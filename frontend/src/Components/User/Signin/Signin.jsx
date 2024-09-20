@@ -9,7 +9,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import {api} from '../../../axios'
 import { useNavigate } from 'react-router-dom';
 
-function Signin({onLoginClick}) {
+function Signin({setActivePopup}) {
 
   const [email, setEmail] = useState('');
   const [mob, setMob] = useState('');
@@ -68,7 +68,7 @@ function Signin({onLoginClick}) {
 
       api.post('signin/', userData).then((res)=>{
         console.log(res.data);
-        navigate('/home')
+        setActivePopup('otp')
       })
     
     }
@@ -76,8 +76,8 @@ function Signin({onLoginClick}) {
   });
 
   return (
-    <div class='w-full flex justify-center p-5'>
-      <div className="signin" class='p-5 bg-white flex rounded-xl'>
+    <div class='fixed bg-[#7e7e7e90] w-full flex justify-center min-h-screen items-center p-5' onClick={()=>{setActivePopup('')}}>
+      <div onClick={(e)=>e.stopPropagation()} className="signin" class='p-5 bg-white flex rounded-xl '>
         <div className="left">
             <img src={img} alt="" />
         </div>
@@ -102,9 +102,9 @@ function Signin({onLoginClick}) {
                 <button type='submit' class='h-10 rounded-full bg-[#F1C72C] text-white font-bold' onClick={handlesubmit}>CONTINUE</button>
             </div>
         </div>
+      <div class='pl-3 '>
+        <IoIosCloseCircle class=' text-3xl cursor-pointer' onClick={()=>{setActivePopup('')}}/>
       </div>
-      <div class='pl-3'>
-        <IoIosCloseCircle class='text-3xl cursor-pointer' onClick={onLoginClick}/>
       </div>
     </div>
     
