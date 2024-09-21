@@ -3,11 +3,12 @@ import './Signin.css'
 import img from '../../../images/Mask group.png'
 import { FcGoogle } from "react-icons/fc";
 import { IoIosCloseCircle } from "react-icons/io";
-import { GoogleLogin } from '@react-oauth/google';
 import { useGoogleLogin } from '@react-oauth/google';
 
 import {api} from '../../../axios'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUserinfo } from '../../../redux/user';
 
 function Signin({setActivePopup}) {
 
@@ -17,25 +18,26 @@ function Signin({setActivePopup}) {
   const inputElement = useRef();
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handlesubmit = async ()=>{
+  const handlesubmit = ()=>{
     const val = inputElement.current.value
     console.log((val));
     
     
     if (Number.isInteger(parseInt(val))){
+      setMob(val)
       if (val.length !== 10){
         setError('Mobile number should contain 10 digits.')
+        return;
       }
-      setMob(val)
     }
     else{
+      setEmail(val)
       var validRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-      if (val.match(validRegex)){
-        setEmail(val)
-      }
-      else{
+      if (!val.match(validRegex)){
         setError('Please give valid email.')
+        return; 
       }
     }
 
@@ -45,9 +47,9 @@ function Signin({setActivePopup}) {
     }
     console.log(data);
     console.log(email, mob);
-    
 
-    const res = await api.post('signin/', data);
+    const res = api.post('signin/', data);
+    setActivePopup('otp')
     console.log(res.data,'data', res);
     
   }
@@ -62,48 +64,49 @@ function Signin({setActivePopup}) {
       });
   
       const userData = await userInfo.json();
-      console.log(userData, 'userdata');
-
-      userData.mob = '';
-
-      api.post('signin/', userData).then((res)=>{
-        console.log(res.data);
-        setActivePopup('otp')
-      })
-    
+      try{
+        api.post('signin-with-google/', userData).then((res)=>{
+          console.log(res.data);
+          setActivePopup('')
+          dispatch(setUserinfo(res.data))
+        })
+      }
+      catch{
+        console.log(userData, 'userdata');
+      }
     }
     
   });
 
   return (
-    <div class='fixed bg-[#7e7e7e90] w-full flex justify-center min-h-screen items-center p-5' onClick={()=>{setActivePopup('')}}>
-      <div onClick={(e)=>e.stopPropagation()} className="signin" class='p-5 bg-white flex rounded-xl '>
+    <div className='fixed bg-[#7e7e7e90] w-full flex justify-center min-h-screen items-center p-5' onClick={()=>{setActivePopup('')}}>
+      <div onClick={(e)=>e.stopPropagation()} className='signin p-5 bg-white flex rounded-xl '>
         <div className="left">
             <img src={img} alt="" />
         </div>
-        <div className="right" class='p-20 flex flex-col gap-10'>
+        <div className="right p-20 flex flex-col gap-10">
             <div>
-                <div onClick={() => login()}  class='border gap-8 flex pl-4 pr-20 pt-2 pb-2 rounded-lg items-center m-2 cursor-pointer'>
-                    <FcGoogle class='text-xl'/>
-                    <h4 class='text-sm font-medium text-stone-950'>Continue with Google</h4>
+                <div onClick={() => login()}  className='border gap-8 flex pl-4 pr-20 pt-2 pb-2 rounded-lg items-center m-2 cursor-pointer'>
+                    <FcGoogle className='text-xl'/>
+                    <h4 className='text-sm font-medium text-stone-950'>Continue with Google</h4>
                 </div >
-                <div class='flex items-center gap-2'>
-                    <div class='line w-36 bg-gray-400'></div>
-                    <h6 class='text-xs'>Or</h6>
-                    <div class='line w-36 bg-gray-400'></div>
+                <div className='flex items-center gap-2'>
+                    <div className='line w-36 bg-gray-400'></div>
+                    <h6 className='text-xs'>Or</h6>
+                    <div className='line w-36 bg-gray-400'></div>
                 </div>
             </div>
-            <div class='flex flex-col gap-4'>
-                <div class='flex flex-col gap-1'>
-                    <label class='text-xs font-normal'>Email or Mobile Number</label>
-                    <input type="text" ref={inputElement} onChange={()=>{setError('')}} class='border outline-none h-10 rounded-lg pl-3'/>
-                    <p class='text-red-600 text-xs'>{Error}</p>
+            <div className='flex flex-col gap-4'>
+                <div className='flex flex-col gap-1'>
+                    <label className='text-xs font-normal'>Email or Mobile Number</label>
+                    <input type="text" ref={inputElement} onChange={()=>{setError('')}} className='border outline-none h-10 rounded-lg pl-3'/>
+                    <p className='text-red-600 text-xs'>{Error}</p>
                 </div>
-                <button type='submit' class='h-10 rounded-full bg-[#F1C72C] text-white font-bold' onClick={handlesubmit}>CONTINUE</button>
+                <button type='submit' className='h-10 rounded-full bg-[#F1C72C] text-white font-bold' onClick={handlesubmit}>CONTINUE</button>
             </div>
         </div>
-      <div class='pl-3 '>
-        <IoIosCloseCircle class=' text-3xl cursor-pointer' onClick={()=>{setActivePopup('')}}/>
+      <div className='pl-3 '>
+        <IoIosCloseCircle className=' text-3xl cursor-pointer' onClick={()=>{setActivePopup('')}}/>
       </div>
       </div>
     </div>
