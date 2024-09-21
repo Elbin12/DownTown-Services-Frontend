@@ -7,13 +7,17 @@ import Signin from '../Signin/Signin';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../../../axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { MdAccountCircle } from "react-icons/md";
+import OTP from '../OTP/OTP';
+import { setUserinfo } from '../../../redux/user';
 
 
-function Navbar({setActivePopup}) {
+function Navbar() {
 
+  const [activePopup, setActivePopup] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const userinfo = useSelector(state => state.user.userinfo);
   console.log(userinfo, 'jjjj');
@@ -22,12 +26,15 @@ function Navbar({setActivePopup}) {
   const logout = ()=>{
     api.post('logout/').then((res)=>{
       console.log(res);
+      dispatch(setUserinfo(''))
     })
   }
 
   return (
     <div>
-      <div className='flex justify-between w-screen flex-column bg-white h-28 items-center pl-20 pr-20'>
+      {activePopup=='login' && <Signin setActivePopup={setActivePopup}/>}
+      {activePopup=='otp' && <OTP setActivePopup={setActivePopup}/>}
+      <div className='flex justify-between w-full flex-column bg-white h-28 items-center pl-20 pr-20'>
         <div className="logo cursor-pointer" onClick={()=>{navigate('/')}}>
           <img src={Logo} alt="" />
         </div>

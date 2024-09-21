@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { api } from '../../../axios'
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { setUserinfo } from '../../../redux/user';
 
 function OTP({setActivePopup}) {
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [otp, setotp] = useState();
 
@@ -19,6 +22,7 @@ function OTP({setActivePopup}) {
             console.log(res);
             navigate('/',{'message':'Sign In successfully'})
             setActivePopup('')
+            dispatch(setUserinfo(res.data))
         }
         catch(error){
             console.log('err',error);

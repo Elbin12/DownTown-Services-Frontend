@@ -7,16 +7,10 @@ import TopServices from '../../Components/User/TopServices/TopServices';
 
 function Homepage() {
 
-  const [activePopup, setActivePopup] = useState(null);
-  const [showLogin, setShowLogin] = useState(false);
-  const [showOTP, setshowOTP] = useState(false);
-
 
   return (
     <Fragment>
-      {activePopup=='login' && <Signin setActivePopup={setActivePopup}/>}
-      {activePopup=='otp' && <OTP setActivePopup={setActivePopup}/>}
-      <Navbar setActivePopup={setActivePopup}/>
+      <Navbar />
       <Banner />
       <TopServices />
     </Fragment>
