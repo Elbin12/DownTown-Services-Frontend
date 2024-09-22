@@ -5,7 +5,7 @@ import Searchbar from '../../Searchbar/Searchbar'
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import Signin from '../Signin/Signin';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../../axios';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -34,7 +34,7 @@ function Navbar() {
     <div>
       {activePopup=='login' && <Signin setActivePopup={setActivePopup}/>}
       {activePopup=='otp' && <OTP setActivePopup={setActivePopup}/>}
-      <div className='flex justify-between w-full flex-column bg-white h-28 items-center pl-20 pr-20'>
+      <div className='flex justify-between w-full flex-column bg-white h-24 items-center px-20'>
         <div className="logo cursor-pointer" onClick={()=>{navigate('/')}}>
           <img src={Logo} alt="" />
         </div>
@@ -53,10 +53,12 @@ function Navbar() {
         {userinfo&&<button onClick={logout}>LOGOUT</button>}
         {userinfo&&
           (
+            <Link to='profile/'>
             <div className='border h-14 flex items-center gap-1 px-2 rounded-lg border-[#d5d5d5] cursor-pointer'>
               <MdAccountCircle className='text-4xl' />
               <h6 className='text-[#303030]'>Hi, {userinfo&& userinfo.first_name}</h6>
             </div>
+            </Link>
           )
         }
         </div>
