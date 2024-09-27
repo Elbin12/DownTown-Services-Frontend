@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FaCalendar } from "react-icons/fa";
 import AddMobile from './AddMobile';
 import { api, BASE_URL } from '../../../axios';
-import { setUserinfo } from '../../../redux/user';
+import user, { setUserinfo } from '../../../redux/user';
 
 import { FaEdit } from "react-icons/fa";
 
@@ -21,11 +21,12 @@ function Profile() {
   console.log(userinfo, 'userrrrr');
   
 
-  const [first_name, setFirst_name] = useState(userinfo ? userinfo.first_name : '');
-  const [last_name, setLast_name] = useState(userinfo ? userinfo.last_name : '');
+  const [first_name, setFirst_name] = useState(userinfo ? userinfo.first_name===null? '': userinfo.first_name : '');
+  const [last_name, setLast_name] = useState(userinfo ? userinfo.last_name ===null?'': userinfo.last_name : '');
   const [dob, setDob] = useState();
   const [gender, setGender] = useState();
   const [first_name_err, setFirst_name_Error] = useState('');
+  const [picerr, setPicErr] = useState('');
   const [pic, setPic] = useState();
 
   const dispatch = useDispatch();
@@ -38,19 +39,13 @@ function Profile() {
   }
 
   const uploadImageDisplay = (e) => {
-    console.log(e, 'Event object from uploadImageDisplay');
-
-    console.log((e.target.files[0], 'from function'));
-    
     const uploadedFile = e.target.files[0]
-    console.log(uploadedFile, 'file uploaded');
     
     if (uploadedFile){
       setPic(uploadedFile)
       const cachedURL = URL.createObjectURL(uploadedFile);
-      setImg(cachedURL );
-      console.log(cachedURL, 'cached');
-      
+      setImg(cachedURL );    
+      setPicErr('');
     }
 }
   console.log(img, 'img');
@@ -58,9 +53,7 @@ function Profile() {
   const handlefirst_name = (e)=>{
     setActivePopup(true)
     setFirst_name(e.target.value)
-    if (e.target.value == userinfo.first_name){
-      setActivePopup(false)
-    }
+    setFirst_name_Error('');
   }
 
   const handleimg = ()=>{
@@ -68,6 +61,17 @@ function Profile() {
   }
 
   const handlesubmit = async()=>{
+
+    if (!img && !userinfo?.profile_pic){
+      setPicErr('Profile image is Required')
+      return
+    }
+
+    if (first_name.trim() === ''){
+      setFirst_name_Error('First Name is Required')
+      return
+    }
+
     let data = {
       first_name,
       last_name,
@@ -75,42 +79,45 @@ function Profile() {
       gender,
       profile_pic:pic
     }
+    console.log(data, 'ddd');
+    
     try{
       const res = await api.post('profile/', data,{
         headers: {
           'Content-Type': 'multipart/form-data'  // Necessary for file uploads
         }
       })
-      console.log(res, 'res', res.data);
+      console.log('res', res.data);
       dispatch(setUserinfo(res.data))
+      setActivePopup('');
     }catch(err){
-      console.log(err);
+      console.log(err.response.data);
     } 
   }
+  
 
   return (
     <div>
       <div className='bg-white h-96 mx-[20rem] rounded-lg'>
       <div className='bg-[#233e56d2] h-20 my-11 rounded-t-lg'>
-        <div className='flex items-center gap-4 py-8 px-16'>
-          <div className='flex flex-col items-center justify-center bg-white rounded-full w-[6rem] h-[6rem] drop-shadow-lg overflow-hidden' onClick={imageUpload}>
+        <div className='flex items-center gap-4 py-6 px-16'>
+          <div className='flex flex-col'>
+            <div className='flex flex-col items-center justify-center bg-white rounded-full w-[6rem] h-[6rem] drop-shadow-lg overflow-hidden' onClick={imageUpload}>
+              {img? <img src={img?img:''} alt="" className='object-cover kkk w-full h-full p-[2px] rounded-full'/>
+              : (userinfo?.profile_pic&&<img src={userinfo.profile_pic?`${BASE_URL}${userinfo.profile_pic}`:''} alt="" className='object-cover jjj w-full h-full p-[2px] rounded-full'/>)}
 
-            {img? <img src={img?img:''} alt="" className='object-cover kkk w-full h-full p-[2px] rounded-full'/>
-            : (userinfo?.profile_pic&&<img src={userinfo.profile_pic?`${BASE_URL}${userinfo.profile_pic}`:''} alt="" className='object-cover jjj w-full h-full p-[2px] rounded-full'/>)}
-            {/* {userinfo?.profile_pic?
-            <img src={userinfo.profile_pic?userinfo.profile_pic:''} alt="" className='object-cover w-full h-full p-[2px] rounded-full'/>
-            :(img&&<img src={img} alt="" className='object-cover w-full hh h-full p-[2px] rounded-full' />)} */}
-            
-            <input type="file" ref={fileuploadRef} id="file" hidden accept="image/*" onChange={uploadImageDisplay} />
-            {!userinfo?.profile_pic && !img&&(<>
-            <BsFillCameraFill onClick={handleimg} className='text-3xl opacity-30'/>
-            <h5 className='text-[9px] opacity-80' onClick={handleimg}>+ Add</h5>
-            </>)}
-            {(img || userinfo?.profile_pic) && (
-                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    <FaEdit />
-                </div>
-            )}
+              <input type="file" ref={fileuploadRef} id="file" hidden accept="image/*" onChange={uploadImageDisplay} />
+              {!userinfo?.profile_pic && !img&&(<>
+              <BsFillCameraFill onClick={handleimg} className='text-3xl opacity-30'/>
+              <h5 className='text-[9px] opacity-80' onClick={handleimg}>+ Add</h5>
+              </>)}
+              {(img || userinfo?.profile_pic) && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 text-white opacity-0 hover:opacity-100 transition-opacity duration-300">
+                      <FaEdit />
+                  </div>
+              )}
+            </div>
+            <p className='text-red-500 text-xs'>{picerr}</p>
           </div>
           <h6 className='text-lg pb-6 text-white font-semibold'>Hi, {userinfo?.first_name? userinfo.first_name:'Guest'}</h6>
         </div>

@@ -4,16 +4,17 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const INITIAL_STATE = {
-    userinfo:{
-        first_name:'',
-        last_name:'',
-        dob:'',
-        gender:'',
-        profile_pic:'',
-        isActive:false,
-        isAdmin:false,
-    }
+    userinfo:''
 }
+
+// first_name:'',
+//         last_name:'',
+//         email:'',
+//         dob:'',
+//         gender:'',
+//         profile_pic:'',
+//         isActive:false,
+//         isAdmin:false,
 
 console.log(INITIAL_STATE.userinfo);
 
