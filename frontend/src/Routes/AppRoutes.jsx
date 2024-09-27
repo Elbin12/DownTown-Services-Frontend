@@ -1,14 +1,15 @@
 import React from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
-import Homepage from '../Pages/User/Homepage';
-import Profilepage from '../Pages/User/Profilepage';
+import UserRoutes from './UserRoutes';
+import AdminRoutes from './AdminRoutes';
+import AdminProtectedRoute from './AdminProtected';
 
 const AppRoutes = ()=>{
     return(
         <Router>
             <Routes>
-                <Route path='/' element={<Homepage />}></Route>
-                <Route path='profile/' element={<Profilepage />}></Route>
+                <Route path='/*' element={<UserRoutes />}/>
+                <Route path='admin/*' element={<AdminProtectedRoute><AdminRoutes /></AdminProtectedRoute>} />
             </Routes>
         </Router>
     )
