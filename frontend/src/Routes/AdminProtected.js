@@ -6,22 +6,25 @@ import { useNavigate } from 'react-router-dom';
 
 const AdminProtectedRoute = ({children}) => {
 
-  const is_admin = useSelector((state) => state.user.isAdmin);
+  const userinfo = useSelector((state) => state.user.userinfo);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
 
 
+  console.log(userinfo.isAdmin, 'from route', userinfo);
+  
+
   useEffect(() => {
     
-    if (is_admin === undefined || is_admin === null) {
+    if (userinfo.isAdmin === undefined || userinfo.isAdmin === null) {
       setIsLoading(true);
     } else {
-      if (!is_admin) {
+      if (!userinfo.isAdmin) {
         navigate('/');
       }
       setIsLoading(false); 
     }
-  }, [is_admin, navigate]);
+  }, [userinfo.isAdmin, navigate]);
 
   return children;
 };

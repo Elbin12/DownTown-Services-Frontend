@@ -53,7 +53,7 @@ function Navbar() {
         {userinfo&&<button onClick={logout}>LOGOUT</button>}
         {userinfo&&
           (
-            <Link to='profile/'>
+            <Link to='/profile/'>
             <div className='border h-14 flex items-center gap-1 px-2 rounded-lg border-[#d5d5d5] cursor-pointer'>
               <MdAccountCircle className='text-4xl' />
               <h6 className='text-[#303030]'>Hi, {userinfo&& userinfo.first_name}</h6>

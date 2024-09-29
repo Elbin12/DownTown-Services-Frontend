@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const INITIAL_STATE = {
-    users:[]
+    users:[],
+    selectedUser:'',
 }
 
 console.log(INITIAL_STATE.users);
@@ -14,9 +15,12 @@ const adminSlice = createSlice({
     reducers:{
         setUsers: (state, action)=>{
             state.users = action.payload;
+        },
+        setSelectedUser: (state, action) => {
+            state.selectedUser = action.payload;
         }
     }
 })
 
-export const {setUsers} = adminSlice.actions;
+export const {setUsers, setSelectedUser} = adminSlice.actions;
 export default adminSlice.reducer;
