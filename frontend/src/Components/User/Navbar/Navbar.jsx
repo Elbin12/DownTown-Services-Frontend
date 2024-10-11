@@ -27,6 +27,7 @@ function Navbar() {
     api.post('logout/').then((res)=>{
       console.log(res);
       dispatch(setUserinfo(''))
+      navigate('/')
     })
   }
 
@@ -34,7 +35,7 @@ function Navbar() {
     <div>
       {activePopup=='login' && <Signin setActivePopup={setActivePopup} input={input} setInput={setInput}/>}
       {activePopup=='otp' && <OTP  setActivePopup={setActivePopup} input={input}/>}
-      <div className='flex justify-between w-full flex-column bg-white h-24 items-center px-20'>
+      <div className='flex justify-between w-full flex-column bg-white h-24 items-center px-20 fixed top-0 z-10'>
         <div className="logo cursor-pointer" onClick={()=>{navigate('/')}}>
           <img src={Logo} alt="" />
         </div>

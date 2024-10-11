@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserinfo } from '../../../redux/user';
 
-import { Toaster, toast } from 'sonner'
+import { Toaster, toast } from 'sonner';
 
 function OTP({setActivePopup, input}) {
     const dispatch = useDispatch();
@@ -80,7 +80,7 @@ function OTP({setActivePopup, input}) {
 
 
   return (
-    <div className='min-h-screen items-center fixed bg-[#7e7e7e90] w-full flex  justify-center p-4'>
+    <div className='min-h-screen items-center fixed bg-[#7e7e7e90] w-full flex  justify-center p-4 top-0 z-20'>
       <div className='bg-white w-3/12 px-6 py-10 flex flex-col gap-9 rounded-lg drop-shadow-sm'>
         <div className='flex flex-col gap-1'>
             <h6 className='text-xs font-medium text-[#F1C72C] mb-4 hover:underline cursor-pointer' onClick={()=>{setActivePopup('login')}}>BACK</h6>

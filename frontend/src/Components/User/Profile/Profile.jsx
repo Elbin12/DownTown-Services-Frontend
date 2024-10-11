@@ -11,6 +11,9 @@ import {setWorkerinfo} from '../../../redux/worker';
 
 import { FaEdit } from "react-icons/fa";
 
+import { Toaster, toast } from 'sonner';
+
+
 function Profile({role}) {
 
   const fileuploadRef = useRef();
@@ -118,17 +121,16 @@ function Profile({role}) {
         try{
           const res = await api.post('profile/', data,{
             headers: {
-              'Content-Type': 'multipart/form-data'  // Necessary for file uploads
+              'Content-Type': 'multipart/form-data'  
             }
           })
           console.log('res', res.data);
           dispatch(setUserinfo(res.data))
           setActivePopup('');
+          toast.success('Profile Updated Successfully')
         }catch(err){
           console.log(err.response.data, 'lll');
-          setMobErr(err.response.data.mob)
-          console.log(err.response.data.mob, 'lll');
-          
+          setMobErr(err.response.data.mob)     
         } 
       }else if(role=='worker'){
         let data = {
@@ -162,7 +164,7 @@ function Profile({role}) {
 
   return (
     <div>
-      <div className='bg-white h-96 mx-[20rem] mt-11 justify-center flex rounded-lg'>
+      <div className='bg-white h-96 mx-[20rem] mt-[5rem] justify-center flex rounded-lg'>
         {activePopup=='mob' && < MobilePopup setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
       <div className='bg-[#233e56d2] h-20 rounded-t-lg w-full'>
         <div className='flex items-center gap-4 py-6 px-16'>

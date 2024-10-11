@@ -8,15 +8,9 @@ const AdminProtectedRoute = ({children}) => {
 
   const userinfo = useSelector((state) => state.user.userinfo);
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(true);
-
-
-  console.log(userinfo.isAdmin, 'from route', userinfo);
-  
 
   useEffect(() => {
     console.log(userinfo, 'userinfpooo');
-    
     if (!userinfo.isAdmin) {
       navigate('/');
     }

@@ -92,7 +92,7 @@ function Signin({setActivePopup, input, setInput}) {
   });
 
   return (
-    <div className='fixed bg-[#7e7e7e90] z-10 w-full flex justify-center min-h-screen items-center p-5' onClick={()=>{setActivePopup('')}}>
+    <div className='fixed bg-[#7e7e7e90] w-full flex justify-center min-h-screen items-center p-5 top-0 z-20' onClick={()=>{setActivePopup('')}}>
       <div onClick={(e)=>e.stopPropagation()} className='signin p-5 bg-white flex rounded-xl '>
         <div className="left">
             <img src={img} alt="" />

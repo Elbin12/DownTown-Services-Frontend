@@ -19,6 +19,7 @@ function Login() {
             const res = await api.post('worker/login/', data)
             console.log(res, 'res')
             dispatch(setWorkerinfo(res.data))
+            navigate('worker/dashboard/')
         }
         catch(err){
             console.log(err);
@@ -26,10 +27,6 @@ function Login() {
         }
     }
 
-    const handle = async ()=>{
-        const res = await api.get('worker/hi/')
-            console.log(res, 'res')
-    }
   return (
     <div className='w-full h-auto flex justify-center mt-14'>
       <div className='w-5/12 bg-white px-16 py-4 rounded-lg flex flex-col gap-20'>
