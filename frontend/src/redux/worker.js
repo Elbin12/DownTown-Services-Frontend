@@ -2,10 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const INITIAL_STATE = {
-    workerinfo:[]
+    workerinfo:''
 }
 
-console.log(INITIAL_STATE.users);
+console.log(INITIAL_STATE.workerinfo);
 
 
 const workerSlice = createSlice({
@@ -13,7 +13,7 @@ const workerSlice = createSlice({
     initialState:INITIAL_STATE,
     reducers:{
         setWorkerinfo: (state, action)=>{
-            state.worker = action.payload;
+            state.workerinfo = action.payload;
         }
     }
 })

@@ -3,6 +3,7 @@ import Logo from '../../images/LOGO.png';
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { PiUsersThree } from "react-icons/pi";
+import { Link } from "react-router-dom";
 
 function Sidebar() {
   return (
@@ -12,17 +13,23 @@ function Sidebar() {
       </div>
       <div className='w-full h-[1px] bg-black border border-dotted'></div>
       <div className='flex flex-col gap-6 items-center mt-11'>
-        <div className='flex items-center gap-1 w-8/12 bg-[#BACBDF] py-4 pl-4 justify-start'>
-            <MdSpaceDashboard />
-            <li className='list-none '>Dashboard</li>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('dashboard')&&'bg-[#BACBDF]'}`}>
+            <MdSpaceDashboard className={`${window.location.pathname.includes('dashboard')&& 'text-2xl font-semibold'}`}/>
+            <li className='list-none '>
+              <Link to="/admin/dashboard/" className={`${window.location.pathname.includes('dashboard')&& 'text-[#658ab7] font-semibold'}`}>Dashboard</Link>
+            </li>
         </div>
-        <div className='flex items-center gap-1 w-8/12 pl-4 justify-start'>
-            <PiUsersThree />
-            <li className='list-none '>Users</li>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('user')&&'bg-[#BACBDF]'}`}>
+            <PiUsersThree className={`${window.location.pathname.includes('user')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/users/" className={`${window.location.pathname.includes('user')&& 'text-[#658ab7] font-semibold'}`}>Users</Link>
         </div>
-        <div className='flex items-center gap-1 w-8/12 pl-4 justify-start'>
-            <FaUsers />
-            <li className='list-none '>Workers</li>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('worker')&&'bg-[#BACBDF]'}`}>
+            <FaUsers className={`${window.location.pathname.includes('worker')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/workers/" className={`${window.location.pathname.includes('worker')&& 'text-[#658ab7] font-semibold'}`}>Workers</Link>
+        </div>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('requests')&&'bg-[#BACBDF]'}`}>
+            <FaUsers className={`${window.location.pathname.includes('requests')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/requests/" className={`${window.location.pathname.includes('requests')&& 'text-[#658ab7] font-semibold'}`}>Requests</Link>
         </div>
       </div>
     </div>

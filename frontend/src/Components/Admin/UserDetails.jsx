@@ -9,7 +9,7 @@ function UserDetails() {
     const dispatch = useDispatch();
 
     const blockuser = async ()=>{
-        const res = await api.post('block/', {"email":selectedUser.email})
+        const res = await api.post('admin/block/', {"email":selectedUser.email})
         console.log(res, 'block response');
         console.log(selectedUser);
         const new_user = {...selectedUser }

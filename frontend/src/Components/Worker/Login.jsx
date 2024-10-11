@@ -16,7 +16,7 @@ function Login() {
     const handlesubmit = async()=>{
         var data = {email, password}
         try{
-            const res = await api.post('login/', data)
+            const res = await api.post('worker/login/', data)
             console.log(res, 'res')
             dispatch(setWorkerinfo(res.data))
         }
@@ -24,6 +24,11 @@ function Login() {
             console.log(err);
             
         }
+    }
+
+    const handle = async ()=>{
+        const res = await api.get('worker/hi/')
+            console.log(res, 'res')
     }
   return (
     <div className='w-full h-auto flex justify-center mt-14'>

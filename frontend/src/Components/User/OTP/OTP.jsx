@@ -1,54 +1,107 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { api } from '../../../axios'
 import { useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { setUserinfo } from '../../../redux/user';
 
-function OTP({setActivePopup}) {
+import { Toaster, toast } from 'sonner'
 
+function OTP({setActivePopup, input}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [otp, setotp] = useState();
+
+    const [otp, setOTP] = useState(['', '', '', '', '', '']);
+    const inputRefs = useRef([]);
+
+    const [timeRemaining, setTimeRemaining] = useState(60);
+
+    useEffect(() => {
+        if (inputRefs.current[0]) {
+          inputRefs.current[0].focus();
+        }
+      }, []);
+
+    useEffect(()=>{
+        const timeInterval = setInterval(()=>{         
+            setTimeRemaining((prevTime)=>{  
+                if (prevTime === 0){
+                    return 0
+                }else{
+                    return prevTime - 1;    
+                }
+            });
+        }, 1000);
+        return ()=> clearInterval(timeInterval);
+    }, []);
+
+    const handleOTP = (value, index)=>{  
+        const newOTP = [...otp];
+        newOTP[index] = value;
+        setOTP(newOTP)
+        if (value && index < otp.length - 1 &&inputRefs.current[index + 1]) {
+            inputRefs.current[index + 1].focus();
+        }
+    }
+
+    const handleKeyDown = (e, index) => {
+        if (e.key === 'Backspace' && index > 0 && !otp[index]) {
+          inputRefs.current[index - 1].focus();
+        }
+      };
 
     const handlesubmit = async ()=>{
         console.log(otp);
+
+        const OTP = otp.join('');
         
         const data = {
-            'otp':otp
+            'otp':OTP
         }
-
+        console.log(data, 'ggg');
+        
         try{
             const res = await api.post('verify_otp/', data);
             console.log(res);
             navigate('/',{'message':'Sign In successfully'})
             setActivePopup('')
             dispatch(setUserinfo(res.data))
+            toast.success("Sign in successfully");
         }
         catch(error){
             console.log('err',error);
+            setActivePopup('login')
+            toast.error(error.response.data.message);
         }
         
     }
 
 
+
+
+
   return (
     <div className='min-h-screen items-center fixed bg-[#7e7e7e90] w-full flex  justify-center p-4'>
-      <div className='bg-white w-auto px-6 py-10 flex flex-col gap-9 rounded-lg drop-shadow-sm'>
+      <div className='bg-white w-3/12 px-6 py-10 flex flex-col gap-9 rounded-lg drop-shadow-sm'>
         <div className='flex flex-col gap-1'>
             <h6 className='text-xs font-medium text-[#F1C72C] mb-4 hover:underline cursor-pointer' onClick={()=>{setActivePopup('login')}}>BACK</h6>
             <h1 className='font-medium text-[#414141] text-xl'>Enter OTP</h1>
-            <h6 className='text-sm'>OTP has been sent to MOBILE</h6>
+            <h6 className='text-sm'>OTP has been sent to {input}</h6>
         </div>
         <div className='flex flex-col gap-3'>
             <h4>Enter OTP</h4>
-            <div className='flex border items-center px-3 rounded-lg'>
-                <input className='w-96 h-14 outline-none' type="text" onChange={(e)=>{setotp(e.target.value)}} placeholder='Enter OTP here'/>
-                <h6 className='text-decoration-line: underline text-xs text-[#F1C72C]'>Resend OTP</h6>
-            </div>
-            <h6 className='text-sm'>Didn't receive the OTP? Resend in 59 Sec</h6>
+            <div className='flex justify-between py-6 w-full'>
+                {otp.map((item, index)=>{
+                    return(<input type="text" className='border outline-none w-[2.5rem] py-2 rounded-lg px-2' 
+                        key={index} value={item} ref={(e) => inputRefs.current[index] = e} 
+                        maxLength={1}
+                        onKeyDown={(e) => handleKeyDown(e, index)}
+                        onChange={(e)=>{handleOTP(e.target.value, index)}}/>)
+                })}
+            </div>  
+            <h6 className='text-sm'>Didn't receive the OTP?<span className='hover:text-[#F1C72C] font-medium mb-4 hover:underline cursor-pointer'> Resend in {timeRemaining} Sec</span> </h6>
         </div>
-        <div onClick={handlesubmit} className='border bg-[#F1C72C] p-4 flex justify-center rounded-full mb-28 cursor-pointer'>
-            <h3 className='text-white font-bold tracking-wide text-lg'>VERIFY & CREATE ACCOUNT</h3>
+        <div onClick={handlesubmit} className='border bg-[#F1C72C] p-3 flex justify-center rounded-full mb-3 cursor-pointer'>
+            <h3 className='text-white font-bold tracking-wide text-sm'>VERIFY</h3>
         </div>
       </div>
     </div>

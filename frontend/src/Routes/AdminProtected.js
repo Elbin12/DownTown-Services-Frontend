@@ -15,14 +15,10 @@ const AdminProtectedRoute = ({children}) => {
   
 
   useEffect(() => {
+    console.log(userinfo, 'userinfpooo');
     
-    if (userinfo.isAdmin === undefined || userinfo.isAdmin === null) {
-      setIsLoading(true);
-    } else {
-      if (!userinfo.isAdmin) {
-        navigate('/');
-      }
-      setIsLoading(false); 
+    if (!userinfo.isAdmin) {
+      navigate('/');
     }
   }, [userinfo.isAdmin, navigate]);
 

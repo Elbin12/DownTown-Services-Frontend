@@ -10,10 +10,10 @@ import { json, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setUserinfo } from '../../../redux/user';
 
-function Signin({setActivePopup}) {
+import { Toaster, toast } from 'sonner'
 
+function Signin({setActivePopup, input, setInput}) {
 
-  const [input, setinput] = useState('');
   const [Error, setError] = useState();
   const inputElement = useRef();
 
@@ -67,14 +67,25 @@ function Signin({setActivePopup}) {
   
       const userData = await userInfo.json();
       try{
-        api.post('signin-with-google/', userData).then((res)=>{
-          console.log(res.data);
+        const res = await api.post('signin-with-google/', userData)
+        console.log(res.status, 'status');
+        
+        if (res.status === 200){
+          console.log(res.data, '200');
           setActivePopup('')
+          console.log('hi', res.data);
           dispatch(setUserinfo(res.data))
-        })
-      }
-      catch{
-        console.log(userData, 'userdata');
+          toast.success("Sign In successfully");
+        }
+      }catch(err){
+        console.error("Error signing in:", err);
+        if(err.response.status === 400){
+          console.log(err.response.data, '400');
+          toast.error(err.response.data.message);
+        }else{
+          setActivePopup('')
+          toast.error("An unexpected error occurred. Please try again.");
+        }
       }
     }
     
@@ -101,7 +112,7 @@ function Signin({setActivePopup}) {
             <div className='flex flex-col gap-4'>
                 <div className='flex flex-col gap-1'>
                     <label className='text-xs font-normal'>Email or Mobile Number</label>
-                    <input type="text" onChange={(e)=>{setinput(e.target.value)} } className='border outline-none h-10 rounded-lg pl-3'/>
+                    <input type="text" onChange={(e)=>{setInput(e.target.value)} } className='border outline-none h-10 rounded-lg pl-3'/>
                     <p className='text-red-600 text-xs'>{Error}</p>
                 </div>
                 <button type='submit' className='h-10 rounded-full bg-[#F1C72C] text-white font-bold' onClick={handlesubmit}>CONTINUE</button>

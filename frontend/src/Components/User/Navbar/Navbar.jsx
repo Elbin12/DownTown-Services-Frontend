@@ -8,7 +8,6 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../../../axios';
 import { useDispatch, useSelector } from 'react-redux';
-
 import { MdAccountCircle } from "react-icons/md";
 import OTP from '../OTP/OTP';
 import { setUserinfo } from '../../../redux/user';
@@ -17,6 +16,7 @@ import { setUserinfo } from '../../../redux/user';
 function Navbar() {
 
   const [activePopup, setActivePopup] = useState(null);
+  const [input, setInput] = useState();
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userinfo = useSelector(state => state.user.userinfo);
@@ -32,8 +32,8 @@ function Navbar() {
 
   return (
     <div>
-      {activePopup=='login' && <Signin setActivePopup={setActivePopup}/>}
-      {activePopup=='otp' && <OTP setActivePopup={setActivePopup}/>}
+      {activePopup=='login' && <Signin setActivePopup={setActivePopup} input={input} setInput={setInput}/>}
+      {activePopup=='otp' && <OTP  setActivePopup={setActivePopup} input={input}/>}
       <div className='flex justify-between w-full flex-column bg-white h-24 items-center px-20'>
         <div className="logo cursor-pointer" onClick={()=>{navigate('/')}}>
           <img src={Logo} alt="" />

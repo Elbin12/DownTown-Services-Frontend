@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Searchbar from './Searchbar'
-import { FaChevronDown } from "react-icons/fa";
 import { api, BASE_URL } from '../../axios';
-import { setUsers } from '../../redux/admin';
+import { setUsers, setWorkers } from '../../redux/admin';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from './Pagination';
 import { setSelectedUser } from '../../redux/admin';
 import { useNavigate } from 'react-router-dom';
 
 
-function Userslist() {
+function Userslist({role}) {
 
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
@@ -20,35 +19,67 @@ function Userslist() {
   const indexOfLastUser = currentPage * postsPerPage;
   const indexOfFirstUser = indexOfLastUser - postsPerPage;
   const users = useSelector(state=>state.admin.users)
+  const workers = useSelector(state => state.admin.workers)
 
   const currentUsers =  users?users.slice(indexOfFirstUser, indexOfLastUser):[];
 
   const selectedUser = useSelector(state=> state.admin.selectedUser)
+  const [loading, setLoading] = useState(false);
 
   
   useEffect(()=>{
+    console.log('hi', 'workere');
+    
     const fetchUsers = async () => {
       try {
-        const res = await api.get('users/');
+        const res = await api.get('admin/users/');
         dispatch(setUsers(res.data)); 
         console.log(res.data); 
       } catch (err) {
         console.log(err); 
+      }finally{
+        setLoading(false);
       }
     };
-    fetchUsers();
+
+    const fetchWorkers = async () => {
+      try {
+        const res = await api.get('admin/workers/');
+        dispatch(setWorkers(res.data)); 
+        console.log(res.data); 
+      } catch (err) {
+        console.log(err); 
+      }finally{
+        setLoading(false);
+      }
+    };
+
+    if (role==='users' && users.length===0){
+      setLoading(true)
+      fetchUsers();
+    }else if(role === 'workers'&& workers.length===0){
+      console.log(workers, 'workers');
+      setLoading(true)
+      fetchWorkers();
+    }
+
   },[])
   
   const handleclick = (user)=>{
     dispatch(setSelectedUser(user))
+    console.log('hi  lfldl');
+    if (role==='users'){
+      navigate('/admin/user')
+    }else{
+      navigate('/admin/user')
+    }
     console.log(user, 'usererr');
-    navigate('/admin/user')
   }
   
 
   return (
-    <div className='w-5/6 flex justify-center items-center pr-11'>
-      <div className=' w-full bg-white flex flex-col justify-between rounded-lg h-4/6'>
+    <div className='w-5/6 flex h-screen justify-center overflow-y-auto pr-11'>
+      <div className=' w-full bg-white flex flex-col mt-32 justify-between rounded-lg h-4/6'>
         <div>
           <div className='w-4/6 flex items-center px-6 justify-between py-4'>
             <h3 className='text-lg'>Customers</h3>
@@ -64,21 +95,42 @@ function Userslist() {
               </tr>
             </thead>
             <tbody>
-              {currentUsers.map((user, index)=>(
-                <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
-                  <td className="px-8 py-3 flex gap-2 items-center" onClick={()=>{handleclick(user)}}>
-                    <img src={`${BASE_URL}${user.profile_pic}`} alt="" className='w-7 h-7 rounded-full' />
-                    {user.Name}
+              {loading&&
+                <tr>
+                  <td colSpan="4" className="text-center font-semibold py-8">
+                    LOADING...
                   </td>
-                  <td className="px-8 py-3">{user.email}</td>
-                  <td className="px-8 py-3">{user.mob}</td>
-                  <td className={`px-8 py-3 text-xs ${user.is_active?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{user.is_active?'ACTIVE':'BLOCKED'}</td>
                 </tr>
-              ))}
+              }
+              {role ==='users'?
+                currentUsers.map((user, index)=>(
+                  <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
+                    <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(user)}}>
+                      <img src={`${BASE_URL}${user.profile_pic}`} alt="" className='w-7 h-7 rounded-full' />
+                      {user.Name}
+                    </td>
+                    <td className="px-8 py-3">{user.email}</td>
+                    <td className="px-8 py-3">{user.mob}</td>
+                    <td className={`px-8 py-3 text-xs ${user.is_active?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{user.is_active?'ACTIVE':'BLOCKED'}</td>
+                  </tr>
+                ))
+              :
+                workers?.map((worker, index)=>(
+                  <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
+                    <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(worker)}}>
+                      <img src={`${BASE_URL}${worker.profile_pic}`} alt="" className='w-7 h-7 rounded-full' />
+                      {worker.Name}
+                    </td>
+                    <td className="px-8 py-3">{worker.email}</td>
+                    <td className="px-8 py-3">{worker.mob}</td>
+                    <td className={`px-8 py-3 text-xs ${worker.is_active?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{worker.is_active?'ACTIVE':'BLOCKED'}</td>
+                  </tr>
+                ))
+              }
             </tbody>
           </table>
         </div>
-        <Pagination length={users?.length} postsPerPage={postsPerPage} currentPage={currentPage} onPageChange={setCurrentPage}/>
+        <Pagination length={role=='users'? users?.length: workers?.length} postsPerPage={postsPerPage} currentPage={currentPage} onPageChange={setCurrentPage}/>
       </div>
     </div>
   )

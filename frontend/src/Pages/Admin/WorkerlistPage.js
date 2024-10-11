@@ -1,15 +1,14 @@
 import React from 'react'
 import Sidebar from '../../Components/Admin/Sidebar'
 import Userslist from '../../Components/Admin/Userslist'
-import Navbar from '../../Components/Admin/Navbar'
 
-function UserlistPage() {
+function WorkerlistPage() {
   return (
     <div className='flex gap-11'>
         <Sidebar />
-        <Userslist role={'users'}/>
+        <Userslist role={'workers'}/>
     </div>
   )
 }
 
-export default UserlistPage
+export default WorkerlistPage

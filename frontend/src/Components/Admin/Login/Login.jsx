@@ -17,7 +17,7 @@ function Login() {
         console.log('useeffect', userinfo);
         if (userinfo.isAdmin === true) {
             console.log(userinfo.isAdmin, 'Admin access');
-            navigate('/admin/');
+            navigate('/admin/dashboard/');
         }
     }, [userinfo]);
     // console.log(userinfo.isAdmin, userinfo, 'lkjg');
@@ -25,14 +25,13 @@ function Login() {
     const handlesubmit = async()=>{
         var data = {email, password}
         try{
-            const res = await api.post('login/', data)
+            const res = await api.post('admin/login/', data)
             console.log(res, 'res')
             dispatch(setUserinfo(res.data))
             navigate('/admin/user-list/')
         }
         catch(err){
             console.log(err);
-            
         }
     }
   return (

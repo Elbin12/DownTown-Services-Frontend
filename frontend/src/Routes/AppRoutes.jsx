@@ -10,7 +10,7 @@ const AppRoutes = ()=>{
         <Router>
             <Routes>
                 <Route path='/*' element={<UserRoutes />}/>
-                <Route path='admin/*' element={<AdminProtectedRoute><AdminRoutes /></AdminProtectedRoute>} />
+                <Route path='admin/*' element={<AdminRoutes />} />
                 <Route path='worker/*' element={<WorkerRoutes />} />
             </Routes>
         </Router>

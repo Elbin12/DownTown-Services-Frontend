@@ -16,7 +16,7 @@ const INITIAL_STATE = {
 //         isActive:false,
 //         isAdmin:false,
 
-console.log(INITIAL_STATE.userinfo);
+console.log(INITIAL_STATE.userinfo, 'hiiiii');
 
 
 const userSlice = createSlice({
