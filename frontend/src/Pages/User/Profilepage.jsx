@@ -7,8 +7,8 @@ function Profilepage() {
   return (
     <>
       <Navbar />
-      <SecondNavbar />
-      <Profile role='user'/>
+      <SecondNavbar/>  
+      <Profile role="user" />  
     </>
   )
 }

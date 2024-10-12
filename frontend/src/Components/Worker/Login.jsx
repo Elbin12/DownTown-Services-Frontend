@@ -32,8 +32,8 @@ function Login() {
     }
 
   return (
-    <div className='w-full h-auto flex justify-center mt-14'>
-      <div className='w-5/12 bg-white px-16 py-4 rounded-lg flex flex-col gap-20'>
+    <div className='w-full h-screen bg-black flex justify-center items-center'>
+      <div className='w-5/12 h-3/5 bg-white px-16 py-4 rounded-lg flex flex-col gap-20'>
         <div className='flex gap-1 items-center mt-4'>
             <h2 className='text-2xl text-[#504f4f] font-semibold'>Sign In</h2>
             <h4 className='text-xs pt-2.5 text-[#9A9A9A]'>As Worker</h4>

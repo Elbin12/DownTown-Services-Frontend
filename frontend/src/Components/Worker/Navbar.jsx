@@ -6,14 +6,21 @@ import { AiOutlineUser } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
 import { CiWallet } from "react-icons/ci";
 import { IoIosNotifications } from "react-icons/io";
+import { useSelector } from 'react-redux';
+import { setWorkerinfo } from '../../redux/worker';
 
 
 
 
 
 function Navbar() {
+  const workerinfo = useSelector(state=>state.worker.workerinfo)
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
+
+  const logout  = ()=>[
+    setWorkerinfo('')
+  ]
 
   return (
     <div className='flex justify-between w-full flex-column fixed top-0 z-10 bg-[#eff8f4] h-24 items-center px-20'>
@@ -32,14 +39,14 @@ function Navbar() {
         </div>
         
         <div
-          className='relative flex border w-1/5 px-2 h-9 justify-center items-center rounded-sm cursor-pointer'
+          className='relative flex border  px-2 h-9 justify-center items-center rounded-sm cursor-pointer'
           onMouseEnter={() => setShowPopup(true)}
           onMouseLeave={() => setShowPopup(false)}
         >
           <div className='bg-green-400 w-6 h-6 rounded-full font-bold mr-1 text-white text-xs flex justify-center items-center'>
-            <h4>M</h4>
+            <h4>{workerinfo?.first_name && workerinfo.first_name[0]}</h4>
           </div>
-          <h1 className='font-semibold text-sm mr-3'>Hi, Merin</h1>
+          <h1 className='font-semibold text-sm mr-3'>Hi, {workerinfo?.first_name}</h1>
           <IoIosArrowDown className='mt-1' />
 
           {showPopup && (
@@ -58,7 +65,7 @@ function Navbar() {
                   <p className='text-xs'>Use your wallet money to avail even greater discounts</p>
                 </div>
               </div>
-              <div className='flex gap-4 hover:bg-blue-50 p-3'>
+              <div className='flex gap-4 hover:bg-blue-50 p-3' onClick={logout}>
                 <CiLogout className='text-2xl'/>
                 <div>
                   <h4 className='font-semibold text-sm'>Sign Out</h4>

@@ -5,7 +5,6 @@ import Login from '../../Components/Worker/Login'
 function LoginPage() {
   return (
     <>
-    <Navbar />
     <Login />
     </>
   )

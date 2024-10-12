@@ -6,7 +6,7 @@ import { FaCalendar } from "react-icons/fa";
 import AddMobile from './AddMobile';
 import MobilePopup from '../AddMobile';
 import { api, BASE_URL } from '../../../axios';
-import user, { setUserinfo } from '../../../redux/user';
+import  { setUserinfo } from '../../../redux/user';
 import {setWorkerinfo} from '../../../redux/worker';
 
 import { FaEdit } from "react-icons/fa";
@@ -42,9 +42,9 @@ function Profile({role}) {
   });
   const [dob, setDob] = useState(()=>{
     if (role === 'user') {
-      return userinfo ? userinfo.dob === null ?'': userinfo.dob : '';
+      return userinfo && userinfo.dob;
     } else if (role === 'worker') {
-      return workerinfo ? workerinfo.dob === null ?'': workerinfo.dob : '';
+      return workerinfo && workerinfo.dob ;
     }
     return '';
   });
@@ -97,16 +97,16 @@ function Profile({role}) {
     console.log(first_name, last_name, 'woooo');
     
 
-    if (!img && !userinfo?.profile_pic){
-      setPicErr('Profile image is Required')
-      return
-    }
-
-    if (first_name.trim() === ''){
-      setFirst_name_Error('First Name is Required')
-      return
-    }
     if (role==='user'){
+      if (!img && !userinfo?.profile_pic){
+        setPicErr('Profile image is Required')
+        return
+      }
+  
+      if (first_name.trim() === ''){
+        setFirst_name_Error('First Name is Required')
+        return
+      }
 
         let data = {
           first_name,
@@ -133,6 +133,15 @@ function Profile({role}) {
           setMobErr(err.response.data.mob)     
         } 
       }else if(role=='worker'){
+        if (!img && !workerinfo?.profile_pic){
+          setPicErr('Profile image is Required')
+          return
+        }
+    
+        if (first_name.trim() === ''){
+          setFirst_name_Error('First Name is Required')
+          return
+        }
         let data = {
           first_name,
           last_name,
@@ -152,6 +161,7 @@ function Profile({role}) {
           console.log('res', res.data);
           dispatch(setWorkerinfo(res.data))
           setActivePopup('');
+          toast.success('Profile Updated Successfully')
         }catch(err){
           console.log(err.response.data, 'lll');
           setMobErr(err.response.data.mob)
@@ -163,7 +173,7 @@ function Profile({role}) {
   
 
   return (
-    <div className=' mt-[6rem]'>
+    <div className='pt-[10rem]'>
       <div className='bg-white h-96 mx-[20rem] justify-center flex rounded-lg'>
         {activePopup=='mob' && < MobilePopup setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
       <div className='bg-[#233e56d2] h-20 rounded-t-lg w-full'>

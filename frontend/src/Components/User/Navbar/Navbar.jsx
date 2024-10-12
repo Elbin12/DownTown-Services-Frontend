@@ -32,7 +32,7 @@ function Navbar() {
   }
 
   return (
-    <div>
+    <>
       {activePopup=='login' && <Signin setActivePopup={setActivePopup} input={input} setInput={setInput}/>}
       {activePopup=='otp' && <OTP  setActivePopup={setActivePopup} input={input}/>}
       <div className='flex justify-between w-full flex-column bg-white h-24 items-center px-20 fixed top-0 z-10'>
@@ -64,7 +64,7 @@ function Navbar() {
         }
         </div>
     </div>
-  </div>
+  </>
   )
 }
 
