@@ -4,10 +4,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setWorkerinfo } from '../../redux/worker';
 import { api } from '../../axios';
 
+import { Toaster, toast } from 'sonner'
+
 function Login() {
     
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
+    const [error, setError] = useState();
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
@@ -19,11 +22,12 @@ function Login() {
             const res = await api.post('worker/login/', data)
             console.log(res, 'res')
             dispatch(setWorkerinfo(res.data))
-            navigate('worker/dashboard/')
+            navigate('/worker/dashboard/')
+            toast.success('Loggined successfully')
         }
         catch(err){
             console.log(err);
-            
+            setError(err.response.data.message)
         }
     }
 
@@ -37,12 +41,13 @@ function Login() {
         <div className='flex flex-col gap-3'>
             <div className='flex flex-col gap-1'>
                 <h4 className='text-sm'>Email</h4>
-                <input className='border rounded-lg w-3/4 h-10 focus:outline-none px-4' type="text" onChange={(e)=>{setEmail(e.target.value)}}/>
+                <input className='border rounded-lg w-3/4 h-10 focus:outline-none px-4' type="text" onChange={(e)=>{setEmail(e.target.value); setError('')}}/>
             </div>
             <div className='flex flex-col gap-1'>
                 <h4 className='text-sm'>Password</h4>
-                <input className='border rounded-lg w-3/4 h-10 focus:outline-none px-4' type="password" onChange={(e)=>{setPassword(e.target.value)}}/>
+                <input className='border rounded-lg w-3/4 h-10 focus:outline-none px-4' type="password" onChange={(e)=>{setPassword(e.target.value); setError('');}}/>
             </div>
+            <p className='text-red-500 text-sm'>{error}</p>
             <div className='bg-blue-500 rounded-full w-3/4 h-10 flex justify-center items-center mb-20 cursor-pointer' onClick={handlesubmit}>
                 <h4 className='text-white'>Sign In</h4>
             </div>

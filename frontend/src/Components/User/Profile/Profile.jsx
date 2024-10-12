@@ -163,8 +163,8 @@ function Profile({role}) {
   
 
   return (
-    <div>
-      <div className='bg-white h-96 mx-[20rem] mt-[5rem] justify-center flex rounded-lg'>
+    <div className=' mt-[6rem]'>
+      <div className='bg-white h-96 mx-[20rem] justify-center flex rounded-lg'>
         {activePopup=='mob' && < MobilePopup setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
       <div className='bg-[#233e56d2] h-20 rounded-t-lg w-full'>
         <div className='flex items-center gap-4 py-6 px-16'>
