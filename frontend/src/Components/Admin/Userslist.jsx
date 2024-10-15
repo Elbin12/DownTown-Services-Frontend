@@ -78,8 +78,8 @@ function Userslist({role}) {
   
 
   return (
-    <div className='w-5/6 flex h-screen justify-center overflow-y-auto pr-11'>
-      <div className=' w-full bg-white flex flex-col mt-32 justify-between rounded-lg h-4/6'>
+    <div className='w-screen flex h-screen items-center justify-end overflow-y-auto pr-10'>
+      <div className=' w-4/5 bg-white flex flex-col mt-16 justify-between rounded-lg h-4/6'>
         <div>
           <div className='w-4/6 flex items-center px-6 justify-between py-4'>
             <h3 className='text-lg'>Customers</h3>

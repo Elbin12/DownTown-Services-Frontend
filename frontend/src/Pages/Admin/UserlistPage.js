@@ -5,10 +5,11 @@ import Navbar from '../../Components/Admin/Navbar'
 
 function UserlistPage() {
   return (
-    <div className='flex gap-11'>
+    <>
+        <Navbar/>
         <Sidebar />
         <Userslist role={'users'}/>
-    </div>
+    </>
   )
 }
 

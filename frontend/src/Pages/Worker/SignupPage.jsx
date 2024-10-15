@@ -6,7 +6,6 @@ function SignupPage() {
   const [poputp, setPopup] = useState();
   return (
     <>
-        <Navbar />
         <SignUp />
     </>
   )

@@ -1,13 +1,15 @@
 import React from 'react'
 import Sidebar from '../../Components/Admin/Sidebar'
 import Userslist from '../../Components/Admin/Userslist'
+import Navbar from '../../Components/Admin/Navbar'
 
 function WorkerlistPage() {
   return (
-    <div className='flex gap-11'>
+    <>
+        <Navbar/>
         <Sidebar />
         <Userslist role={'workers'}/>
-    </div>
+    </>
   )
 }
 

@@ -5,7 +5,6 @@ import Navbar from '../../Components/Admin/Navbar'
 function LoginPage() {
   return (
     <>
-        <Navbar />
         <Login />
     </>
   )

@@ -1,13 +1,15 @@
 import React from 'react'
 import Requests from '../../Components/Admin/Requests'
 import Sidebar from '../../Components/Admin/Sidebar'
+import Navbar from '../../Components/Admin/Navbar'
 
 function RequestsPage() {
   return (
-    <div className='flex gap-11'>
+    <>
+        <Navbar />
         <Sidebar />
         <Requests />
-    </div>
+    </>
   )
 }
 

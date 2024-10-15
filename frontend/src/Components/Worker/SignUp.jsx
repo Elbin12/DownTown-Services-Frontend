@@ -4,13 +4,16 @@ import { useNavigate } from 'react-router-dom';
 import SentRequest from '../../Components/Worker/SentRequest';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { api } from '../../axios';
 
 function SignUp() {
   const navigate = useNavigate();
   const [popup, setPopup] = useState(false);
   const [formValues, setFormValues] = useState({});
+  const [err, setErr] = useState();
+  const [categories, setCategories] = useState();
 
-  // Validation schema using Yup
+
   const validationSchema = Yup.object({
     email: Yup.string().email('Invalid email address').required('Email is required'),
     mob: Yup.string()
@@ -24,8 +27,8 @@ function SignUp() {
 
   return (
     <div>
-      {popup && <SentRequest setPopup={setPopup} formData={formValues}/>}
-      <div className='w-full mt-7 flex'>
+      {popup && <SentRequest setPopup={setPopup} categories={categories} formData={formValues}/>}
+      <div className='w-full  py-20 flex h-screen'>
         <div className='w-1/2 justify-center flex'>
           <img src={img} alt="" />
         </div>
@@ -33,19 +36,32 @@ function SignUp() {
           <div className=' w-4/6 rounded-xl bg-white flex flex-col gap-4 pl-14 py-11'>
             <h2 className='text-2xl'>Sign Up</h2>
 
-            {/* Formik Form */}
             <Formik
               initialValues={{ email: '', mob: '', password: '', confirm_password: '' }}
               validationSchema={validationSchema}
-              onSubmit={(values, { setSubmitting }) => {
-                // Handle form submission
-                setFormValues(values);
-                console.log(values);
-                setPopup(true); // Display the popup on form submission
-                setSubmitting(false);
+              onSubmit={async(values, { setSubmitting }) => {
+                
+                try {
+                  const response = await api.post('worker/check-credentials/', { email: values.email, mob:values.mob });
+                  
+                  if (response.status === 200) {
+                    setFormValues(values);
+                    console.log(values);
+                    setPopup(true); 
+                    setCategories(response.data)
+                    
+                  } else {
+                    setErr(response.data);
+                  }
+                } catch (error) {
+                  console.error(error);
+                  setErr(error.response?.data?.message || "Something went wrong, please try again.");
+                } finally {
+                  setSubmitting(false); 
+                }
               }}
             >
-              {({ isSubmitting }) => (
+              {({ isSubmitting, handleChange }) => (
                 <Form className='flex flex-col gap-4'>
                   <div>
                     <li className='list-none font-semibold text-[#585858] text-sm mb-1'>Email</li>
@@ -53,6 +69,7 @@ function SignUp() {
                       type="text"
                       name="email"
                       className='border outline-[#3C5267]  w-4/6 py-2 rounded-lg pl-4'
+                      onChange={(e)=>{handleChange(e); setErr('')}}
                     />
                     <ErrorMessage name="email" component="div" className="text-red-500 text-xs" />
                   </div>
@@ -63,6 +80,7 @@ function SignUp() {
                       type="text"
                       name="mob"
                       className='border outline-[#3C5267]  w-4/6 py-2 rounded-lg pl-4'
+                      onChange={(e)=>{handleChange(e); setErr('')}}
                     />
                     <ErrorMessage name="mob" component="div" className="text-red-500 text-xs" />
                   </div>
@@ -86,6 +104,8 @@ function SignUp() {
                     />
                     <ErrorMessage name="confirm_password" component="div" className="text-red-500 text-xs" />
                   </div>
+                  <p className='text-red-500 text-xs'>{err}</p>
+
 
                   <button
                     type="submit"

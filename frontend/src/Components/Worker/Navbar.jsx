@@ -30,7 +30,7 @@ function Navbar() {
 
   return (
     <div className='flex justify-between w-full flex-column fixed top-0 z-10 bg-[#eff8f4] h-24 items-center px-5 sm:px-20 md:px-20'>
-      <div className="logo cursor-pointer w-24 sm:w-36" onClick={() => { navigate('/worker/dashboard/') }}>
+      <div className="logo cursor-pointer items-center flex gap-4" onClick={() => { navigate('/worker/dashboard/') }}>
         <img src={Logo} alt="Logo" />
       </div>
 

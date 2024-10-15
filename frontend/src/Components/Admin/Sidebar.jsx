@@ -4,14 +4,15 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { FaUsers } from "react-icons/fa";
 import { PiUsersThree } from "react-icons/pi";
 import { Link } from "react-router-dom";
+import { TiSpanner } from "react-icons/ti";
+
 
 function Sidebar() {
   return (
-    <div className='w-1/6 h-screen flex-col justify-center bg-[#CEE7E6]'>
-      <div className='p-6'>
+    <div className='w-1/6 h-screen fixed pt-24 flex-col justify-center bg-[#CEE7E6]'>
+      {/* <div className='p-6'>
         <img src={Logo} alt="" />
-      </div>
-      <div className='w-full h-[1px] bg-black border border-dotted'></div>
+      </div> */}
       <div className='flex flex-col gap-6 items-center mt-11'>
         <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('dashboard')&&'bg-[#BACBDF]'}`}>
             <MdSpaceDashboard className={`${window.location.pathname.includes('dashboard')&& 'text-2xl font-semibold'}`}/>
@@ -30,6 +31,10 @@ function Sidebar() {
         <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('requests')&&'bg-[#BACBDF]'}`}>
             <FaUsers className={`${window.location.pathname.includes('requests')&& 'text-2xl font-semibold'}`}/>
             <Link to="/admin/requests/" className={`${window.location.pathname.includes('requests')&& 'text-[#658ab7] font-semibold'}`}>Requests</Link>
+        </div>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('services')&&'bg-[#BACBDF]'}`}>
+            <TiSpanner className={`${window.location.pathname.includes('services')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/services/" className={`${window.location.pathname.includes('services')&& 'text-[#658ab7] font-semibold'}`}>Services</Link>
         </div>
       </div>
     </div>

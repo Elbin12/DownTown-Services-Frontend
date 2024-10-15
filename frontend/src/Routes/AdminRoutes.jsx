@@ -7,6 +7,7 @@ import UsersdetailPage from '../Pages/Admin/UsersdetailPage'
 import WorkerlistPage from '../Pages/Admin/WorkerlistPage';
 import RequestsPage from '../Pages/Admin/RequestsPage'
 import AdminProtectedRoute from './AdminProtected'
+import ServicesListingPage from '../Pages/Admin/ServicesListingPage'
 
 function AdminRoutes() {
   return (
@@ -18,6 +19,8 @@ function AdminRoutes() {
         <Route path='/workers/' element={<AdminProtectedRoute><WorkerlistPage /></AdminProtectedRoute>} />
         <Route path='/user/' element={<AdminProtectedRoute><UsersdetailPage /></AdminProtectedRoute>} />
         <Route path='/requests/' element={<AdminProtectedRoute><RequestsPage /></AdminProtectedRoute>} />
+        <Route path='/services/' element={<AdminProtectedRoute><ServicesListingPage /></AdminProtectedRoute>} />
+
       </Routes>
     </div>
   )

@@ -39,8 +39,8 @@ function Requests() {
     
 
   return (
-    <div className='w-5/6 flex h-screen justify-center overflow-y-auto pr-11'>
-      <div className='w-full bg-white flex flex-col gap-6 mt-32 rounded-lg h-auto pl-9 py-9'>
+    <div className='w-screen flex h-screen items-center justify-end overflow-y-auto pr-10'>
+      <div className=' w-4/5 bg-white flex flex-col mt-16 gap-6 rounded-lg h-4/6 pl-9 py-9'>
         <h3 className='font-semibold text-lg'>All Requests</h3>
         <div className='flex flex-wrap gap-4'>
         {

@@ -12,6 +12,9 @@ import {setWorkerinfo} from '../../../redux/worker';
 import { FaEdit } from "react-icons/fa";
 
 import { Toaster, toast } from 'sonner';
+import EditEmail from '../EditEmail';
+import OTP from '../OTP/OTP';
+import { useNavigate } from 'react-router-dom';
 
 
 function Profile({role}) {
@@ -23,6 +26,7 @@ function Profile({role}) {
   
   const userinfo = useSelector(state=>state.user.userinfo)
   const workerinfo = useSelector(state=>state.worker.workerinfo)
+
   console.log(userinfo, 'userrrrr');
   const [first_name, setFirst_name] = useState(()=>{
     if (role === 'user') {
@@ -57,12 +61,16 @@ function Profile({role}) {
     }
     return '';
   });
+
+  const [email, setEmail] = useState();
+
   const [mobErr, setMobErr] = useState('');
   const [first_name_err, setFirst_name_Error] = useState('');
   const [picerr, setPicErr] = useState('');
   const [pic, setPic] = useState();
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
 
   
@@ -129,6 +137,10 @@ function Profile({role}) {
           setActivePopup('');
           toast.success('Profile Updated Successfully')
         }catch(err){
+          if (err.status===401){
+            navigate('/')
+            toast.error(err.response.data.message)
+          }
           console.log(err.response.data, 'lll');
           setMobErr(err.response.data.mob)     
         } 
@@ -163,6 +175,10 @@ function Profile({role}) {
           setActivePopup('');
           toast.success('Profile Updated Successfully')
         }catch(err){
+          if (err.status===401){
+            navigate('/')
+            toast.error(err.response.message)
+          }
           console.log(err.response.data, 'lll');
           setMobErr(err.response.data.mob)
           console.log(err.response.data.mob, 'lll');
@@ -177,6 +193,8 @@ function Profile({role}) {
       <div className='bg-white h-96 mx-auto  sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] justify-center flex sm:rounded-lg'>
         {activePopup=='mobAdd' && < MobilePopup role={'Add'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
         {activePopup=='mobEdit' && < MobilePopup role={'Edit'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
+        {activePopup=='emailEdit' && < EditEmail setActivePopup={setActivePopup} setEmail={setEmail}/>}
+        {activePopup=='otp' && < OTP input={email} setActivePopup={setActivePopup} from={'profile'}/>}
       <div className='bg-[#233e56d2] h-14 sm:h-16  md:h-20 sm:rounded-t-lg w-full'>
         <div className='flex items-center gap-4 py-6 px-4 sm:px-16'>
           <div className='flex flex-col'>
@@ -225,11 +243,11 @@ function Profile({role}) {
                 <h6 className='bg-[#aef3b5ba] px-4 items-center flex'>Verified</h6>
               </div>
               {role=='user'?
-              userinfo?.email&&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('mobEdit')}}>
+              userinfo?.email&&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('emailEdit')}}>
                 <MdOutlineEdit />
                 <h6>Edit</h6>
               </div>):
-              workerinfo?.email&&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('mobEdit')}}>
+              workerinfo?.email&&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('emailEdit')}}>
                 <MdOutlineEdit />
                 <h6>Edit</h6>
               </div>)
