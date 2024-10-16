@@ -89,7 +89,7 @@ function Profile({role}) {
       setPicErr('');
     }
 }
-  console.log(img, 'img');
+  console.log(img, 'img', pic);
   
   const handlefirst_name = (e)=>{
     setActivePopup('save')
