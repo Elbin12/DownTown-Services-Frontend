@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../images/LOGO.png';
 import { IoIosArrowDown } from "react-icons/io";
-import { AiFillPauseCircle, AiOutlineUser } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
 import { CiLogout } from "react-icons/ci";
 import { CiWallet } from "react-icons/ci";
 import { IoIosNotifications } from "react-icons/io";
 import { useDispatch, useSelector } from 'react-redux';
 import { setWorkerinfo } from '../../redux/worker';
 import {api} from '../../axios'
-
+import { IoAddCircleSharp } from "react-icons/io5";
 
 
 
@@ -30,8 +30,12 @@ function Navbar() {
 
   return (
     <div className='flex justify-between w-full flex-column fixed top-0 z-10 bg-[#eff8f4] h-24 items-center px-5 sm:px-20 md:px-20'>
-      <div className="logo cursor-pointer items-center flex gap-4" onClick={() => { navigate('/worker/dashboard/') }}>
-        <img src={Logo} alt="Logo" />
+      <div className="logo cursor-pointer h-1/3 items-center flex gap-8">
+        <img src={Logo} alt="Logo" onClick={() => { navigate('/worker/dashboard/') }}/>
+        <div className={`border-x px-4 py-5 cursor-pointer border-[#25252557] w-auto h-full flex items-center ${window.location.pathname.includes('add-services')&& 'bg-[#f9f5e1] border-x-0'}`}  onClick={() => { navigate('/worker/add-services/') }}>
+          <h1 className={`font-semibold mr-1 text-lg text-slate-800`}>Add Services</h1>
+          <IoAddCircleSharp className='text-2xl text-slate-800'/>
+        </div>
       </div>
 
       <div className='flex w-1/2 items-center gap-4 justify-end'>
@@ -56,7 +60,7 @@ function Navbar() {
           <IoIosArrowDown className='mt-1 md:block hidden' />
 
           {showPopup && (
-            <div className='fixed top-[4.3rem] w-[23rem] bg-white shadow-sm flex flex-col rounded-lg border ' style={{left:'70%'}}>
+            <div className='fixed top-[4.3rem] w-[23rem] z-20 bg-white shadow-sm flex flex-col rounded-lg border ' style={{left:'70%'}}>
               <div className='flex gap-4 hover:bg-blue-50 p-3' onClick={()=>{navigate('/worker/profile/')}}>
                 <AiOutlineUser className='text-2xl'/>
                 <div>
