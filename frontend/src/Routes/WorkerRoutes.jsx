@@ -6,6 +6,7 @@ import ProfilePage from '../Pages/Worker/ProfilePage'
 import WorkerProtectedRoute from './WorkerProtectedRoute'
 import HomePage from '../Pages/Worker/HomePage'
 import AddServicesPage from '../Pages/Worker/AddServicesPage'
+import ServicesPage from '../Pages/Worker/ServicesPage'
 
 function WorkerRoutes() {
   return (
@@ -16,6 +17,7 @@ function WorkerRoutes() {
         <Route path='/dashboard/' element={<WorkerProtectedRoute><HomePage /></WorkerProtectedRoute>} />
         <Route path='/profile/' element={<WorkerProtectedRoute><ProfilePage /></WorkerProtectedRoute>} />
         <Route path='/add-services/' element={<WorkerProtectedRoute><AddServicesPage /></WorkerProtectedRoute>} />
+        <Route path='/services/' element={<WorkerProtectedRoute><ServicesPage /></WorkerProtectedRoute>} />
       </Routes>
     </div>
   )

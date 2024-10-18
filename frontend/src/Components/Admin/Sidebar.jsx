@@ -36,6 +36,10 @@ function Sidebar() {
             <TiSpanner className={`${window.location.pathname.includes('services')&& 'text-2xl font-semibold'}`}/>
             <Link to="/admin/services/" className={`${window.location.pathname.includes('services')&& 'text-[#658ab7] font-semibold'}`}>Services</Link>
         </div>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('categories')&&'bg-[#BACBDF]'}`}>
+            <TiSpanner className={`${window.location.pathname.includes('categories')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/categories/" className={`${window.location.pathname.includes('categories')&& 'text-[#658ab7] font-semibold'}`}>Services</Link>
+        </div>
       </div>
     </div>
   )

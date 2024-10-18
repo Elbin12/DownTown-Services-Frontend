@@ -118,6 +118,7 @@ function AddServices() {
             })
             if (res.status === 200){
                 console.log(res.data, 'kkk');
+                toast.success('service added successfully')
             }
         }catch(err){
             console.log(err, 'errr'); 
