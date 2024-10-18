@@ -5,6 +5,7 @@ import { FaUsers } from "react-icons/fa";
 import { PiUsersThree } from "react-icons/pi";
 import { Link } from "react-router-dom";
 import { TiSpanner } from "react-icons/ti";
+import { BiCategory } from "react-icons/bi";
 
 
 function Sidebar() {
@@ -37,8 +38,8 @@ function Sidebar() {
             <Link to="/admin/services/" className={`${window.location.pathname.includes('services')&& 'text-[#658ab7] font-semibold'}`}>Services</Link>
         </div>
         <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('categories')&&'bg-[#BACBDF]'}`}>
-            <TiSpanner className={`${window.location.pathname.includes('categories')&& 'text-2xl font-semibold'}`}/>
-            <Link to="/admin/categories/" className={`${window.location.pathname.includes('categories')&& 'text-[#658ab7] font-semibold'}`}>Services</Link>
+            <BiCategory className={`${window.location.pathname.includes('categories')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/categories/" className={`${window.location.pathname.includes('categories')&& 'text-[#658ab7] font-semibold'}`}>Categories</Link>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ const INITIAL_STATE = {
     selectedUser:'',
     workers:[],
     requests:[],
+    selectedCategory:'',
 }
 
 console.log(INITIAL_STATE.users);
@@ -27,8 +28,11 @@ const adminSlice = createSlice({
         setRequests: (state, action)=>{
             state.requests = action.payload;
         },
+        setSelectedCategory:(state, action)=>{
+            state.selectedCategory = action.payload;
+        }
     }
 })
 
-export const {setUsers, setSelectedUser, setWorkers, setRequests} = adminSlice.actions;
+export const {setUsers, setSelectedUser, setWorkers, setRequests, setSelectedCategory} = adminSlice.actions;
 export default adminSlice.reducer;

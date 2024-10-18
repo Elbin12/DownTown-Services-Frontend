@@ -1,16 +1,16 @@
 import React from 'react'
 import Navbar from '../../Components/Admin/Navbar'
 import Sidebar from '../../Components/Admin/Sidebar'
-import Services from '../../Components/Admin/Services'
+import Categories from '../../Components/Admin/Categories'
 
-function ServicesListingPage() {
+function CategoriesPage() {
   return (
     <>
         <Navbar />
-        <Sidebar /> 
-        <Services />
+        <Sidebar />
+        <Categories />
     </>
   )
 }
 
-export default ServicesListingPage
+export default CategoriesPage
