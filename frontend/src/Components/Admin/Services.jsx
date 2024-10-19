@@ -16,7 +16,7 @@ function Services() {
         setLoading(true)
         const res = await api.get('admin/services/');
         setServices(res.data); 
-        console.log(res.data); 
+        console.log(res.data, 'kkkk'); 
       } catch (err) {
         console.log(err); 
       }finally{

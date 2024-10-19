@@ -7,6 +7,8 @@ const INITIAL_STATE = {
     workers:[],
     requests:[],
     selectedCategory:'',
+    selectedSubCategory:'',
+    selectedSubcategories:''
 }
 
 console.log(INITIAL_STATE.users);
@@ -30,9 +32,34 @@ const adminSlice = createSlice({
         },
         setSelectedCategory:(state, action)=>{
             state.selectedCategory = action.payload;
+        },
+        updateSelectedCategory:(state, action)=>{
+            state.selectedCategory = {
+                ...state.selectedCategory,
+                subcategories:[
+                    ...state.selectedCategory.subcategories,
+                    action.payload
+                ]
+            };
+        },
+        editandUpdateselectedCategory:(state, action)=>{
+            const updatedSubcategory = action.payload;
+    
+            state.selectedCategory = {
+                ...state.selectedCategory,
+                subcategories: state.selectedCategory.subcategories.map(subcategory => 
+                    subcategory.id === updatedSubcategory.id ? updatedSubcategory : subcategory
+                ),
+            };
+        },
+        setselectedSubCategory:(state, action)=>{
+            state.selectedSubCategory = (action.payload);
+        },
+        setSelectedSubcategories:(state, action)=>{
+            state.selectedSubCategory = (action.payload);
         }
     }
 })
 
-export const {setUsers, setSelectedUser, setWorkers, setRequests, setSelectedCategory} = adminSlice.actions;
+export const {setUsers, setSelectedUser, setWorkers, setRequests, setSelectedCategory, setselectedSubCategory, updateSelectedCategory, editandUpdateselectedCategory} = adminSlice.actions;
 export default adminSlice.reducer;

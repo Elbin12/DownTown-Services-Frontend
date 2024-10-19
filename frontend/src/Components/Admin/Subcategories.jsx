@@ -4,13 +4,16 @@ import Searchbar from './Searchbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { MdOutlineEdit } from 'react-icons/md';
 import { IoIosAdd } from "react-icons/io";
-import { setSelectedCategory } from '../../redux/admin';
+import { setSelectedCategory, setselectedSubCategory } from '../../redux/admin';
+import { toast } from 'sonner';
 
 
-function Subcategories() {
+function Subcategories({setPopup}) {
 
-    const subcategories = useSelector(state=>state.admin.selectedCategory?.subcategories)
     const dispatch = useDispatch();
+
+    const selectedCategory = useSelector(state=>state.admin.selectedCategory)
+    const subcategories = useSelector(state => state.admin.selectedCategory?.subcategories);
 
     console.log(subcategories, 'kkkh');
 
@@ -21,13 +24,23 @@ function Subcategories() {
     }, [])
     
 
+    const addSub =()=>{
+        console.log(selectedCategory, 'seleted category');
+        
+        if (selectedCategory.length === 0){
+            toast.error('Please select a category first')
+            return
+        }
+        setPopup('Addsub')
+    }
+
   return (
     <div className=' w-3/4 bg-white flex flex-col rounded-lg h-48'>
         <div className='w-full py-4 px-4 flex justify-between gap-9'>
             <h3 className='text-lg '>Sub Categories</h3>
             < Searchbar />
-            <div className='flex items-center text-[#474747]'>
-                <IoIosAdd className='text-3xl'/>
+            <div className='flex items-center text-[#474747] cursor-pointer' onClick={addSub}>
+                <IoIosAdd className='text-3xl' />
                 <h2>Add a sub category</h2>
             </div>
         </div>
@@ -53,7 +66,7 @@ function Subcategories() {
                     <td className="px-8 py-3 flex gap-2 items-center cursor-pointer">
                     {subcategory.subcategory_name}
                     </td>
-                    <td><MdOutlineEdit /></td>
+                    <td onClick={()=>{dispatch(setselectedSubCategory(subcategory)); setPopup('sub')}}><MdOutlineEdit /></td>
                 </tr>
                 ))
             }      
