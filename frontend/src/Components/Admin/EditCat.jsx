@@ -7,9 +7,11 @@ function EditCat({role, setPopup, setCategories, categories}) {
 
     const [input, setInput] = useState();
     const category = useSelector(state=>state.admin.selectedCategory)
-    const subcategory = useSelector(state=>state.admin.selectedSubCategory)
+    const subcategory = useSelector(state=>state.admin.selectedSubCategory) 
 
     const dispatch = useDispatch();
+    console.log(categories, 'kkk');
+    
 
     const handleSubmit =async()=>{
         if (role==='cat'){
@@ -41,6 +43,27 @@ function EditCat({role, setPopup, setCategories, categories}) {
                 console.log(res.data);
                 if (res.status===200){
                     dispatch(editandUpdateselectedCategory(res.data))
+                    if (res.status === 200) {
+                        const updated = categories.map((cat) => {
+                            if (cat.id === category.id) {
+                                return {
+                                    ...cat,
+                                    subcategories: cat.subcategories.map((subcategory) => {
+                                        if (subcategory.id === id) {
+                                            return {
+                                                ...subcategory,
+                                                id: res.data.id,
+                                                subcategory_name: res.data.subcategory_name
+                                            };
+                                        }
+                                        return subcategory; 
+                                    })
+                                };
+                            }
+                            return cat; 
+                        });
+                        setCategories(updated)
+                    }
                     setPopup('')
                 }
                 

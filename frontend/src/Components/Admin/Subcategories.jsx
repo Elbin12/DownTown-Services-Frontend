@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../../axios'
 import Searchbar from './Searchbar';
 import { useDispatch, useSelector } from 'react-redux';
-import { MdOutlineEdit } from 'react-icons/md';
+import { MdDeleteForever, MdOutlineEdit } from 'react-icons/md';
 import { IoIosAdd } from "react-icons/io";
 import { setSelectedCategory, setselectedSubCategory } from '../../redux/admin';
 import { toast } from 'sonner';
@@ -13,9 +13,8 @@ function Subcategories({setPopup}) {
     const dispatch = useDispatch();
 
     const selectedCategory = useSelector(state=>state.admin.selectedCategory)
-    const subcategories = useSelector(state => state.admin.selectedCategory?.subcategories);
 
-    console.log(subcategories, 'kkkh');
+    console.log(selectedCategory.subcategories, 'kkkh');
 
     useEffect(()=>{
         return () => {
@@ -52,21 +51,26 @@ function Subcategories({setPopup}) {
             </tr>
             </thead>
             <tbody>
-            {!subcategories ? (
+            {!selectedCategory.subcategories ? (
                         <tr>
                             <td className="px-8 py-3 flex gap-2 items-center">
                                 Please select a category first
                             </td>
                         </tr>
                     ):
-                subcategories.length === 0?
+                selectedCategory.subcategories.length === 0?
                 <tr><td className="px-8 py-3 flex gap-2 font-semibold items-center text-[#505050]">No Sub categories</td></tr>:
-                subcategories?.map((subcategory, index)=>(
+                selectedCategory.subcategories?.map((subcategory, index)=>(
                 <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
                     <td className="px-8 py-3 flex gap-2 items-center cursor-pointer">
                     {subcategory.subcategory_name}
                     </td>
-                    <td onClick={()=>{dispatch(setselectedSubCategory(subcategory)); setPopup('sub')}}><MdOutlineEdit /></td>
+                    <td className=' pr-6'>
+                        <div className='flex justify-end '>
+                            <MdOutlineEdit className='mr-2 cursor-pointer' onClick={()=>{dispatch(setselectedSubCategory(subcategory)); setPopup('sub')}}/> 
+                            <MdDeleteForever className='cursor-pointer' onClick={()=>{setPopup('Delsub'); dispatch(setselectedSubCategory(subcategory))}}/>
+                        </div>
+                    </td>
                 </tr>
                 ))
             }      

@@ -4,7 +4,7 @@ import { api } from '../../axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateSelectedCategory } from '../../redux/admin';
 
-function AddSub({setPopup}) {
+function AddSub({setPopup, setCategories, categories}) {
 
     const selectedCategory = useSelector(state=>state.admin.selectedCategory)
     
@@ -19,13 +19,28 @@ function AddSub({setPopup}) {
             const res = await api.post('admin/subcategories/',{'subcategory_name':subcategory_name, 'category':selectedCategory.id});
             console.log(res.data, res);
             dispatch(updateSelectedCategory(res.data))
+            if (res.status === 201) {
+              const updated = categories.map((category) => {
+                  if (category.id === selectedCategory.id) {
+                      return { 
+                          ...category, 
+                          subcategories: [...category.subcategories, res.data] 
+                      };
+                  }
+                  return category;
+              });
+          
+            console.log(updated, 'updated'); 
+            setCategories(updated);
+            }
             setSubCategory('')
             setPopup('')
             toast.success('Category added sucessfully')
+            
           } catch (err) {
             console.log(err); 
-            if (err.response.data?.category_name){
-              setErr(err.response.data.category_name[0])
+            if (err.response.data?.subcategory_name){
+              setErr(err.response.data.subcategory_name[0])
             }else{
               setErr(err.response.data.non_field_errors)
             }
@@ -42,7 +57,8 @@ function AddSub({setPopup}) {
                 <div className='flex flex-col gap-4'>
                     <div>
                         <li className='list-none mb-1 text-sm'> Subcategory Name</li>
-                        <input type="text" className='outline-none border pl-2 py-1 rounded-sm' onChange={(e)=>{setSubCategory(e.target.value)}}/>
+                        <input type="text" className='outline-none border pl-2 py-1 rounded-sm' onChange={(e)=>{setSubCategory(e.target.value); setErr('')}}/>
+                        <p className='text-xs text-red-500'>{err}</p>
                     </div>
                     <button className='border w-1/2 bg-[#fce7a9] py-1' onClick={handleSubmit}>Add</button>
                 </div>

@@ -32,6 +32,8 @@ function AddServices() {
     const [descriptionErr, setDescriptionErr] = useState();
 
     const [categories, setCategories] = useState();
+
+    const [err, setErr] = useState();
     
     useEffect(()=>{
         const fetchCategories = async () => {
@@ -119,9 +121,17 @@ function AddServices() {
             if (res.status === 200){
                 console.log(res.data, 'kkk');
                 toast.success('service added successfully')
+                setService_name('')
+                setIsCategory('')
+                setSubcategory('')
+                setImg('')
+                setPic('')
+                setPrice('')
+                setDescription('')
             }
         }catch(err){
             console.log(err, 'errr'); 
+            
         }
         
     }

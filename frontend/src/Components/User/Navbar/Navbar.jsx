@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MdAccountCircle } from "react-icons/md";
 import OTP from '../OTP/OTP';
 import { setUserinfo } from '../../../redux/user';
+import Location from '../Location';
 
 
 function Navbar() {

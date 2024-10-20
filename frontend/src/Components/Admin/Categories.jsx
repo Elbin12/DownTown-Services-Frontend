@@ -8,6 +8,9 @@ import { setSelectedCategory } from '../../redux/admin';
 import { useDispatch, useSelector } from 'react-redux';
 import EditCat from './EditCat';
 import AddSub from './AddSub';
+import { MdDeleteForever } from "react-icons/md";
+import DelCat from './DelCat';
+
 
 function Categories() {
 
@@ -36,9 +39,14 @@ function Categories() {
 
     console.log(categories, 'catego', selectedCategory, 'lll');
 
-    const handleClick = (category)=>{
+    const handleEdit = (category)=>{
         setPopup('cat');
         dispatch(setSelectedCategory(category))
+    }
+
+    const handleDelete = (category)=>{
+      setPopup('Delcat');
+      dispatch(setSelectedCategory(category))
     }
     
 
@@ -46,11 +54,13 @@ function Categories() {
 <>
     {popup&&
         <div onClick={()=>{setPopup(false)}}>
-            <div className='bg-gray-200 opacity-40 w-screen h-screen n fixed top-0 left-0 z-10'>
+            <div className='bg-black opacity-30 w-screen h-screen fixed top-0 left-0 z-10'>
             </div>
-            {popup==='Addsub'&&<AddSub setPopup={setPopup}/>}
+            {popup==='Addsub'&&<AddSub setPopup={setPopup} setCategories={setCategories} categories={categories}/>}
             {popup==='cat'&&<EditCat role={'cat'} setPopup={setPopup} setCategories={setCategories} categories={categories}/>}
-            {popup==='sub'&&<EditCat role={'sub'} setPopup={setPopup}/>}
+            {popup==='sub'&&<EditCat role={'sub'} setPopup={setPopup} setCategories={setCategories} categories={categories}/>}
+            {popup==='Delcat'&&<DelCat role={'cat'} setPopup={setPopup} setCategories={setCategories} categories={categories}/>}
+            {popup==='Delsub'&&<DelCat role={'sub'} setPopup={setPopup} setCategories={setCategories} categories={categories}/>}
         </div>
     }
     <div className='w-screen flex justify-end overflow-y-auto pr-10'>
@@ -79,11 +89,16 @@ function Categories() {
                         }
                         {
                             categories?.map((category, index)=>(
-                            <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
+                            <tr key={index} className={`'text-sm font-semibold text-[#505050] py-6 border-b' ${category.id === selectedCategory.id&& 'bg-yellow-50'} `}>
                                 <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{dispatch(setSelectedCategory(category))}}>
                                 {category.category_name}
                                 </td>
-                                <td className='cursor-pointer' onClick={()=>{handleClick(category)}}><MdOutlineEdit /></td>
+                                <td className= 'pr-6'>
+                                  <div className='flex justify-end '>
+                                    <MdOutlineEdit className='mr-2 cursor-pointer' onClick={()=>{handleEdit(category)}}/> 
+                                    <MdDeleteForever className='cursor-pointer' onClick={()=>{handleDelete(category)}}/>
+                                  </div>
+                                </td>
                             </tr>
                             ))
                         }
