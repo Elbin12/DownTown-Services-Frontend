@@ -5,6 +5,7 @@ import SentRequest from '../../Components/Worker/SentRequest';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { api } from '../../axios';
+import { useLoadScript } from "@react-google-maps/api";
 
 function SignUp() {
   const navigate = useNavigate();
@@ -25,9 +26,14 @@ function SignUp() {
       .required('Confirm passowrd is required'),
   });
 
+  const { isLoaded } = useLoadScript({
+    googleMapsApiKey: 'AIzaSyBKSryYED9mgDRis7ipzRA90BUxxx6rXVo',
+    libraries: ["places"],
+  });
+
   return (
     <div>
-      {popup && <SentRequest setPopup={setPopup} categories={categories} formData={formValues}/>}
+      {popup && <SentRequest isLoaded={isLoaded} setPopup={setPopup} categories={categories} formData={formValues}/>}
       <div className='w-full  py-20 flex h-screen'>
         <div className='w-1/2 justify-center flex'>
           <img src={img} alt="" />

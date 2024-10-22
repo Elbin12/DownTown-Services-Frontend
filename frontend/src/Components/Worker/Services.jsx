@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import wires_jpg from '../../images/services_images/wires.jpg';
 import { api, BASE_URL } from '../../axios';
+import { MdModeEdit } from "react-icons/md";
 
 function Services() {
 
@@ -37,9 +38,10 @@ function Services() {
                         <h1 className='px-4 bg-[#E5E5E5] py-2 text-xs '>24/7 Availability</h1>
                     </div>
                     </div>
-                    <div className=' relative bg-cover  w-3/6 fit overflow-hidden'>
-                    <div className='bg-[#E9E9E9] absolute  opacity-40 w-full h-full'></div>
-                    <img src={`${BASE_URL}${service.pic}`} alt="" className=' w-full h-full object-cover'/>
+                    <div className=' relative bg-cover w-3/6 fit overflow-hidden flex justify-end'>
+                        <div className='bg-[#E9E9E9] absolute  opacity-40 w-full h-full'></div>
+                        <MdModeEdit className='absolute m-2 cursor-pointer text-xl'/>
+                        <img src={`${BASE_URL}${service.pic}`} alt="" className=' w-full h-full object-cover'/>
                     </div>
                 </div>
             ))}
