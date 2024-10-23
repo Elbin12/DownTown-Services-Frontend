@@ -32,7 +32,7 @@ function Navbar() {
     <div className='flex justify-between w-full flex-column fixed top-0 z-10 bg-[#eff8f4] h-24 items-center px-5 sm:px-20 md:px-20'>
       <div className="logo cursor-pointer h-1/3 items-center flex gap-8">
         <img src={Logo} alt="Logo" onClick={() => { navigate('/worker/dashboard/') }}/>
-        <div className={`border-x px-4 py-5 cursor-pointer border-[#25252557] w-auto h-full flex items-center ${window.location.pathname.includes('add-services')&& 'bg-[#f9f5e1] border-x-0'}`}  onClick={() => { navigate('/worker/add-services/') }}>
+        <div className={`border-x px-4 py-5 cursor-pointer border-[#25252557] w-auto h-full flex items-center ${window.location.pathname.includes('add-service')&& 'bg-[#f9f5e1] border-x-0'}`}  onClick={() => { navigate('/worker/add-service/') }}>
           <h1 className={`font-semibold mr-1 text-lg text-slate-800`}>Add Services</h1>
           <IoAddCircleSharp className='text-2xl text-slate-800'/>
         </div>
@@ -40,8 +40,8 @@ function Navbar() {
 
       <div className='flex w-1/2 items-center gap-4 justify-end'>
         <div className='md:flex hidden'>
-          <div className='border-r cursor-pointer border-[#25252557] w-24 text-center h-6 flex items-center justify-center'>
-            <h4 className='text-sm font-semibold'>Wallet</h4>
+          <div className={`border-r cursor-pointer border-[#25252557] w-24 text-center h-6 flex items-center justify-center ${window.location.pathname.includes('services')&&'text-sky-900'}`} onClick={()=>{navigate('/worker/services/')}}>
+            <h4 className='text-sm font-semibold'>Services</h4>
           </div>
           <div className='border-r cursor-pointer border-[#25252557] w-24 text-center h-6 flex items-center justify-center'>
             <h4 className='text-sm font-semibold'>Requests</h4>

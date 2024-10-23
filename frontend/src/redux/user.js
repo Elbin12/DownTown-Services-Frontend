@@ -4,7 +4,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const INITIAL_STATE = {
-    userinfo:''
+    userinfo:'',
+    search_key:''
 }
 
 // first_name:'',
@@ -25,9 +26,12 @@ const userSlice = createSlice({
     reducers:{
         setUserinfo: (state, action)=>{
             state.userinfo = action.payload;
+        },
+        setSearch_key: (state, action)=>{
+            state.search_key = action.payload;
         }
     }
 })
 
-export const {setUserinfo} = userSlice.actions;
+export const {setUserinfo, setSearch_key} = userSlice.actions;
 export default userSlice.reducer;

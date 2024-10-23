@@ -2,10 +2,15 @@ import React, { useEffect, useState } from 'react';
 import wires_jpg from '../../images/services_images/wires.jpg';
 import { api, BASE_URL } from '../../axios';
 import { MdModeEdit } from "react-icons/md";
+import { useDispatch } from 'react-redux';
+import { setSelectedService } from '../../redux/worker';
+import { useNavigate } from 'react-router-dom';
 
 function Services() {
 
     const [services, setServices] = useState();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const fetchServices = async () => {
@@ -23,7 +28,7 @@ function Services() {
     },[])
 
   return (
-    <div className='min-h-screen '>
+    <div className='min-h-screen pb-9'>
         <div className='flex flex-col items-center px-32 pt-32  gap-6' >
         {services?.map((service) => (
                 <div className='w-3/4 flex bg-white h-48'>
@@ -40,7 +45,7 @@ function Services() {
                     </div>
                     <div className=' relative bg-cover w-3/6 fit overflow-hidden flex justify-end'>
                         <div className='bg-[#E9E9E9] absolute  opacity-40 w-full h-full'></div>
-                        <MdModeEdit className='absolute m-2 cursor-pointer text-xl'/>
+                        <MdModeEdit className='absolute m-2 cursor-pointer text-xl' onClick={()=>{dispatch(setSelectedService(service)); navigate('/worker/service-edit/')}}/>
                         <img src={`${BASE_URL}${service.pic}`} alt="" className=' w-full h-full object-cover'/>
                     </div>
                 </div>

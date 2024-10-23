@@ -2,7 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 const INITIAL_STATE = {
-    workerinfo:''
+    workerinfo:'',
+    selectedService:''
 }
 
 console.log(INITIAL_STATE.workerinfo);
@@ -14,9 +15,12 @@ const workerSlice = createSlice({
     reducers:{
         setWorkerinfo: (state, action)=>{
             state.workerinfo = action.payload;
+        },
+        setSelectedService: (state, action)=>{
+            state.selectedService = action.payload;
         }
     }
 })
 
-export const {setWorkerinfo} = workerSlice.actions;
+export const {setWorkerinfo, setSelectedService} = workerSlice.actions;
 export default workerSlice.reducer;

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import wires_jpg from '../../images/services_images/wires.jpg';
 import { api, BASE_URL } from '../../axios';
+import { useSelector } from 'react-redux';
 
 function Servies() {
 
   const [categories, setCategories] = useState();
   const [services, setServices] = useState();
   const [loading, setLoading] = useState(true);
+
+  const search_key = useSelector(state=>state.user.search_key)
 
   useEffect(()=>{
     const fetchCategories = async () => {
@@ -26,18 +29,34 @@ function Servies() {
 
   useEffect(()=>{
       const fetchServices = async () => {
-      try {
-          const res = await api.get('services/');
-          if (res.status === 200) {
+        if (search_key){
+          try {
+            const res = await api.get(`services/`, {
+              params: {
+                search_key: search_key
+              }
+            });
+            if (res.status === 200) {
               setServices(res.data);
-              console.log(res.data, 'data');
+              console.log(res.data, 'search', search_key);
+            }
+          } catch (error) {
+            console.error('Error fetching services:', error);
           }
-      } catch (err) {
-          console.error("Error fetching services", err);
+        }else{
+          try {
+            const res = await api.get('services/');
+            if (res.status === 200) {
+                setServices(res.data);
+                console.log(res.data, 'data');
+            }
+        } catch (err) {
+            console.error("Error fetching services", err);
+        }
       }
       };
       fetchServices();
-  },[])
+  },[search_key])
 
   return (
     <div className='min-h-screen py-6'>
