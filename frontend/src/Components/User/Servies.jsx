@@ -115,7 +115,7 @@ function Servies() {
                       <div className='absolute w-full h-full flex items-center justify-center'>
                         <h1 className='text-xl font-bold text-slate-800 bg-white px-6 py-2'>Rs. {service.price}</h1>
                       </div>
-                      <img src={`${BASE_URL}${service.pic}`} alt="" className=' w-full h-full object-cover'/>
+                      <img src={service.pic} alt="" className=' w-full h-full object-cover'/>
                     </div>
                 </div>
             ))}

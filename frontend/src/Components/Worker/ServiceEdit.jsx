@@ -183,7 +183,7 @@ function ServiceEdit() {
                 }
             }} />}
             <div className='w-1/5'>
-                <img src={img? img : `${BASE_URL}${selectedService.pic}`} alt="" accept="image/*" className={`w-full ${pic&&''}`}/>
+                <img src={img? img : selectedService.pic} alt="" accept="image/*" className={`w-full ${pic&&''}`}/>
                 <div className='flex items-center gap-2 border py-1 justify-center text-white bg-stone-400 cursor-pointer' onClick={()=>{imgInput.current.click()}}>
                     <h1 className='text-xs'>Change Image </h1>
                     <MdOutlineEdit className='text-xs'/>

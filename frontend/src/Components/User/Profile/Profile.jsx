@@ -27,6 +27,13 @@ function Profile({role}) {
   const userinfo = useSelector(state=>state.user.userinfo)
   const workerinfo = useSelector(state=>state.worker.workerinfo)
 
+  useEffect(()=>{
+    api.get('profile/').then((res)=>{
+      console.log(res.data, res, 'prof');
+      
+    })
+  },[])
+
   console.log(userinfo, 'userrrrr');
   const [first_name, setFirst_name] = useState(()=>{
     if (role === 'user') {
@@ -200,8 +207,8 @@ function Profile({role}) {
           <div className='flex flex-col'>
             <div className='flex flex-col items-center justify-center w-[3rem] h-[3rem] sm:w-[4rem] sm:h-[4rem] bg-white rounded-full md:w-[6rem] md:h-[6rem] drop-shadow-lg overflow-hidden' onClick={imageUpload}>
               {img? <img src={img?img:''} alt="" className='object-cover  w-full h-full p-[2px] rounded-full'/>
-              : (role=='user'? userinfo?.profile_pic&&<img src={userinfo.profile_pic?`${BASE_URL}${userinfo.profile_pic}`:''} alt="" className='object-cover jjj w-full h-full p-[2px] rounded-full'/>
-                : workerinfo?.profile_pic&&<img src={workerinfo.profile_pic?`${BASE_URL}${workerinfo.profile_pic}`:''} alt="" className='object-cover jjj w-full h-full p-[2px] rounded-full'/>
+              : (role=='user'? userinfo?.profile_pic&&<img src={userinfo.profile_pic?`${userinfo.profile_pic}`:''} alt="" className='object-cover jjj w-full h-full p-[2px] rounded-full'/>
+                : workerinfo?.profile_pic&&<img src={workerinfo.profile_pic?`${workerinfo.profile_pic}`:''} alt="" className='object-cover jjj w-full h-full p-[2px] rounded-full'/>
               )}
 
               <input type="file" ref={fileuploadRef} id="file" hidden accept="image/*" onChange={uploadImageDisplay} />
