@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Pagination from './Pagination';
 import { setSelectedUser } from '../../redux/admin';
 import { useNavigate } from 'react-router-dom';
+import profile from '../../images/profile.png';
 
 
 function Userslist({role}) {
@@ -106,7 +107,7 @@ function Userslist({role}) {
                 currentUsers.map((user, index)=>(
                   <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
                     <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(user)}}>
-                      <img src={`${BASE_URL}${user.profile_pic}`} alt="" className='w-7 h-7 rounded-full' />
+                      <img src={user.profile_pic?user.profile_pic:profile} alt="" className='w-7 h-7 rounded-full' />
                       {user.Name}
                     </td>
                     <td className="px-8 py-3">{user.email}</td>
@@ -118,7 +119,7 @@ function Userslist({role}) {
                 workers?.map((worker, index)=>(
                   <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
                     <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(worker)}}>
-                      <img src={`${BASE_URL}${worker.profile_pic}`} alt="" className='w-7 h-7 rounded-full' />
+                      <img src={worker.profile_pic?worker.profile_pic:profile} alt='' className='w-7 h-7 rounded-full' />
                       {worker.Name}
                     </td>
                     <td className="px-8 py-3">{worker.email}</td>

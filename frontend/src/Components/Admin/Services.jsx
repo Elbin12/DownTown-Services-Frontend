@@ -56,12 +56,12 @@ function Services() {
                 services?.map((service, index)=>(
                   <tr key={index} className="text-xs font-semibold text-[#505050] py-6 border-b">
                     <td className="px-4 py-3 flex gap-2 items-center cursor-pointer" >
-                      <img src={`${BASE_URL}${service.pic}`} alt="" className='w-7 h-7 rounded-full' />
+                      <img src={service.pic} alt="" className='w-7 h-7 rounded-full' />
                       {service.service_name}
                     </td>
                     <td className="px-4 py-3 ">
                       <div className='flex gap-2 items-center cursor-pointer'>
-                        <img src={`${BASE_URL}${service.workerProfile.profile_pic}`} alt="" className='w-7 h-7 rounded-full' />
+                        <img src={service.workerProfile.profile_pic} alt="" className='w-7 h-7 rounded-full' />
                         {service.workerProfile.first_name}
                       </div>
                     </td>
