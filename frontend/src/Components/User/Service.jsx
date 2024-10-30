@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function Service({service}) {
         const [isLoading, setIsLoading] = useState(true);
+        const navigate = useNavigate();
       
         const handleImageLoad = () => {
           setIsLoading(false);
@@ -12,7 +14,7 @@ function Service({service}) {
         };
       
         return (
-          <div className='flex bg-white h-48'>
+          <div className='flex bg-white h-48 cursor-pointer' onClick={()=>{navigate(`/service/${service.id}/`)}}>
             <div className='flex flex-col justify-between w-3/4  py-6 px-6'>
               <div className='flex flex-col gap-2'>
                   <h1 className='text-2xl font-semibold text-[#2A2A2A]'>{service.service_name}</h1>

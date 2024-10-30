@@ -2,13 +2,14 @@ import React, { useState } from 'react'
 import { api } from '../../axios'
 import { useLoadScript } from "@react-google-maps/api";
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
+import { useNavigate } from 'react-router-dom';
 
 function SentRequest({isLoaded, setPopup, categories, formData}) {
 
   const [isSent, setSent] = useState(false);
   const [error, setError] = useState();
 
-
+  const navigate = useNavigate();
 
   const {
     ready,
@@ -67,7 +68,7 @@ function SentRequest({isLoaded, setPopup, categories, formData}) {
   console.log("Status:", status);
 console.log("Suggestions data:", data);
   return (
-    <div className='w-full h-screen fixed flex top-0 justify-center bg-[#88888846]' onClick={()=>{setPopup(false)}}>
+    <div className='w-full h-screen fixed flex top-0 justify-center bg-[#39393999]' onClick={()=>{setPopup(false)}}>
       <div onClick={(e)=>e.stopPropagation()} className='w-3/4 bg-white my-16 flex flex-col gap-4 px-16 py-9 rounded-lg'>
         <h2 className='font-semibold text-[#000000c6]'>Select the services that you are good at:</h2>
         <div className='bg-[#e9e3b43f] rounded-lg'>
@@ -111,7 +112,7 @@ console.log("Suggestions data:", data);
         <div className='w-full flex flex-col gap-2 items-center mt-9'>
             {!isSent&&<h3 className='rounded-full bg-[#3c5267de] w-2/6 py-2 text-center text-white font-semibold tracking-wider' onClick={handleSubmit}>Sent a Request</h3>}
             {isSent&&<h3 className='rounded-full bg-[#4aae3ed1] w-2/6 py-2 text-center text-white font-semibold tracking-wider'>Request sent</h3>}
-            {isSent&&<p className='text-sm'>You will gain access to additional pages once approved by the admin</p>}
+            {isSent&&<p className='text-sm'>You will gain access to additional pages once approved by the admin. <span onClick={()=>navigate('/worker/')} className='hover:underline hover:text-yellow-400 cursor-pointer'>Please go to the login</span></p>}
         </div>
       </div>
     </div>

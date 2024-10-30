@@ -55,10 +55,10 @@ function Userslist({role}) {
       }
     };
 
-    if (role==='users' && users.length===0){
+    if (role==='users'){
       setLoading(true)
       fetchUsers();
-    }else if(role === 'workers'&& workers.length===0){
+    }else if(role === 'workers'){
       console.log(workers, 'workers');
       setLoading(true)
       fetchWorkers();

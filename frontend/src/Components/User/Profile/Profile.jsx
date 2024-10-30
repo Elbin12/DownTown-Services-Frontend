@@ -70,7 +70,6 @@ function Profile({role}) {
   });
 
   const [email, setEmail] = useState();
-
   const [mobErr, setMobErr] = useState('');
   const [first_name_err, setFirst_name_Error] = useState('');
   const [picerr, setPicErr] = useState('');
@@ -118,7 +117,7 @@ function Profile({role}) {
         return
       }
   
-      if (first_name.trim() === ''){
+      if (first_name === undefined || first_name.trim() === ''){
         setFirst_name_Error('First Name is Required')
         return
       }
@@ -157,7 +156,7 @@ function Profile({role}) {
           return
         }
     
-        if (first_name.trim() === ''){
+        if (first_name === undefined || first_name.trim() === ''){
           setFirst_name_Error('First Name is Required')
           return
         }
@@ -273,11 +272,11 @@ function Profile({role}) {
                   <p className='text-red-500 text-xs'>{mobErr&& mobErr}</p>
               </div>
               {role=='user'?
-              userinfo?.mob&&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('mobEdit')}}>
+              mob &&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('mobEdit')}}>
                 <MdOutlineEdit />
                 <h6>Edit</h6>
               </div>):
-              workerinfo?.mob&&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('mobEdit')}}>
+              mob &&(<div className='flex gap-3 items-center cursor-pointer text-xs md:text-sm' onClick={()=>{setActivePopup('mobEdit')}}>
                 <MdOutlineEdit />
                 <h6>Edit</h6>
               </div>)

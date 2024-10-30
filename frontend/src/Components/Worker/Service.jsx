@@ -3,8 +3,9 @@ import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { setSelectedService } from '../../redux/worker';
 import { MdModeEdit } from 'react-icons/md';
+import { MdDeleteForever } from "react-icons/md";
 
-function Service({service}) {
+function Service({service, key, setPopup}) {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
@@ -16,6 +17,7 @@ function Service({service}) {
     const handleImageError = () => {
         setIsLoading(false);
     };
+
   return (
     <div className='w-3/4 flex bg-white h-48'>
         <div className='flex flex-col justify-between w-3/4  py-6 px-6'>
@@ -31,7 +33,10 @@ function Service({service}) {
         </div>
         <div className=' relative bg-cover w-3/6 fit overflow-hidden flex justify-end'>
             <div className='bg-[#E9E9E9] absolute  opacity-30 w-full h-full'></div>
-            <MdModeEdit className='absolute m-2 cursor-pointer text-xl' onClick={()=>{dispatch(setSelectedService(service)); navigate('/worker/service-edit/')}}/>
+            <div className='absolute text-stone-800 m-2 flex gap-1'>
+                <MdModeEdit className=' cursor-pointer text-xl' onClick={()=>{dispatch(setSelectedService(service)); navigate('/worker/service-edit/')}}/>
+                <MdDeleteForever className='cursor-pointer text-xl' onClick={()=>{dispatch(setSelectedService(service)); setPopup(true);}}/>
+            </div>
             {isLoading&&
                 <div className="w-full h-full bg-neutral-300 relative overflow-hidden">
                     <div className="absolute inset-0 bg-gradient-to-r from-neutral-300 via-neutral-200 to-neutral-300 animate-shimmer"></div>

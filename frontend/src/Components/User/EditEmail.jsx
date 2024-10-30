@@ -20,7 +20,7 @@ function EditEmail({setActivePopup, setEmail}) {
     
 
   return (
-    <div className='w-full  z-10 fixed bg-[#e0e0e0a3] h-full top-0 left-0 items-center flex justify-center'>
+    <div className='w-full  z-10 fixed bg-[#39393999] h-full top-0 left-0 items-center flex justify-center'>
         <div className='bg-white w-1/4 h-3/5 p-6 flex flex-col justify-between rounded-lg'>
             <IoChevronBack onClick={()=>{setActivePopup('')}} className='text-lg cursor-pointer'/>
             <div className='flex flex-col gap-9'>

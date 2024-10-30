@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { api, BASE_URL } from '../../axios'
 import { setSelectedUser } from '../../redux/admin';
+import profile from '../../images/profile.png';
 
 function UserDetails() {
 
@@ -24,7 +25,7 @@ function UserDetails() {
       <div className=' w-4/5 bg-white flex flex-col mt-16 justify-between items-center rounded-lg h-4/6 py-6'>
             <div className='flex w-11/12 justify-center gap-6 items-end'>
                 <div className='bg-white rounded-full w-[6rem] h-[6rem] drop-shadow-lg overflow-hidden'>
-                    <img src={`${BASE_URL}${selectedUser.profile_pic}`} className='object-cover w-full h-full p-[2px] rounded-full' alt="" />
+                    <img src={selectedUser.profile_pic?selectedUser.profile_pic:profile} className='object-cover w-full h-full p-[2px] rounded-full' alt="" />
                 </div>
                 <div className='bg-[#3e689024] w-4/5 flex justify-between py-4 px-9 items-start rounded-lg'>
                     <div >

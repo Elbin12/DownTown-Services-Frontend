@@ -8,6 +8,10 @@ function Servies() {
   const [categories, setCategories] = useState();
   const [services, setServices] = useState();
   const [loading, setLoading] = useState(true);
+  const [category, setCategory] = useState();
+  const [isAnySelected, setIsAnySelected] = useState(false);
+
+  const [selectedSubcategories, setSelectedSubcategories] = useState({});
 
   const search_key = useSelector(state=>state.user.search_key)
 
@@ -43,7 +47,7 @@ function Servies() {
           } catch (error) {
             console.error('Error fetching services:', error);
           }
-        }else{
+        }else if (!isAnySelected){
           try {
             const res = await api.get('services/');
             if (res.status === 200) {
@@ -56,8 +60,44 @@ function Servies() {
       }
       };
       fetchServices();
-  },[search_key])
+  },[search_key, isAnySelected])
 
+  
+  const handleSubmit = async(newSelected)=>{
+    try{  
+      const res = await api.post(`services/`,{ selected_sub: newSelected, search_key:search_key })  
+    if (res.status === 200){
+      setServices(res.data);
+    }
+    }catch(err){
+      console.log(err);
+    }
+  }
+
+  const handleCheckbox = (cat_id, sub_id)=>{
+    setSelectedSubcategories((prev)=>{
+      const newSelected = {...prev}
+      if (newSelected[cat_id]?.includes(sub_id)){
+        newSelected[cat_id] = newSelected[cat_id].filter(id=> id !== sub_id);
+      }else{
+        newSelected[cat_id] = [...(newSelected[cat_id] || []), sub_id];
+      }
+      const hasSelection = Object.values(newSelected).some(subs => subs.length > 0);
+      setIsAnySelected(hasSelection);
+      return newSelected
+    })
+
+    const newSelected = { ...selectedSubcategories };
+    if (newSelected[cat_id]?.includes(sub_id)) {
+      newSelected[cat_id] = newSelected[cat_id].filter(id => id !== sub_id);
+    } else {
+      newSelected[cat_id] = [...(newSelected[cat_id] || []), sub_id];
+    }
+    handleSubmit(newSelected);
+  }
+
+  console.log(selectedSubcategories, 'selectedSubcategories');
+  
   
 
   return (
@@ -87,7 +127,7 @@ function Servies() {
                       <div className='flex gap-2 flex-col'>
                         {category.subcategories.map((sub) => (
                           <div key={sub.id} className="flex gap-2">   
-                            <input type="checkbox" />
+                            <input type="checkbox"  onChange={()=>{handleCheckbox(category.id, sub.id)}}/>
                             <h4 className="text-sm">{sub.subcategory_name}</h4>
                           </div>
                         ))}
@@ -97,13 +137,20 @@ function Servies() {
                     )}
                   </div>
                 ))}
+                {/* {isAnySelected&&
+                  <div className='flex cursor-pointer'>
+                    <h2 className='bg-slate-600  text-white font-semibold px-3 rounded-sm py-0.5' onClick={handleSubmit}>Save</h2>
+                  </div>
+                } */}
             </div>
           </div>
         </div>
         <div className=' h-auto z-10 mt-14  scrollbar-none overflow-y-auto flex flex-col w-3/4 gap-4 '>
-        {services?.map((service) => (
+        {services && services.length!==0? services.map((service) => (
                 <Service key={service.id} service={service} />
-            ))}
+            )):
+          <h1 className='text-white text-lg font-extralight'>No services found</h1>
+        }
         </div>
       </div>
     </div>
