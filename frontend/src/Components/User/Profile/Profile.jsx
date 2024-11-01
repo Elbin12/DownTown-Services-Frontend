@@ -2,10 +2,9 @@ import React, { useEffect, useRef, useState } from 'react'
 import { MdOutlineEdit } from "react-icons/md";
 import { BsFillCameraFill } from "react-icons/bs";
 import { useDispatch, useSelector } from 'react-redux';
-import { FaCalendar } from "react-icons/fa";
 import AddMobile from './AddMobile';
 import MobilePopup from '../AddMobile';
-import { api, BASE_URL } from '../../../axios';
+import { api } from '../../../axios';
 import  { setUserinfo } from '../../../redux/user';
 import {setWorkerinfo} from '../../../redux/worker';
 
@@ -26,12 +25,22 @@ function Profile({role}) {
   
   const userinfo = useSelector(state=>state.user.userinfo)
   const workerinfo = useSelector(state=>state.worker.workerinfo)
+  
 
   useEffect(()=>{
-    api.get('profile/').then((res)=>{
-      console.log(res.data, res, 'prof');
+    const fetchProfile = async() =>{
+      const res = await api.get('profile/')
       
-    })
+    }
+    try{
+      api.get('profile/').then((res)=>{
+        console.log(res.data, res, 'prof');
+        
+      })
+    }catch(err){
+      console.log(err);
+      
+    }
   },[])
 
   console.log(userinfo, 'userrrrr');
@@ -69,7 +78,18 @@ function Profile({role}) {
     return '';
   });
 
-  const [email, setEmail] = useState();
+  const [email, setEmail] = useState(()=>{
+    if (role === 'user') {
+      return userinfo ? userinfo.email === null ?'': userinfo.email : '';
+    } else if (role === 'worker') {
+      return workerinfo ? workerinfo.email === null ?'': workerinfo.email : '';
+    }
+    return '';
+  });
+
+  const [input, setInput] = useState(email);
+
+
   const [mobErr, setMobErr] = useState('');
   const [first_name_err, setFirst_name_Error] = useState('');
   const [picerr, setPicErr] = useState('');
@@ -78,7 +98,7 @@ function Profile({role}) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-
+  console.log(userinfo?.email, email, 'email');
   
   const imageUpload = ()=>{
     setActivePopup('save')
@@ -199,8 +219,8 @@ function Profile({role}) {
       <div className='bg-white h-96 mx-auto  sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] justify-center flex sm:rounded-lg'>
         {activePopup=='mobAdd' && < MobilePopup role={'Add'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
         {activePopup=='mobEdit' && < MobilePopup role={'Edit'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
-        {activePopup=='emailEdit' && < EditEmail setActivePopup={setActivePopup} setEmail={setEmail}/>}
-        {activePopup=='otp' && < OTP input={email} setActivePopup={setActivePopup} from={'profile'}/>}
+        {activePopup=='emailEdit' && < EditEmail input={input} setInput={setInput} role={role} setActivePopup={setActivePopup} email={email} setEmail={setEmail}/>}
+        {activePopup=='otp' && < OTP role={role} setEmail={setEmail} input={input} setActivePopup={setActivePopup} from={'profile'}/>}
       <div className='bg-[#233e56d2] h-14 sm:h-16  md:h-20 sm:rounded-t-lg w-full'>
         <div className='flex items-center gap-4 py-6 px-4 sm:px-16'>
           <div className='flex flex-col'>
@@ -245,7 +265,7 @@ function Profile({role}) {
             <span className='w-1/3 text-xs md:text-sm block md:hidden'>Email</span>
             <span className='w-1/3 text-xs md:text-sm hidden md:block'>Email Address</span>
               <div className='flex w-full text-xs md:text-sm'>
-                <h6 className='mr-4'>{role=='user'?userinfo&& userinfo.email:workerinfo&& workerinfo.email}</h6>
+                <h6 className='mr-4'>{email}</h6>
                 <h6 className='bg-[#aef3b5ba] px-4 items-center flex'>Verified</h6>
               </div>
               {role=='user'?

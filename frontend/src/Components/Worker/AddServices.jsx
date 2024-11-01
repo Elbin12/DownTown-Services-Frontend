@@ -3,9 +3,12 @@ import { api } from '../../axios';
 import { SlPicture } from "react-icons/sl";
 
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 
 function AddServices() {
+
+    const navigate = useNavigate();
 
     const [service_name, setService_name] = useState();
     const [serviceErr, setServiceErr] = useState();
@@ -76,7 +79,7 @@ function AddServices() {
         setIsSubcategory(true);
     }
 
-    const handleSubmit = ()=>{
+    const handleSubmit = async()=>{
         if(!service_name || service_name.trim() === ''){
             setServiceErr('Service name is required')
             return
@@ -113,13 +116,13 @@ function AddServices() {
         console.log(data, 'data', );
 
         try{
-            const res = api.post('worker/services/', data,{
+            const res = await api.post('worker/services/', data,{
             headers: {
                 'Content-Type': 'multipart/form-data'  
                 }
             })
-            if (res.status === 200){
-                console.log(res.data, 'kkk');
+            if (res.status === 201){
+                console.log(res.status, 'kkk');
                 toast.success('service added successfully')
                 setService_name('')
                 setIsCategory('')
@@ -128,6 +131,7 @@ function AddServices() {
                 setPic('')
                 setPrice('')
                 setDescription('')
+                navigate('/worker/services/')
             }
         }catch(err){
             console.log(err, 'errr'); 

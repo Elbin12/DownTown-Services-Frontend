@@ -9,6 +9,7 @@ import RequestsPage from '../Pages/Admin/RequestsPage'
 import AdminProtectedRoute from './AdminProtected'
 import ServicesListingPage from '../Pages/Admin/ServicesListingPage'
 import CategoriesPage from '../Pages/Admin/CategoriesPage'
+import WorkerDetailPage from '../Pages/Admin/WorkerDetailPage'
 
 function AdminRoutes() {
   return (
@@ -17,6 +18,7 @@ function AdminRoutes() {
         <Route path='/dashboard/' element={<AdminProtectedRoute><HomePage /></AdminProtectedRoute>}/>
         <Route path='/login/' element={<LoginPage />}></Route>
         <Route path='/users/' element={<AdminProtectedRoute><UserlistPage /></AdminProtectedRoute>} />
+        <Route path='/worker/' element={<AdminProtectedRoute><WorkerDetailPage /></AdminProtectedRoute>} />
         <Route path='/workers/' element={<AdminProtectedRoute><WorkerlistPage /></AdminProtectedRoute>} />
         <Route path='/user/' element={<AdminProtectedRoute><UsersdetailPage /></AdminProtectedRoute>} />
         <Route path='/requests/' element={<AdminProtectedRoute><RequestsPage /></AdminProtectedRoute>} />

@@ -3,6 +3,7 @@ import img from '../../images/account.png';
 import { api } from '../../axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { setRequests } from '../../redux/admin';
+import { toast } from 'sonner';
 
 function Requests() {
 
@@ -32,8 +33,23 @@ function Requests() {
             'status':status,
             'email': email
         }
-        const res = await api.post('admin/handle_requests/', data)
-        console.log(res.data, 'data');
+        try{
+            const res = await api.post('admin/handle_requests/', data)
+            console.log(res.data)
+            if (res.status === 200){
+                if (res.data.success){
+                    const new_workers = [...workers.filter((worker)=>worker.id !== res.data.id)]
+                    dispatch(setRequests(new_workers));
+                    toast.success(res.data.success) 
+                }else if(res.data.failure){                    
+                    toast.error(res.data.failure    )
+                }
+            }
+        }catch(err){
+            toast.error('Something went wrong.')
+            console.log(err, 'err');
+        }
+
         
     }
     

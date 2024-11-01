@@ -1,13 +1,14 @@
 import React from 'react';
 import { FaAngleLeft } from "react-icons/fa6";
 import { FaAngleRight } from "react-icons/fa6";
+import { api } from '../../axios';
+import { useDispatch } from 'react-redux';
+import { setUsers } from '../../redux/admin';
 
-function Pagination({postsPerPage, length, currentPage, onPageChange }) {
+function Pagination({role, postsPerPage, totalPages, currentPage, onPageChange }) {
 
-
-    console.log(length, 'length');
+    console.log(totalPages, 'length');
     
-    const totalPages = Math.ceil(length / postsPerPage);
     const paginationNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
         paginationNumbers.push(i);
@@ -34,7 +35,7 @@ function Pagination({postsPerPage, length, currentPage, onPageChange }) {
             </div>
             )}
             {paginationNumbers.map((pageNumber) => (
-                <div className={`border p-1 rounded-sm w-7 items-center font-semibold flex justify-center cursor-pointer ${currentPage === pageNumber ? 'text-blue-400' : ''}`} onClick={() => onPageChange(pageNumber)}>
+                <div className={`border p-1 rounded-sm w-7 items-center font-semibold flex justify-center cursor-pointer ${currentPage === pageNumber ? 'text-blue-400' : ''}`} onClick={() => {onPageChange(pageNumber)}}>
                     <h3 key={pageNumber} className={currentPage === pageNumber? 'text-blue-400' : ''}>{pageNumber}</h3>
                 </div>
             ))}

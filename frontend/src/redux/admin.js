@@ -4,6 +4,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const INITIAL_STATE = {
     users:[],
     selectedUser:'',
+    selectedWorker:'',
     workers:[],
     requests:[],
     selectedCategory:'',
@@ -23,6 +24,9 @@ const adminSlice = createSlice({
         },
         setSelectedUser: (state, action) => {
             state.selectedUser = action.payload;
+        },
+        setSelectedWorker: (state, action) => {
+            state.selectedWorker = action.payload;
         },
         setWorkers: (state, action)=>{
             state.workers = action.payload;
@@ -61,5 +65,5 @@ const adminSlice = createSlice({
     }
 })
 
-export const {setUsers, setSelectedUser, setWorkers, setRequests, setSelectedCategory, setselectedSubCategory, updateSelectedCategory, editandUpdateselectedCategory} = adminSlice.actions;
+export const {setUsers, setSelectedUser, setSelectedWorker, setWorkers, setRequests, setSelectedCategory, setselectedSubCategory, updateSelectedCategory, editandUpdateselectedCategory} = adminSlice.actions;
 export default adminSlice.reducer;

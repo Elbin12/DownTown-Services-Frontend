@@ -74,7 +74,7 @@ function EditCat({role, setPopup, setCategories, categories}) {
     }
 
   return (
-    <div className='absolute top-0 left-0 w-full h-full flex justify-center items-center z-20' >
+    <div className='fixed top-0 left-0 w-full h-full flex justify-center items-center z-20' >
         <div className=' w-2/5 bg-white flex flex-col justify-between rounded-lg h-56' onClick={(e) => e.stopPropagation()}>
             <div className='border-b py-2 px-4'>
                 <h3 className='text-lg '>Edit {role==='cat'?'category':'Sub category'}</h3>

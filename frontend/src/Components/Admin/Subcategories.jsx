@@ -34,7 +34,7 @@ function Subcategories({setPopup}) {
     }
 
   return (
-    <div className=' w-3/4 bg-white flex flex-col rounded-lg h-48'>
+    <div className=' w-3/4 bg-white flex flex-col rounded-lg'>
         <div className='w-full py-4 px-4 flex justify-between gap-9'>
             <h3 className='text-lg '>Sub Categories</h3>
             < Searchbar />

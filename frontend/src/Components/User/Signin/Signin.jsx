@@ -56,40 +56,33 @@ function Signin({setActivePopup, input, setInput}) {
     
   }
 
-  const login = useGoogleLogin({
-    onSuccess: async  tokenResponse => {
-      console.log(tokenResponse)
-      const userInfo = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
-        headers: {
-          Authorization: `Bearer ${tokenResponse.access_token}`,
-        },
-      });
-  
-      const userData = await userInfo.json();
-      try{
-        const res = await api.post('signin-with-google/', userData)
-        console.log(res.status, 'status');
-        
-        if (res.status === 200){
-          console.log(res.data, '200');
-          setActivePopup('')
-          console.log('hi', res.data);
-          dispatch(setUserinfo(res.data))
-          toast.success("Sign In successfully");
-        }
-      }catch(err){
-        console.error("Error signing in:", err);
-        if(err.response.status === 400){
-          console.log(err.response.data, '400');
-          toast.error(err.response.data.message);
-        }else{
-          setActivePopup('')
-          toast.error("An unexpected error occurred. Please try again.");
+    const login = useGoogleLogin({
+      onSuccess: async  tokenResponse => {
+        console.log(tokenResponse)
+        try{
+          const res = await api.post('signin-with-google/', { token: tokenResponse.access_token })
+          console.log(res.status, 'status');
+          
+          if (res.status === 200){
+            console.log(res.data, '200'); 
+            setActivePopup('')
+            console.log('hi', res.data);
+            dispatch(setUserinfo(res.data))
+            toast.success("Sign In successfully");
+          }
+        }catch(err){
+          console.error("Error signing in:", err);
+          if(err.response.status === 400){
+            console.log(err.response.data, '400');
+            toast.error(err.response.data.message);
+          }else{
+            setActivePopup('')
+            toast.error("An unexpected error occurred. Please try again.");
+          }
         }
       }
-    }
-    
-  });
+      
+    });
 
   return (
     <div className='fixed bg-[#39393999] w-full flex justify-center min-h-screen items-center p-5 top-0 z-20' onClick={()=>{setActivePopup('')}}>

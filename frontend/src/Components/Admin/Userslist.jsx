@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Searchbar from './Searchbar'
 import { api, BASE_URL } from '../../axios';
-import { setUsers, setWorkers } from '../../redux/admin';
+import { setSelectedWorker, setUsers, setWorkers } from '../../redux/admin';
 import { useDispatch, useSelector } from 'react-redux';
 import Pagination from './Pagination';
 import { setSelectedUser } from '../../redux/admin';
@@ -12,17 +12,17 @@ import profile from '../../images/profile.png';
 function Userslist({role}) {
 
   const dispatch = useDispatch();
-  const [currentPage, setCurrentPage] = useState(1);
-  const postsPerPage = 6;
-
+  const [currentPage, setCurrentPage] = useState();
+  const [total_pages, setTotaPages] = useState();
+  
   const navigate = useNavigate();
-
-  const indexOfLastUser = currentPage * postsPerPage;
-  const indexOfFirstUser = indexOfLastUser - postsPerPage;
+  
   const users = useSelector(state=>state.admin.users)
   const workers = useSelector(state => state.admin.workers)
-
-  const currentUsers =  users?users.slice(indexOfFirstUser, indexOfLastUser):[];
+  
+  const postsPerPage = users?.length
+  
+  const currentUsers =  users
 
   const selectedUser = useSelector(state=> state.admin.selectedUser)
   const [loading, setLoading] = useState(false);
@@ -33,8 +33,14 @@ function Userslist({role}) {
     
     const fetchUsers = async () => {
       try {
-        const res = await api.get('admin/users/');
-        dispatch(setUsers(res.data)); 
+        const res = await api.get('admin/users/', {
+          params: {
+            page_no: currentPage
+          }
+        });
+        dispatch(setUsers(res.data.users));
+        setCurrentPage(res.data.pagination.current_page) 
+        setTotaPages(res.data.pagination.total_pages) 
         console.log(res.data); 
       } catch (err) {
         console.log(err); 
@@ -45,8 +51,14 @@ function Userslist({role}) {
 
     const fetchWorkers = async () => {
       try {
-        const res = await api.get('admin/workers/');
-        dispatch(setWorkers(res.data)); 
+        const res = await api.get('admin/workers/', {
+          params: {
+            page_no: currentPage
+          }
+        });
+        dispatch(setWorkers(res.data.workers)); 
+        setCurrentPage(res.data.pagination.current_page) 
+        setTotaPages(res.data.pagination.total_pages) 
         console.log(res.data); 
       } catch (err) {
         console.log(err); 
@@ -64,15 +76,15 @@ function Userslist({role}) {
       fetchWorkers();
     }
 
-  },[])
+  },[currentPage])
   
-  const handleclick = (user)=>{
-    dispatch(setSelectedUser(user))
-    console.log('hi  lfldl');
-    if (role==='users'){
-      navigate('/admin/user')
-    }else{
-      navigate('/admin/user')
+  const handleclick = (user, role)=>{
+    if(role==='users'){
+      dispatch(setSelectedUser(user))
+      navigate('/admin/user/')
+    }else{ 
+      dispatch(setSelectedWorker(user))
+      navigate('/admin/worker/')
     }
     console.log(user, 'usererr');
   }
@@ -106,7 +118,7 @@ function Userslist({role}) {
               {role ==='users'?
                 currentUsers.map((user, index)=>(
                   <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
-                    <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(user)}}>
+                    <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(user, role)}}>
                       <img src={user.profile_pic?user.profile_pic:profile} alt="" className='w-7 h-7 rounded-full' />
                       {user.Name}
                     </td>
@@ -118,20 +130,20 @@ function Userslist({role}) {
               :
                 workers?.map((worker, index)=>(
                   <tr key={index} className="text-sm font-semibold text-[#505050] py-6 border-b">
-                    <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(worker)}}>
+                    <td className="px-8 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{handleclick(worker, role)}}>
                       <img src={worker.profile_pic?worker.profile_pic:profile} alt='' className='w-7 h-7 rounded-full' />
                       {worker.Name}
                     </td>
                     <td className="px-8 py-3">{worker.email}</td>
                     <td className="px-8 py-3">{worker.mob}</td>
-                    <td className={`px-8 py-3 text-xs ${worker.is_active?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{worker.is_active?'ACTIVE':'BLOCKED'}</td>
+                    <td className={`px-8 py-3 text-xs ${worker.status === 'verified'?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{worker.status}</td>
                   </tr>
                 ))
               }
             </tbody>
           </table>
         </div>
-        <Pagination length={role=='users'? users?.length: workers?.length} postsPerPage={postsPerPage} currentPage={currentPage} onPageChange={setCurrentPage}/>
+        <Pagination role={role} totalPages={total_pages} postsPerPage={postsPerPage} currentPage={currentPage} onPageChange={setCurrentPage}/>
       </div>
     </div>
   )
