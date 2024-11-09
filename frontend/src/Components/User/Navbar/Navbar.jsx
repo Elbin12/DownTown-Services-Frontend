@@ -17,12 +17,12 @@ import { useLoadScript } from "@react-google-maps/api";
 
 function Navbar() {
 
+  const userinfo = useSelector(state => state.user.userinfo);
   const [activePopup, setActivePopup] = useState(null);
   const [input, setInput] = useState();
-  const [location, setLocation] = useState();
+  const [location, setLocation] = useState(userinfo? userinfo.location:'');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userinfo = useSelector(state => state.user.userinfo);
   console.log(userinfo, 'jjjj');
   
 
@@ -31,19 +31,11 @@ function Navbar() {
     libraries: ["places"],
   });
 
-  const logout = ()=>{
-    api.post('logout/').then((res)=>{
-      console.log(res);
-      dispatch(setUserinfo(''))
-      navigate('/')
-    })
-  }
-
   return (
     <>
       {activePopup=='login' && <Signin setActivePopup={setActivePopup} input={input} setInput={setInput}/>}
       {activePopup=='otp' && <OTP  setActivePopup={setActivePopup} input={input}/>}
-      {activePopup=='location' && <Location setLocation={setLocation} setActivePopup={setActivePopup}/>}
+      {activePopup=='location' && <Location role={'user'} location={location} setLocation={setLocation} setActivePopup={setActivePopup}/>}
       <div className='flex justify-between w-full flex-column bg-white h-24 items-center px-20 fixed top-0 z-20'>
         <div className="logo cursor-pointer" onClick={()=>{navigate('/')}}>
           <img src={Logo} alt="" />
@@ -57,10 +49,9 @@ function Navbar() {
         <div className='flex flex-row gap-6'>
 
         <div  className='location-button h-14 w-28 justify-center flex items-center bg-[#E9E3B4] rounded-lg text-white gap-3 cursor-pointer' onClick={()=>{setActivePopup('location')}}>
-          <h4 className='text-[#313030] font-medium'>{location}</h4>
-          <MdOutlineArrowDropDown className='text-black'/>
+          <h4 className='text-[#313030] font-medium'>{location?.split(',')[0].slice(0,5)}</h4>
+          <MdOutlineArrowDropDown className='text-black text-2xl'/>
         </div>
-        {userinfo&&<button onClick={logout}>LOGOUT</button>}
         {userinfo&&
           (
             <Link to='/profile/'>

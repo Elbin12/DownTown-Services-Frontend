@@ -9,6 +9,7 @@ import AddServicesPage from '../Pages/Worker/AddServicesPage'
 import ServicesPage from '../Pages/Worker/ServicesPage'
 import ServiceEditPage from '../Pages/Worker/ServiceEditPage'
 import ForgotPasswordPage from '../Pages/Worker/ForgotPasswordPage'
+import RequestPage from '../Pages/Worker/RequestPage'
 
 function WorkerRoutes() {
   return (
@@ -22,6 +23,7 @@ function WorkerRoutes() {
         <Route path='/add-service/' element={<WorkerProtectedRoute><AddServicesPage /></WorkerProtectedRoute>} />
         <Route path='/services/' element={<WorkerProtectedRoute><ServicesPage /></WorkerProtectedRoute>} />
         <Route path='/service-edit/' element={<WorkerProtectedRoute><ServiceEditPage /></WorkerProtectedRoute>} />
+        <Route path='/requests/' element={<WorkerProtectedRoute><RequestPage /></WorkerProtectedRoute>} />
       </Routes>
     </div>
   )

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import benglaru from '../../images/locations/benglaru.png';
 import kochi from '../../images/locations/kochi.png';
 import mumbai from '../../images/locations/mumbai.png';
@@ -7,8 +7,14 @@ import kolkata from '../../images/locations/kolkata.png';
 import chennai from '../../images/locations/chennai.png';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useLoadScript } from "@react-google-maps/api";
+import { api } from '../../axios';
+import { useDispatch } from 'react-redux';
+import { setUserinfo } from '../../redux/user';
+import { setWorkerinfo } from '../../redux/worker';
 
-function Location({setLocation, setActivePopup}) {
+function Location({role, location, setLocation, setActivePopup}) {
+
+  const dispatch = useDispatch();
 
     const {
         ready,
@@ -22,24 +28,58 @@ function Location({setLocation, setActivePopup}) {
         },
         debounce: 300,
       });
+
+      useEffect(() => {
+        if (location) {
+            setValue(location, false);
+        }
+      }, [location, setValue]);
     
       const handleInput = (e) => {
         setValue(e.target.value);
-        setLocation(value.split(','));
       };
     
-      const  handleSelect =
-        ({ description }) =>
-        () => {
-          setValue(description, false);
-          clearSuggestions();
-    
-    
-          getGeocode({ address: description }).then((results) => {
+      const  handleLocationSelect  = async(description) => {
+          console.log(description, 'desc');
+          
+          try{
+            const results = await getGeocode({ address: description });
             const { lat, lng } = getLatLng(results[0]);
-            console.log("📍 Coordinates: ", { lat, lng });
-          });
+            console.log("📍 Coordinates: ", { lat, lng }, results);
+
+            const data = {
+              lat:lat,
+              lng:lng,
+              location:description
+            }
+            if(role ==='user'){
+              const res = await api.post('change-location/', data)
+              if (res.status === 200){
+                console.log(res.data, 'data');
+                setActivePopup('')
+                dispatch(setUserinfo(res.data));
+                setValue(description, false);
+                setLocation(description);
+                clearSuggestions();
+              }
+            }else if(role ==='worker'){
+              const res = await api.post('worker/change-location/', data)
+              if (res.status === 200){
+                console.log(res.data, 'data');
+                setActivePopup('')
+                dispatch(setWorkerinfo(res.data));
+                setValue(description, false);
+                setLocation(description);
+                clearSuggestions();
+              }
+            }
+
+          }catch(err){
+            console.log(err, 'err');
+          }
         };
+      
+      const handleSelect = ({ description }) => () => handleLocationSelect(description);
     
       const renderSuggestions = () =>
         data.filter((suggestion) => {
@@ -78,27 +118,27 @@ function Location({setLocation, setActivePopup}) {
             <div className='flex flex-col text-center px-36 gap-9'>
                 <h2 className='font-semibold'>POPULAR CITIES</h2>
                 <div className='flex gap-x-20 gap-y-6 justify-center flex-wrap'>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={()=>{handleLocationSelect('Benglaru')}}>
                         <img src={benglaru} alt="" />
                         <h4>Benglaru</h4>
                     </div>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={()=>{handleLocationSelect('Kochi')}}>
                         <img src={kochi} alt="" />
                         <h4>Kochi</h4>
                     </div>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={()=>{handleLocationSelect('Mumbai')}}>
                         <img src={mumbai} alt="" />
                         <h4>Mumbai</h4>
                     </div>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={()=>{handleLocationSelect('Delhi')}}>
                         <img src={delhi} alt="" />
                         <h4>Delhi NCR</h4>
                     </div>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={()=>{handleLocationSelect('Kolkata')}}>
                         <img src={kolkata} alt="" />
                         <h4>Kolkata</h4>
                     </div>
-                    <div className='cursor-pointer'>
+                    <div className='cursor-pointer' onClick={()=>{handleLocationSelect('Chennai')}}>
                         <img src={chennai} alt="" />
                         <h4>Chennai</h4>
                     </div>

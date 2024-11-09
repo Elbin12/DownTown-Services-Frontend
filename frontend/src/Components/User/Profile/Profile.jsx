@@ -212,6 +212,14 @@ function Profile({role}) {
       }
     }
 
+    const logout = ()=>{
+      api.post('logout/').then((res)=>{
+        console.log(res);
+        dispatch(setUserinfo(''))
+        navigate('/')
+      })
+    }
+
   
 
   return (
@@ -306,7 +314,7 @@ function Profile({role}) {
         </div>
       </div>
     </div>
-    <div className='bg-white h-96 mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] mb-9 my-3 sm:rounded-lg'>
+    <div className='bg-white h-96 mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] my-2 sm:rounded-lg'>
       <div className='px-4 sm:px-16 gap-9 flex flex-col py-9'>
         <h1 className='text-xs md:text-lg font-semibold text-[#434343]'>Personal Details</h1>
         <div className='flex flex-col gap-6 text-sm px-1'>
@@ -350,6 +358,9 @@ function Profile({role}) {
           </div>
         </div>
       </div>
+    </div>
+    <div className=' mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] mb-9 my-2 sm:rounded-lg'>
+      {userinfo&&<button className='bg-[#3d6b94da] px-2 py-1 rounded-sm text-white font-bold text-sm' onClick={logout}>LOGOUT</button>}
     </div>
     {activePopup==='save' &&(<div className='text-xs md:text-sm fixed flex justify-center items-center bottom-0 w-full bg-white h-20 z-10'>
       <button className='border h-11 w-1/2 rounded-lg text-white bg-[#3d6b94da]' onClick={handlesubmit}>Save Changes</button>
