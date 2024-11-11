@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './Navbar.css'
 import Logo from '../../../images/LOGO.png'
 import Searchbar from '../../Searchbar/Searchbar'
@@ -18,18 +18,25 @@ import { useLoadScript } from "@react-google-maps/api";
 function Navbar() {
 
   const userinfo = useSelector(state => state.user.userinfo);
+  const anonymous_user_location = useSelector(state=>state.anonymous_user.locationDetails)
   const [activePopup, setActivePopup] = useState(null);
   const [input, setInput] = useState();
-  const [location, setLocation] = useState(userinfo? userinfo.location:'');
+  const [location, setLocation] = useState(userinfo? userinfo.location:anonymous_user_location? anonymous_user_location.location:'');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(userinfo, 'jjjj');
+  console.log(userinfo, 'jjjj', anonymous_user_location);
   
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_LOCATION_API,
     libraries: ["places"],
   });
+
+  useEffect(()=>{
+    if (!location){
+      setActivePopup('location');
+    }
+  })
 
   return (
     <>
@@ -57,7 +64,7 @@ function Navbar() {
             <Link to='/profile/'>
             <div className='border h-14 flex items-center gap-1 px-2 rounded-lg border-[#d5d5d5] cursor-pointer'>
               <MdAccountCircle className='text-4xl' />
-              <h6 className='text-[#303030]'>Hi, {userinfo&& userinfo.first_name}</h6>
+              <h6 className='text-[#303030]'>Hi, {userinfo.first_name? userinfo.first_name:'User'}</h6>
             </div>
             </Link>
           )

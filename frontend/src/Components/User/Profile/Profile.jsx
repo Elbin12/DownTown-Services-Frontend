@@ -30,16 +30,6 @@ function Profile({role}) {
   useEffect(()=>{
     const fetchProfile = async() =>{
       const res = await api.get('profile/')
-      
-    }
-    try{
-      api.get('profile/').then((res)=>{
-        console.log(res.data, res, 'prof');
-        
-      })
-    }catch(err){
-      console.log(err);
-      
     }
   },[])
 

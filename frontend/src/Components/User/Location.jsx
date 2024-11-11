@@ -8,13 +8,17 @@ import chennai from '../../images/locations/chennai.png';
 import usePlacesAutocomplete, { getGeocode, getLatLng } from "use-places-autocomplete";
 import { useLoadScript } from "@react-google-maps/api";
 import { api } from '../../axios';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setUserinfo } from '../../redux/user';
 import { setWorkerinfo } from '../../redux/worker';
+import { setLocationDetails } from '../../redux/anonymous_user';
 
 function Location({role, location, setLocation, setActivePopup}) {
 
   const dispatch = useDispatch();
+
+
+    const userinfo = useSelector(state=>state.user.userinfo)
 
     const {
         ready,
@@ -53,27 +57,32 @@ function Location({role, location, setLocation, setActivePopup}) {
               location:description
             }
             if(role ==='user'){
-              const res = await api.post('change-location/', data)
-              if (res.status === 200){
-                console.log(res.data, 'data');
-                setActivePopup('')
-                dispatch(setUserinfo(res.data));
-                setValue(description, false);
-                setLocation(description);
-                clearSuggestions();
-              }
+                const res = await api.post('change-location/', data)
+                if (res.status === 200){
+                  console.log(res.data, 'data');
+                  setActivePopup('')
+                  if (userinfo){
+                    dispatch(setUserinfo(res.data));
+                  }else{
+                    dispatch(setLocationDetails(res.data))
+                  }
+                  setValue(description, false);
+                  setLocation(description);
+                  window.location.reload();
+                  clearSuggestions();
+                }
             }else if(role ==='worker'){
-              const res = await api.post('worker/change-location/', data)
-              if (res.status === 200){
-                console.log(res.data, 'data');
-                setActivePopup('')
-                dispatch(setWorkerinfo(res.data));
-                setValue(description, false);
-                setLocation(description);
-                clearSuggestions();
+                const res = await api.post('worker/change-location/', data)
+                if (res.status === 200){
+                  console.log(res.data, 'data');
+                  setActivePopup('')
+                  dispatch(setWorkerinfo(res.data));
+                  setValue(description, false);
+                  setLocation(description);
+                  window.location.reload();
+                  clearSuggestions();
               }
-            }
-
+              }
           }catch(err){
             console.log(err, 'err');
           }

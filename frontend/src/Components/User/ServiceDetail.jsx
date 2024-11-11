@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../../axios';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 function ServiceDetail() {
@@ -12,6 +12,7 @@ function ServiceDetail() {
     const [descriptionErr, setDescriptionErr] = useState();
 
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
       
     const handleWorkerImgImageLoad = () => {
       setisWorkerImgLoading(false);
@@ -32,15 +33,23 @@ function ServiceDetail() {
     useEffect(()=>{
       setTimeout(() => {
         const fetchServiceDetails = async()=>{
-            const res = await api.get(`service/${id}/`)
-            if(res.status === 200){
-              setService(res.data)
-              setDescription(()=>{
-                if (res.data.request?.status !== 'rejected' && res.data.request?.status !== 'cancelled'){
-                  return res.data.request?.description
-                }
-              })
-              setLoading(false);
+            try{
+              const res = await api.get(`service/${id}/`)
+              if(res.status === 200){
+                setService(res.data)
+                setDescription(()=>{
+                  if (res.data.request?.status !== 'rejected' && res.data.request?.status !== 'cancelled'){
+                    return res.data.request?.description
+                  }
+                })
+                setLoading(false);
+              }
+            }catch(err){
+              console.log(err, 'err');
+              if(err.status === 400){
+                toast.error(err.response.data.error)
+                navigate('/services/')
+              }
             }
         }
         fetchServiceDetails()
