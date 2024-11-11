@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { api } from '../../axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import ServiceAcceptedPopup from './ServiceAcceptedPopup';
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -116,15 +117,7 @@ function ServiceDetail() {
     
   return (
           <div className='w-full justify-center relative flex '>
-            {service?.request?.status === 'accepted' &&
-            <div className='absolute w-full flex justify-center items-center h-screen z-20 bg-[#000000ad]'>
-              <div className='bg-white rounded-lg w-3/4 h-3/4'>
-                <div>
-                  <h1>{service?.service_name}</h1>
-                </div>
-                <div></div>
-              </div>
-            </div>}
+            {service?.request?.status === 'accepted' && <ServiceAcceptedPopup service={service}/>}
             {loading?
               <div className="absolute inset-0 mt-32 flex items-center justify-center">
                 <div className="w-8 h-8 border-4 border-zinc-200 border-t-primary rounded-full animate-drop-spin"></div>
