@@ -5,6 +5,7 @@ import { Route, Routes } from 'react-router-dom'
 import UserProtectedRoute from './UserProtectedRoute'
 import ServicesListingPage from '../Pages/User/ServicesListingPage'
 import ServiceDetailsPage from '../Pages/User/ServiceDetailsPage'
+import AcceptedServicePage from '../Pages/User/AcceptedServicePage'
 
 function UserRoutes() {
     return (
@@ -14,6 +15,7 @@ function UserRoutes() {
                 <Route path='/' element={<Homepage />}></Route>
                 <Route path='/services/' element={<ServicesListingPage />}></Route>
                 <Route path='/service/:id/' element={<ServiceDetailsPage />}></Route>
+                <Route path='/order/:id/' element={<AcceptedServicePage />}></Route>
             </Routes>
         </div>
     )
