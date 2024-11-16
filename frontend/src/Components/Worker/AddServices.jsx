@@ -134,8 +134,8 @@ function AddServices() {
                 navigate('/worker/services/')
             }
         }catch(err){
-            console.log(err, 'errr'); 
-            
+            console.log(err, 'errr', err.response.data?.message[0]); 
+            toast.error(err.response.data?.message[0]);
         }
         
     }

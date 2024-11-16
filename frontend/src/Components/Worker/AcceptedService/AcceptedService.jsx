@@ -1,12 +1,25 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router-dom';
 import { api } from '../../../axios';
 import UserDetails from './UserDetails';
+import { CiSquarePlus } from "react-icons/ci";
+import { FaReceipt } from "react-icons/fa6";
+import { IoIosRemoveCircle } from "react-icons/io";
+
+
+
+
 
 function AcceptedService({role}) {
 
     const { id } = useParams();
+    const [inputSections, setInputSections] = useState([]);
     const [accepted_service, setAcceptedService] = useState();
+
+    const [pic, setPic] = useState();
+    const [img, setImg] = useState();
+
+    const receiptInput = useRef();
 
     useEffect(()=>{
         const fetchAcceptedService = async()=>{
@@ -29,18 +42,181 @@ function AcceptedService({role}) {
         fetchAcceptedService();
     }, [])
 
+    const imageClick =(e)=>{
+        // receiptInput.current.click()
+        e.target.previousElementSibling.lastElementChild.click()
+    }
+
+    
+    const handleAddSection = ()=>{
+        setInputSections([...inputSections, {description: '', image:'', amount:'', img:''}])
+    }
+
+    const handleInputChange = (index, field, value) => {
+        console.log("index from handleInputChange-->", index)
+        const updatedSections = [...inputSections];
+        console.log(updatedSections, index, 'kkkkk');
+        updatedSections[index][field] = value;
+        setInputSections(updatedSections);
+      };
+      
+    const uploadImageDisplay = (event, index) => {
+        console.log("index--", index);
+        console.log("event.target.id--",event.target.id)
+        const file = event.target.files[0];
+        if (file) {
+            const imageURL = URL.createObjectURL(file);
+            handleInputChange(index, "image", file);
+            handleInputChange(index, "img", imageURL);
+        }
+    };
+    
+    console.log(inputSections, 'input');
+    
+
+    const workCompleted =async()=>{
+        try{
+            const res = await api.post('worker/work-completed/', {'order_id':accepted_service.id})
+            if(res.status === 200){
+                console.log(res.data, 'dataa')
+                setAcceptedService(res.data);
+            }
+        }catch(err){
+            console.log(err, 'err')
+        }
+    }
+
+    const paymentProceed =async()=>{
+        console.log(inputSections, 'ffff');
+
+        const formData = new FormData();
+
+        formData.append('order_id', accepted_service?.id);
+
+        formData.append('additional_charges', JSON.stringify(inputSections));
+
+        // Add files individually
+        inputSections.forEach((section, index) => {
+            if (section.image) {
+                formData.append(`image_${index}`, section.image);
+                formData.append(`img_${index}`, section.img);
+            }
+        });
+        
+        try{
+            const res = await api.post('worker/add-payment/', formData)
+            console.log('response --->', res.data, res )
+        }catch(err){
+            console.log(err, 'err');
+        }
+    }
+
     console.log(accepted_service, 'accepted_service')
   return (
     <div className=' w-full flex justify-center'>
-        <div className='bg-white w-full mx-24 py-16 mt-28 gap-16 flex flex-col rounded-lg h-full'>
+        <div className='bg-white w-full mx-24 py-16 mt-28 gap-9 flex flex-col rounded-lg h-full'>
             <UserDetails role={role} user={role==='user'?accepted_service?.worker:accepted_service?.user} order={accepted_service}/>
-            {role==='worker'&&
+            {role==='worker' && accepted_service?.status !== 'completed' &&
                 <div className='flex flex-col items-center gap-3'>
                     <h1 className='text-lg font-semibold text-neutral-700'>Click the button once you've finished your work.</h1>
-                    <button className='bg-amber-600 text-white px-4 py-1 rounded-sm font-semibold'>Mark as Completed</button>
+                    <button className='bg-amber-600 text-white px-4 py-1 rounded-sm font-semibold' onClick={workCompleted}>Mark as Completed</button>
                     <div className='border-b  w-1/2'></div>
                 </div>
             }
+            {role==='user' && accepted_service?.status === 'completed' &&
+                <div className='flex flex-col items-center gap-3'>
+                    <h1 className='text-lg font-semibold text-neutral-700'>{accepted_service?.worker?.first_name} is completed the service. You can check it out.</h1>
+                    <p></p>
+                </div>
+            }
+            {accepted_service?.payment_details &&
+                <div className='flex flex-col items-center px-9 gap-7'>
+                    <h1 className='text-lg text-lime-900 opacity-70 font-bold'>{role==='user'?'Please complete the payment':'Ensure the user has completed the payment'} </h1>
+                    <div className='w-full h-auto flex gap-4'>
+                        <img src={accepted_service?.service_image} alt="" className='h-36 w-auto object-cover'/>
+                        <div className='flex w-full flex-col gap-2'>
+                            <div>
+                                <h1 className='text-zinc-700'>{accepted_service?.service_name}</h1>
+                                <p className='text-xs text-neutral-400 font-semibold'>{accepted_service?.order_tracking.arrival_time} - {accepted_service?.order_tracking.work_end_time}</p>
+                            </div>
+                            <h1 className='text-xs'>{accepted_service?.user_description}</h1>
+                            <div className='flex-col w-3/4 flex gap-1'>
+                                <div className='flex justify-between mb-2'>
+                                    <h1 className='font-semibold text-slate-600'>Base Amount</h1>
+                                    <div>
+                                        <h1 className='font-bold text-neutral-800'>Rs. {accepted_service?.service_price}</h1>
+                                    </div>
+                                </div>
+                                {accepted_service?.payment_details.additional_charges.map((charge)=>(
+                                    <div className='flex justify-between mb-2'>
+                                        <h1 className='font-semibold text-slate-600'>{charge.description}</h1>
+                                        <div className='flex gap-2 items-center'>
+                                            <img src={charge.reciept_img} className='w-9 h-9' alt="" />
+                                            <h1 className='font-bold text-neutral-800'>Rs. {charge.price}</h1>
+                                        </div>
+                                    </div>
+                                ))}
+                                <div className='flex px-4 justify-between bg-orange-50 mb-2'>
+                                    <h1 className='font-semibold text-slate-900'>Total Amount</h1>
+                                    <div>
+                                        <h1 className='font-bold text-neutral-800'>Rs. {accepted_service?.payment_details?.total_amount }</h1>
+                                    </div>
+                                </div>
+                                {role==='user'&& <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' >Make payment</button>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            {role==='worker' && accepted_service?.status === 'completed' && !accepted_service?.payment_details &&
+                <div className='flex flex-col items-center px-9 gap-7'>
+                    <h1 className='text-lg text-lime-900 opacity-70 font-bold'>Please add the charges for the service</h1>
+                    <div className='w-full h-auto flex gap-4'>
+                        <img src={accepted_service?.service_image} alt="" className='h-36 w-auto object-cover'/>
+                        <div className='flex w-full flex-col gap-2'>
+                            <div>
+                                <h1 className='text-zinc-700'>{accepted_service?.service_name}</h1>
+                                <p className='text-xs text-neutral-400 font-semibold'>{accepted_service?.order_tracking.arrival_time} - {accepted_service?.order_tracking.work_end_time}</p>
+                            </div>
+                            <h1 className='text-xs'>{accepted_service?.user_description}</h1>
+                            <div className='flex-col w-3/4 flex gap-1'>
+                                <div className='flex justify-between mb-2'>
+                                    <h1 className='font-semibold text-slate-600'>Base Amount</h1>
+                                    <div>
+                                        <h1 className='font-bold text-neutral-800'>Rs. {accepted_service?.service_price}</h1>
+                                    </div>
+                                </div>
+                                <div className='flex w-full justify-between items-center'>
+                                    <h1 className='text-sm'>Add if you have any Replacement charges</h1>
+                                    <button className='border border-gray-300 px-4 flex items-center gap-1 text-sm text-white bg-slate-700 hover:shadow-lg font-semibold py-1 transform hover:scale-105 transition-all duration-200 ease-in-out rounded' onClick={handleAddSection}><CiSquarePlus className='text-lg'/> Add</button>
+                                </div>
+                                {inputSections.map((section, index) => (
+                                    <div key={index} className='flex justify-between'>
+                                        <div className=''><input value={section.description} onChange={(e)=>{handleInputChange(index, "description", e.target.value)}} className='border px-2' type="text" placeholder='what is this charge for'/></div>
+                                        <div className='flex gap-1 items-center'>
+                                            <h1 className='font-bold text-neutral-800'>Rs.</h1>
+                                            <div>
+                                                <input type="number" value={section.amount} onChange={(e) => handleInputChange(index, "amount", e.target.value)} className='w-16 px-2 py-1 text-sm border border-slate-700 rounded shadow bg-slate-700 text-white font-bold outline-none'/>
+                                                <input type="file" ref={receiptInput} id='xxx' onChange={(e) => uploadImageDisplay(e, index)} className='hidden px-2 py-1 text-xs border border-slate-700 rounded shadow bg-slate-700 text-white font-bold outline-none'/>
+                                            </div>
+                                            <button onClick={(e)=> imageClick(e)} className='border border-gray-300 px-4 flex items-center gap-1 text-sm text-white bg-slate-700 font-semibold py-1 rounded transform hover:scale-105 transition-all duration-200 ease-in-out'><FaReceipt className='text-yellow-400'/>Add receipt</button>
+                                            {section.image&&<img src={section.img} className='w-11 h-7 cursor-pointer object-cover' alt="" />}
+                                            <IoIosRemoveCircle className='text-lg text-red-600 cursor-pointer' 
+                                                onClick={() => {
+                                                    const updatedSections = inputSections.filter((_, i) => i !== index);
+                                                    setInputSections(updatedSections);
+                                                }}
+                                            />
+                                        </div>
+                                    </div>
+                                ))}
+                                <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' onClick={paymentProceed}>Proceed</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            
         </div>
     </div>
   )

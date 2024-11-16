@@ -14,8 +14,8 @@ function UserRoutes() {
                 <Route path='/profile/' element={<UserProtectedRoute><Profilepage /></UserProtectedRoute>}></Route>
                 <Route path='/' element={<Homepage />}></Route>
                 <Route path='/services/' element={<ServicesListingPage />}></Route>
-                <Route path='/service/:id/' element={<ServiceDetailsPage />}></Route>
-                <Route path='/order/:id/' element={<AcceptedServicePage />}></Route>
+                <Route path='/service/:id/' element={<UserProtectedRoute><ServiceDetailsPage /></UserProtectedRoute>}></Route>
+                <Route path='/order/:id/' element={<UserProtectedRoute><AcceptedServicePage /></UserProtectedRoute>}></Route>
             </Routes>
         </div>
     )

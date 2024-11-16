@@ -2,12 +2,15 @@ import React, { useEffect, useState } from 'react'
 import Searchbar from './Searchbar'
 import { api, BASE_URL } from '../../axios';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 
 function Services() {
 
   const [services, setServices] = useState();
   const [loading, setLoading] = useState(false);
 
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   useEffect(()=>{
@@ -55,7 +58,7 @@ function Services() {
               
                 services?.map((service, index)=>(
                   <tr key={index} className="text-xs font-semibold text-[#505050] py-6 border-b">
-                    <td className="px-4 py-3 flex gap-2 items-center cursor-pointer" >
+                    <td className="px-4 py-3 flex gap-2 items-center cursor-pointer" onClick={()=>{navigate(`/admin/service/${service.id}/`)}}>
                       <img src={service.pic} alt="" className='w-7 h-7 rounded-full' />
                       {service.service_name}
                     </td>
