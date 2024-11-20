@@ -33,7 +33,7 @@ function SignUp() {
 
   return (
     <div>
-      {popup && <SentRequest isLoaded={isLoaded} setPopup={setPopup} categories={categories} formData={formValues}/>}
+      {popup && <SentRequest isLoaded={isLoaded} setPopup={setPopup} categories={categories} setFormValues={setFormValues} formValues={formValues}/>}
       <div className='w-full  py-20 flex h-screen'>
         <div className='w-1/2 justify-center flex'>
           <img src={img} alt="" />

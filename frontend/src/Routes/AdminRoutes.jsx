@@ -11,6 +11,7 @@ import ServicesListingPage from '../Pages/Admin/ServicesListingPage'
 import CategoriesPage from '../Pages/Admin/CategoriesPage'
 import WorkerDetailPage from '../Pages/Admin/WorkerDetailPage'
 import ServiceDetailsPage from '../Pages/Admin/ServiceDetailsPage'
+import RequestDetailPage from '../Pages/Admin/RequestDetailPage'
 
 function AdminRoutes() {
   return (
@@ -23,6 +24,7 @@ function AdminRoutes() {
         <Route path='/workers/' element={<AdminProtectedRoute><WorkerlistPage /></AdminProtectedRoute>} />
         <Route path='/user/' element={<AdminProtectedRoute><UsersdetailPage /></AdminProtectedRoute>} />
         <Route path='/requests/' element={<AdminProtectedRoute><RequestsPage /></AdminProtectedRoute>} />
+        <Route path='/request/:id/' element={<AdminProtectedRoute><RequestDetailPage /></AdminProtectedRoute>} />
         <Route path='/services/' element={<AdminProtectedRoute><ServicesListingPage /></AdminProtectedRoute>} />
         <Route path='/service/:id/' element={<AdminProtectedRoute><ServiceDetailsPage /></AdminProtectedRoute>} />
         <Route path='/categories/' element={<AdminProtectedRoute><CategoriesPage /></AdminProtectedRoute>} />
