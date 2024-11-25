@@ -3,6 +3,7 @@ import { api } from '../../axios';
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import ServiceAcceptedPopup from './ServiceAcceptedPopup';
+import { IoIosStar } from "react-icons/io";
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -116,10 +117,10 @@ function ServiceDetail() {
     console.log(service?.request.status, 'status', service?.request.description, description);
     
   return (
-          <div className='w-full justify-center relative flex '>
+          <div className={`w-full justify-center relative flex py-4 ${loading&& 'h-screen'}`}>
             {service?.request?.status === 'accepted' && <ServiceAcceptedPopup service={service}/>}
             {loading?
-              <div className="absolute inset-0 mt-32 flex items-center justify-center">
+              <div className="absolute inset-0 mt-32 flex items-start justify-center">
                 <div className="w-8 h-8 border-4 border-zinc-200 border-t-primary rounded-full animate-drop-spin"></div>
               </div>
               :
@@ -168,7 +169,7 @@ function ServiceDetail() {
                       </select>
                     </div> */}
                   </div>
-                  <div className='flex flex-col items-center mt-11 w-2/5'>
+                  <div className='flex flex-col items-center mt-11 w-2/5 gap-3'>
                     <div className='flex items-center justify-center w-full gap-9'>
                       <div className='rounded-full overflow-hidden'>
                         {isWorkerImgLoading && (
@@ -185,6 +186,17 @@ function ServiceDetail() {
                           <h2 className='font-semibold text-sm text-stone-600'>{service?.workerProfile.mob}</h2>
                         </div>
                       </div>
+                    </div>
+                    <div className='flex flex-col items-center gap-2'>
+                      <h1>Reviews & Rating</h1>
+                      <p className='flex gap-2 items-center text-2xl'>
+                        {Array.from({ length: service?.workerProfile?.rating }).map((_, index) => {
+                          return(
+                              <IoIosStar className={"text-yellow-300 text-3xl"} />
+                          )
+                        })}
+                        
+                      </p>
                     </div>
                   </div>
                 </div>
