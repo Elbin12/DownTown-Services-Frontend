@@ -6,14 +6,17 @@ import reportWebVitals from './reportWebVitals';
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Provider } from 'react-redux';
 import {store} from './redux/store';
+import { GoogleMapsProvider } from './context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <GoogleOAuthProvider clientId='484952135134-ut5tcak70fkt5l4460rlosla8vr1rg4k.apps.googleusercontent.com'>
-      <Provider store={store}>
-        <App />
-      </Provider>
+      <GoogleMapsProvider>
+        <Provider store={store}>
+          <App />
+        </Provider>
+      </GoogleMapsProvider>
     </GoogleOAuthProvider>
   </React.StrictMode>
 );

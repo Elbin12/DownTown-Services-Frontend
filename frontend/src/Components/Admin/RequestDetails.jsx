@@ -11,6 +11,9 @@ function RequestDetails() {
     
     const {id} = useParams();
     const [worker, setWorker] = useState();
+    const [rejectReason, setRejectReason] = useState();
+    const [isRejectClicked, setIsRejectClicked] = useState(false)
+    const [reasonErr, setReasonErr] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -29,10 +32,13 @@ function RequestDetails() {
         fetchWorker();
     }, [])
 
-    const approveWorker = async(email, status)=>{
+    const handleRequest = async(email, status)=>{
         const data = {
             'status':status,
             'email': email
+        }
+        if (status === 'rejected'){
+            data.reason = rejectReason;
         }
         try{
             const res = await api.post('admin/handle_requests/', data)
@@ -41,13 +47,26 @@ function RequestDetails() {
                 if (res.data.success){
                     navigate('/admin/requests/')
                     toast.success(res.data.success) 
-                }else if(res.data.failure){                    
+                }else if(res.data.failure){      
+                    navigate('/admin/requests/')              
                     toast.error(res.data.failure)
                 }
             }
         }catch(err){
             toast.error('Something went wrong.')
             console.log(err, 'err');
+        }
+    }
+
+    const rejectRequest = ()=>{
+        if(!isRejectClicked){
+            setIsRejectClicked(true);
+        }else{
+            if(!rejectReason || !rejectReason.trim()){
+                setReasonErr('Please add the reason to reject.')
+            }else{
+                handleRequest(worker?.email, 'rejected')
+            }
         }
     }
 
@@ -91,9 +110,19 @@ function RequestDetails() {
                         </div>
                         )}
                     </div>
-                    <div className="w-full flex justify-around">
-                        <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md" onClick={()=>{approveWorker(worker?.email, 'verified')}}>Accept</button>
-                        <button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md" onClick={()=>{approveWorker(worker?.email, 'rejected')}}>Reject</button>
+                    <div className='flex flex-col w-full gap-2'>
+                        <div className="w-full flex justify-around">
+                            <button className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded-md" onClick={()=>{handleRequest(worker?.email, 'verified')}}>Accept</button>
+                            <button className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-6 rounded-md" onClick={rejectRequest}>Reject</button>
+                        </div>
+                        {
+                            isRejectClicked&&
+                            <div>
+                                <p className='text-xs'>Add the reasons to reject <strong>{worker?.email}</strong> and click the reject button again.</p>
+                                <input type="text" className='h-11 border w-full outline-none px-4' onChange={(e)=>{setRejectReason(e.target.value); setReasonErr('')}}/>
+                                <p className='text-xs text-red-500'>{reasonErr}</p>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

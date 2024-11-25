@@ -29,7 +29,7 @@ function Sidebar() {
             <FaUsers className={`${window.location.pathname.includes('worker')&& 'text-2xl font-semibold'}`}/>
             <Link to="/admin/workers/" className={`${window.location.pathname.includes('worker')&& 'text-[#658ab7] font-semibold'}`}>Workers</Link>
         </div>
-        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('requests')&&'bg-[#BACBDF]'}`}>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('requests') || window.location.pathname.includes('request') &&'bg-[#BACBDF]'}`}>
             <FaUsers className={`${window.location.pathname.includes('requests')&& 'text-2xl font-semibold'}`}/>
             <Link to="/admin/requests/" className={`${window.location.pathname.includes('requests')&& 'text-[#658ab7] font-semibold'}`}>Requests</Link>
         </div>

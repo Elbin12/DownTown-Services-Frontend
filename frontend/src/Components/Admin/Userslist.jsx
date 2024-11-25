@@ -136,7 +136,7 @@ function Userslist({role}) {
                     </td>
                     <td className="px-8 py-3">{worker.email}</td>
                     <td className="px-8 py-3">{worker.mob}</td>
-                    <td className={`px-8 py-3 text-xs ${worker.status === 'verified'?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{worker.status}</td>
+                    <td className={`px-8 py-3 text-xs ${worker.is_active?'text-green-500':'text-red-600'} font-bold tracking-wider`}>{worker.is_active?'ACTIVE':'BLOCKED'}</td>
                   </tr>
                 ))
               }

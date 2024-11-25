@@ -1,16 +1,16 @@
 import React from 'react'
-import Profile from '../../Components/User/Profile/Profile'
 import Navbar from '../../Components/User/Navbar/Navbar'
 import SecondNavbar from '../../Components/User/SecondNavbar/SecondNavbar'
+import Orders from '../../Components/User/Orders'
 
-function Profilepage() {
+function Orderspage() {
   return (
     <>
       <Navbar />
-      <SecondNavbar role="user"/>  
-      <Profile role="user" />  
+      <SecondNavbar role='user'/>  
+      <Orders role="user" />
     </>
   )
 }
 
-export default Profilepage
+export default Orderspage

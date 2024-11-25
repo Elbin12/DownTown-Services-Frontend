@@ -11,12 +11,15 @@ import ServiceEditPage from '../Pages/Worker/ServiceEditPage'
 import ForgotPasswordPage from '../Pages/Worker/ForgotPasswordPage'
 import RequestPage from '../Pages/Worker/RequestPage'
 import AcceptedServicePage from '../Pages/Worker/AcceptedServicePage'
+import OrdersPage from '../Pages/Worker/OrdersPage'
+import ResubmitPage from '../Pages/Worker/ResubmitPage'
 
 function WorkerRoutes() {
   return (
     <div>
       <Routes>
         <Route path='' element={<LoginPage />}/>
+        <Route path='/resubmit/' element={<ResubmitPage />}/>
         <Route path='/forgot-password/' element={<ForgotPasswordPage />} />
         <Route path='/signup/' element={<SignupPage />}/>
         <Route path='/dashboard/' element={<WorkerProtectedRoute><HomePage /></WorkerProtectedRoute>} />
@@ -26,6 +29,7 @@ function WorkerRoutes() {
         <Route path='/service-edit/' element={<WorkerProtectedRoute><ServiceEditPage /></WorkerProtectedRoute>} />
         <Route path='/requests/' element={<WorkerProtectedRoute><RequestPage /></WorkerProtectedRoute>} />
         <Route path='/services/accepted/:id/' element={<WorkerProtectedRoute><AcceptedServicePage /></WorkerProtectedRoute>} />
+        <Route path='/services/accepted/' element={<WorkerProtectedRoute><OrdersPage /></WorkerProtectedRoute>} />
       </Routes>
     </div>
   )

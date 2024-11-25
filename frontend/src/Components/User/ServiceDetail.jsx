@@ -39,7 +39,7 @@ function ServiceDetail() {
               if(res.status === 200){
                 setService(res.data)
                 setDescription(()=>{
-                  if (res.data.request?.status !== 'rejected' && res.data.request?.status !== 'cancelled'){
+                  if (res.data.request?.status !== 'rejected' && res.data.request?.status !== 'completed' && res.data.request?.status !== 'cancelled'){
                     return res.data.request?.description
                   }
                 })
@@ -204,7 +204,7 @@ function ServiceDetail() {
                         {service?.request?
                           <>
                           {service?.request?.status === 'accepted'&& <button className='py-2 bg-[#398b47d4] text-sm text-white px-4 rounded-lg' >{service?.workerProfile.first_name} accepted your request</button>}
-                          {(service?.request?.status === 'rejected'|| service?.request?.status === 'cancelled')&& <button className='py-2 bg-[#ef6b43d4] text-sm text-white px-4 rounded-lg' onClick={handleRequest}>Request {service?.workerProfile.first_name}</button>}
+                          {(service?.request?.status === 'rejected'|| service?.request?.status === 'cancelled' || service?.request?.status === 'completed')&& <button className='py-2 bg-[#ef6b43d4] text-sm text-white px-4 rounded-lg' onClick={handleRequest}>Request {service?.workerProfile.first_name}</button>}
                             {service.request.status === 'request_sent'&&
                               <>
                                 <button className='py-2 bg-[#398b47d4] text-sm text-white px-4 rounded-lg' >Request sent to {service?.workerProfile.first_name}</button>

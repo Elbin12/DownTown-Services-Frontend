@@ -13,7 +13,7 @@ function ServiceAcceptedPopup({service}) {
 
     useEffect(()=>{
         const fetchOrder=async()=>{
-            const id = service.request.id
+            const id = service?.request.id
             try{
                 const res = await api.get(`find-order/${id}/`)
                 setOrder(res.data)

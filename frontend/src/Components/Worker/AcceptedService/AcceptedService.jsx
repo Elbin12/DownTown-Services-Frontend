@@ -1,23 +1,36 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { api } from '../../../axios';
 import UserDetails from './UserDetails';
 import { CiSquarePlus } from "react-icons/ci";
 import { FaReceipt } from "react-icons/fa6";
 import { IoIosRemoveCircle } from "react-icons/io";
-
-
+import { loadStripe } from "@stripe/stripe-js";
+import { toast } from 'sonner';
+import paymentImg from '../../../images/payment.png'
+import { IoIosStar } from "react-icons/io";
 
 
 
 function AcceptedService({role}) {
 
+    const key = process.env.REACT_APP_STRIPE_PUBLISH_KEY
+    const stripePromise = loadStripe(key);
+
     const { id } = useParams();
     const [inputSections, setInputSections] = useState([]);
     const [accepted_service, setAcceptedService] = useState();
+    const [rating, setRating] = useState(0)
+    const [hoveredRating, setHoveredRating] = useState(0);
+    const [review, setReview] = useState('');
+    const [err, setErr] = useState();
 
-    const [pic, setPic] = useState();
-    const [img, setImg] = useState();
+    const [paymentDetails, setPaymentDetails] = useState(null);
+    const [searchParams] = useSearchParams();
+
+    const [error, setError] = useState(null);
+    const [paymentAddError, setPaymentAddErr] = useState();
+    const [loading, setLoading] = useState(false);
 
     const receiptInput = useRef();
 
@@ -54,6 +67,7 @@ function AcceptedService({role}) {
 
     const handleInputChange = (index, field, value) => {
         console.log("index from handleInputChange-->", index)
+        setPaymentAddErr('')
         const updatedSections = [...inputSections];
         console.log(updatedSections, index, 'kkkkk');
         updatedSections[index][field] = value;
@@ -88,6 +102,18 @@ function AcceptedService({role}) {
 
     const paymentProceed =async()=>{
         console.log(inputSections, 'ffff');
+        let hasError = false;
+        inputSections.forEach((section, index) => {
+            if (!section.description || section.description.trim() ==='' || !section.image || !section.amount || !section.img) {
+                console.error(`Validation Error: Section ${index + 1} has empty fields.`);
+                hasError = true;
+            }
+        });
+
+        if (hasError) {
+            setPaymentAddErr('Please fill out all fields in each section before proceeding.');
+            return
+        }
 
         const formData = new FormData();
 
@@ -95,7 +121,6 @@ function AcceptedService({role}) {
 
         formData.append('additional_charges', JSON.stringify(inputSections));
 
-        // Add files individually
         inputSections.forEach((section, index) => {
             if (section.image) {
                 formData.append(`image_${index}`, section.image);
@@ -111,10 +136,60 @@ function AcceptedService({role}) {
         }
     }
 
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+
+        try {
+            const response = await api.post('create_payment/', {'order_id':id})
+
+            const { clientSecret } = await response.data
+
+            console.log(clientSecret, 'secretttt', response.data)
+
+            const stripe = await stripePromise;
+            const { error, success } = await stripe.redirectToCheckout({sessionId:response.data.id});
+            
+        } catch (err) {
+            setError("Something went wrong!");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleRating = (rate) => {
+        setRating(rate);
+      };
+
+    const handleReviewSubmit = async()=>{
+        if (review.trim() === ''){
+            setErr('Please add a feedback')
+            return
+        }else if(!rating){
+            setErr('Please give a rating')
+            return
+        }
+        const data = {
+            'review' : review,
+            'order_id' : accepted_service?.id,
+            'rating' : rating
+        }
+
+        try{
+            const response = await api.post('add-review/', data)
+            if (response.status === 200){
+                setAcceptedService(response.data)
+            }
+        }catch(err){
+            console.log(err, 'err')
+        }
+    }
+
     console.log(accepted_service, 'accepted_service')
   return (
     <div className=' w-full flex justify-center'>
-        <div className='bg-white w-full mx-24 py-16 mt-28 gap-9 flex flex-col rounded-lg h-full'>
+        <div className='bg-white w-full mx-24 py-9 my-9 mt-28 gap-9 flex flex-col rounded-lg h-full'>
             <UserDetails role={role} user={role==='user'?accepted_service?.worker:accepted_service?.user} order={accepted_service}/>
             {role==='worker' && accepted_service?.status !== 'completed' &&
                 <div className='flex flex-col items-center gap-3'>
@@ -123,24 +198,29 @@ function AcceptedService({role}) {
                     <div className='border-b  w-1/2'></div>
                 </div>
             }
-            {role==='user' && accepted_service?.status === 'completed' &&
-                <div className='flex flex-col items-center gap-3'>
-                    <h1 className='text-lg font-semibold text-neutral-700'>{accepted_service?.worker?.first_name} is completed the service. You can check it out.</h1>
-                    <p></p>
+            {accepted_service?.status === 'completed' &&
+                <div className='flex flex-col items-center gap-3 mx-40 border-stone-200'>
+                    <h1 className='text-lg font-semibold text-neutral-700'>{role==='user'&& accepted_service?.worker?.first_name + ' is completed the service. You can check it out.'}</h1>
+                    <div className='border-b  w-3/4'></div> 
+                    {accepted_service?.payment_details?.status === 'paid' && 
+                    <div className='flex gap-2 items-center'>
+                        <img src={paymentImg} alt="" className='w-11 h-11'/>
+                        <p className='text-lg font-semibold text-green-600'>Payment Successful</p>
+                    </div>}
                 </div>
             }
             {accepted_service?.payment_details &&
                 <div className='flex flex-col items-center px-9 gap-7'>
-                    <h1 className='text-lg text-lime-900 opacity-70 font-bold'>{role==='user'?'Please complete the payment':'Ensure the user has completed the payment'} </h1>
-                    <div className='w-full h-auto flex gap-4'>
+                    <h1 className='text-lg text-lime-900 opacity-70 font-bold'>{role==='user'? accepted_service?.payment_details?.status === 'unPaid'? 'Please complete the payment':'':accepted_service?.payment_details?.status === 'unPaid'&&'Ensure the user has completed the payment'} </h1>
+                    <div className='w-full h-auto flex gap-4 items-center'>
                         <img src={accepted_service?.service_image} alt="" className='h-36 w-auto object-cover'/>
-                        <div className='flex w-full flex-col gap-2'>
+                        <div className='flex w-3/4 flex-col gap-2'>
                             <div>
                                 <h1 className='text-zinc-700'>{accepted_service?.service_name}</h1>
                                 <p className='text-xs text-neutral-400 font-semibold'>{accepted_service?.order_tracking.arrival_time} - {accepted_service?.order_tracking.work_end_time}</p>
                             </div>
                             <h1 className='text-xs'>{accepted_service?.user_description}</h1>
-                            <div className='flex-col w-3/4 flex gap-1'>
+                            <div className='flex-col w-4/5 flex gap-1'>
                                 <div className='flex justify-between mb-2'>
                                     <h1 className='font-semibold text-slate-600'>Base Amount</h1>
                                     <div>
@@ -156,15 +236,51 @@ function AcceptedService({role}) {
                                         </div>
                                     </div>
                                 ))}
-                                <div className='flex px-4 justify-between bg-orange-50 mb-2'>
+                                <div className='flex py-1 justify-between mb-2 border-t-2 text-lg border-stone-300 mt-3 pt-2'>
                                     <h1 className='font-semibold text-slate-900'>Total Amount</h1>
                                     <div>
                                         <h1 className='font-bold text-neutral-800'>Rs. {accepted_service?.payment_details?.total_amount }</h1>
                                     </div>
                                 </div>
-                                {role==='user'&& <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' >Make payment</button>}
+                                {role==='user' && accepted_service?.payment_details?.status === 'unPaid' && <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' onClick={handleSubmit}>Make payment</button>}
                             </div>
                         </div>
+                        {role === 'user' && accepted_service?.status === 'completed' && accepted_service?.payment_details?.status === 'paid'&& accepted_service?.user_review.length === 0 &&
+                            <div className='h-full w-1/2 flex flex-col gap-3 justify-center items-center'>
+                                <div className='text-center gap-1'>
+                                    <h1 className='text-lg'>How was the work?</h1>
+                                    <p className='text-yellow-300 font-semibold text-lg'>Rate Us</p>
+                                    <div className='flex text-4xl justify-center gap-1 text-gray-300'>
+                                        {Array.from({ length: 5 }).map((_, index) => {
+                                            const starIndex = index + 1;
+                                            return(
+                                                <IoIosStar
+                                                key={index}
+                                                className={
+                                                    starIndex <= (hoveredRating || rating)
+                                                    ? "text-yellow-300 cursor-pointer"
+                                                    : "text-gray-300 cursor-pointer"
+                                                }
+                                                onClick={() => handleRating(starIndex)}
+                                                onMouseEnter={() => setHoveredRating(starIndex)}
+                                                onMouseLeave={() => setHoveredRating(0)}
+                                                />
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                <div className='flex flex-col gap-1 w-full items-center'>
+                                    <p className='text-sm'>Give feedback about service and worker.</p>
+                                    <div className='flex w-full items-center justify-center gap-2'>
+                                        <div className='flex flex-col w-2/3'>
+                                            <input type="text" className='py-1 w-full border border-stone-400 outline-none px-2 rounded-sm' onChange={(e)=>{setReview(e.target.value); setErr('')}}/>
+                                            <p className='text-red-500 text-xs'>{err}</p>
+                                        </div>
+                                        <button className='border px-3 py-1 rounded bg-amber-300 text-white font-semibold text-sm shadow' onClick={handleReviewSubmit}>Add feedback</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             }
@@ -210,6 +326,7 @@ function AcceptedService({role}) {
                                         </div>
                                     </div>
                                 ))}
+                                <p className='text-xs text-red-500'>{paymentAddError}</p>
                                 <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' onClick={paymentProceed}>Proceed</button>
                             </div>
                         </div>
