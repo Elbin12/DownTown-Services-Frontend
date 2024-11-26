@@ -4,6 +4,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast } from 'sonner';
 import ServiceAcceptedPopup from './ServiceAcceptedPopup';
 import { IoIosStar } from "react-icons/io";
+import { BiLike } from "react-icons/bi";
+import { BiSolidLike } from "react-icons/bi";
+import { BiDislike } from "react-icons/bi";
+import { BiSolidDislike } from "react-icons/bi";
+
 
 function ServiceDetail() {
     const { id } = useParams();
@@ -114,6 +119,22 @@ function ServiceDetail() {
       }
     }
 
+    const handleInteractions = async(is_like, review_id)=>{
+      try{
+        const res = await api.post('add-interactions/', {'is_like':is_like, 'review_id':review_id})
+        if (res.status === 200){
+          console.log(res.data, 'dataa')
+          setService((prevService)=>{
+            const updatedService = { ...prevService };
+            updatedService.workerProfile = res.data
+            return updatedService;
+          });
+        }
+      }catch(err){
+        console.log(err, 'err')
+      }
+    }
+
     console.log(service?.request.status, 'status', service?.request.description, description);
     
   return (
@@ -188,14 +209,12 @@ function ServiceDetail() {
                       </div>
                     </div>
                     <div className='flex flex-col items-center gap-2'>
-                      <h1>Reviews & Rating</h1>
                       <p className='flex gap-2 items-center text-2xl'>
                         {Array.from({ length: service?.workerProfile?.rating }).map((_, index) => {
                           return(
                               <IoIosStar className={"text-yellow-300 text-3xl"} />
                           )
                         })}
-                        
                       </p>
                     </div>
                   </div>
@@ -230,6 +249,38 @@ function ServiceDetail() {
                       <p className='text-red-500 text-xs'>{descriptionErr}</p>
                     </div>
                     
+                  </div>
+                </div>
+                <div className='px-9'>
+                  <div>
+                    <h1 className='text-lg mb-3'>Reviews</h1>
+                  </div>
+                  <div>
+                    <div className='grid gap-3 grid-cols-2'>
+                      {service?.workerProfile?.reviews?.map((review, index)=>(
+                        <div className='flex flex-col gap-1 border border-stone-400 rounded-lg px-6 py-2 hover:shadow-lg shadow-sm cursor-pointer'>
+                          <div className='flex gap-1'>
+                            {Array.from({ length: review.rating }).map((_, index) => (
+                              <IoIosStar className={"text-stone-700 text-xl"} />
+                            ))}
+                          </div>
+                          <h1 className='font-semibold text-sm'>{review.user.first_name}</h1>
+                          <p className='text-sm'>{review.review}</p>
+                          <div className='flex gap-1 justify-end'>
+                            <div className='flex gap-1'>
+                              <div className='text-center'>
+                                {review.is_liked? <BiSolidLike className='text-xl' /> :<BiLike className='text-xl' onClick={()=>{handleInteractions(true, review.id)}}/>}
+                                <p className='text-xs text-stone-600'>{review.total_likes}</p>
+                              </div>
+                              <div className='text-center'>
+                                {review.is_liked? <BiDislike className='text-xl' onClick={()=>{handleInteractions(false, review.id)}}/> : <BiSolidDislike className='text-xl' />}
+                                <p className='text-xs text-stone-600'>{review.total_dislikes}</p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
