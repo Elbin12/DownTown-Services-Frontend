@@ -9,6 +9,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { toast } from 'sonner';
 import paymentImg from '../../../images/payment.png'
 import { IoIosStar } from "react-icons/io";
+import ServiceAcceptedPopup from '../../User/ServiceAcceptedPopup';
 
 
 
@@ -189,6 +190,7 @@ function AcceptedService({role}) {
     console.log(accepted_service, 'accepted_service')
   return (
     <div className=' w-full flex justify-center'>
+        {role === 'user' && accepted_service?.status === 'pending' && <ServiceAcceptedPopup service={accepted_service} from={'order'}/>}
         <div className='bg-white w-full mx-24 py-9 my-9 mt-28 gap-9 flex flex-col rounded-lg h-full'>
             <UserDetails role={role} user={role==='user'?accepted_service?.worker:accepted_service?.user} order={accepted_service}/>
             {role==='worker' && accepted_service?.status !== 'completed' &&

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 
-function ServiceAcceptedPopup({service}) {
+function ServiceAcceptedPopup({service, from}) {
     const [isClicked, setIsClicked] = useState(false);
 
     const [order, setOrder] = useState();
@@ -13,13 +13,17 @@ function ServiceAcceptedPopup({service}) {
 
     useEffect(()=>{
         const fetchOrder=async()=>{
-            const id = service?.request.id
-            try{
-                const res = await api.get(`find-order/${id}/`)
-                setOrder(res.data)
-                console.log(res.data, 'resss');
-            }catch(err){
-                console.log(err,'err')
+            if (from === 'order'){
+                setOrder(service)
+            }else{
+                const id = service?.request.id
+                try{
+                    const res = await api.get(`find-order/${id}/`)
+                    setOrder(res.data)
+                    console.log(res.data, 'resss');
+                }catch(err){
+                    console.log(err,'err')
+                }
             }
         }
         fetchOrder();
@@ -55,7 +59,7 @@ function ServiceAcceptedPopup({service}) {
     
 
   return (
-    <div className='absolute w-full flex justify-center items-center h-screen z-20 bg-[#000000ad]'>
+    <div className='fixed w-full flex justify-center items-center h-screen z-20 bg-[#000000ad]'>
         <div className='bg-white relative rounded-lg overflow-hidden w-3/4 justify-center gap-8 flex flex-col h-3/4'>
             {isClicked&&
                 <div className='absolute z-20 flex items-center justify-center w-full h-full bg-[#46484866]'>

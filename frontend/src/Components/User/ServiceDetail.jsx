@@ -138,7 +138,7 @@ function ServiceDetail() {
     console.log(service?.request.status, 'status', service?.request.description, description);
     
   return (
-          <div className={`w-full justify-center relative flex py-4 ${loading&& 'h-screen'}`}>
+          <div className={`w-full justify-center relative flex ${loading&& 'h-screen'}`}>
             {service?.request?.status === 'accepted' && <ServiceAcceptedPopup service={service}/>}
             {loading?
               <div className="absolute inset-0 mt-32 flex items-start justify-center">
@@ -146,7 +146,7 @@ function ServiceDetail() {
               </div>
               :
               <>
-              <div className='w-3/4 mt-28 bg-white py-6 flex flex-col gap-3'>
+              <div className='w-3/4 mt-28 bg-white py-6 my-4 flex flex-col gap-3'>
                 <div className='w-full flex gap-4 px-9'>
                   <div className='w-3/5 flex flex-col gap-9'>
                     <div className='flex flex-col gap-1'>
@@ -273,7 +273,7 @@ function ServiceDetail() {
                                 <p className='text-xs text-stone-600'>{review.total_likes}</p>
                               </div>
                               <div className='text-center'>
-                                {review.is_liked? <BiDislike className='text-xl' onClick={()=>{handleInteractions(false, review.id)}}/> : <BiSolidDislike className='text-xl' />}
+                                {review.is_liked === null? <BiDislike className='text-xl' onClick={()=>{handleInteractions(true, review.id)}}/> : review.is_liked? <BiDislike className='text-xl' onClick={()=>{handleInteractions(false, review.id)}}/> : <BiSolidDislike className='text-xl' />}
                                 <p className='text-xs text-stone-600'>{review.total_dislikes}</p>
                               </div>
                             </div>
