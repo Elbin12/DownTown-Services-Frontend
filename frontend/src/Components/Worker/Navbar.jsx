@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Logo from '../../images/LOGO.png';
 import { IoIosArrowDown } from "react-icons/io";
@@ -22,6 +22,9 @@ function Navbar() {
   const workerinfo = useSelector(state=>state.worker.workerinfo)
   const [showPopup, setShowPopup] = useState(false);
   const [location, setLocation] = useState(workerinfo? workerinfo.location:'');
+  const [notifications, setNotifications] = useState([])
+
+  const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -37,7 +40,31 @@ function Navbar() {
       navigate('/')
     }
   }
+  
+  useEffect(() => {
+    const socket = new WebSocket(`ws://localhost:8000/ws/notification/${workerinfo.id}/`);
 
+    socket.onopen = () => {
+      console.log("WebSocket connection opened");
+    };
+
+    socket.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      console.log("Notification received:", data.notification, data);
+      setNotifications((prevNotifications) => [...prevNotifications, data.notification]);
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+    
+    return () => {
+      socket.close();
+    };
+  }, [workerinfo.id]);
+
+
+  console.log(notifications, 'notifications')
   return (
     <>
       {activePopup==='location' && <Location role={'worker'} location={location} setLocation={setLocation} setActivePopup={setActivePopup}/>}
@@ -100,7 +127,27 @@ function Navbar() {
               </div>
             )}
           </div>
-          <IoIosNotifications className='text-lg' />
+          <div className="relative flex">
+            <IoIosNotifications className="text-xl cursor-pointer" onMouseEnter={() => setShowNotifications(true)} onMouseLeave={() => setShowNotifications(false)}/>
+            {notifications?.length > 0 && (
+              <span className="absolute top-0 right-0 bg-slate-600 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center translate-x-1/2 -translate-y-1/2">
+                {notifications.length}
+              </span>
+            )}
+          </div>
+          {showNotifications && (
+              <div className='fixed top-[4.3rem] w-[23rem] z-20 bg-white shadow-sm flex flex-col rounded-lg border ' style={{left:'70%'}}>
+                {notifications?.map((notification, index)=>(
+                  <div key={index} className='flex gap-4 hover:bg-blue-50 p-3' onClick={()=>{navigate('/worker/profile/')}}>
+                    <img src={notification?.sender?.profile_pic} alt="" className='w-9 h-9 object-cover rounded-full'/>
+                    <div>
+                      <h4 className='font-semibold text-sm'>{notification.sender?.first_name}</h4>
+                      <p className='text-xs'>{notification.message}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
         </div>
       </div>
     </>

@@ -8,9 +8,11 @@ import { BiLike } from "react-icons/bi";
 import { BiSolidLike } from "react-icons/bi";
 import { BiDislike } from "react-icons/bi";
 import { BiSolidDislike } from "react-icons/bi";
+import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
+import { useSelector } from 'react-redux';
 
 
-function ServiceDetail() {
+function ServiceDetail({setIsChatOpen, setRecipient_id, setWorker}) {
     const { id } = useParams();
     const [service, setService] = useState();
     const [isWorkerImgLoading, setisWorkerImgLoading] = useState(true);
@@ -20,6 +22,8 @@ function ServiceDetail() {
 
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+
+    const userinfo = useSelector(state=>state.user.userinfo)
       
     const handleWorkerImgImageLoad = () => {
       setisWorkerImgLoading(false);
@@ -205,6 +209,10 @@ function ServiceDetail() {
                         <div>
                           <h1 className='text-xs text-stone-500 mb-1'>PHONE</h1>
                           <h2 className='font-semibold text-sm text-stone-600'>{service?.workerProfile.mob}</h2>
+                        </div>
+                        <div>
+                          <h1 className='text-xs text-stone-500 mb-1'>CHAT</h1>
+                          <h2 className='font-semibold text-sm text-stone-600 cursor-pointer' onClick={()=>{setIsChatOpen(true); setRecipient_id(service?.worker); setWorker(service?.workerProfile);}}><IoChatbubbleEllipsesSharp className='text-2xl'/></h2>
                         </div>
                       </div>
                     </div>

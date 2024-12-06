@@ -13,6 +13,7 @@ import RequestPage from '../Pages/Worker/RequestPage'
 import AcceptedServicePage from '../Pages/Worker/AcceptedServicePage'
 import OrdersPage from '../Pages/Worker/OrdersPage'
 import ResubmitPage from '../Pages/Worker/ResubmitPage'
+import WalletPage from '../Pages/Worker/WalletPage'
 
 function WorkerRoutes() {
   return (
@@ -30,6 +31,7 @@ function WorkerRoutes() {
         <Route path='/requests/' element={<WorkerProtectedRoute><RequestPage /></WorkerProtectedRoute>} />
         <Route path='/services/accepted/:id/' element={<WorkerProtectedRoute><AcceptedServicePage /></WorkerProtectedRoute>} />
         <Route path='/services/accepted/' element={<WorkerProtectedRoute><OrdersPage /></WorkerProtectedRoute>} />
+        <Route path='/wallet/' element={<WorkerProtectedRoute><WalletPage /></WorkerProtectedRoute>} />
       </Routes>
     </div>
   )
