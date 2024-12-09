@@ -17,16 +17,17 @@ import { useLoadScript } from "@react-google-maps/api";
 
 
 
-function Navbar() {
+function Navbar({setChats}) {
   const [activePopup, setActivePopup] = useState(null);
   const workerinfo = useSelector(state=>state.worker.workerinfo)
   const [showPopup, setShowPopup] = useState(false);
   const [location, setLocation] = useState(workerinfo? workerinfo.location:'');
-  const [notifications, setNotifications] = useState([])
 
   const [showNotifications, setShowNotifications] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [notifications, setNotifications] = useState([]);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_LOCATION_API,
@@ -51,16 +52,19 @@ function Navbar() {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log("Notification received:", data.notification, data);
-      setNotifications((prevNotifications) => [...prevNotifications, data.notification]);
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
+      if (data.type === 'recentchats'){
+        console.log('chats updated vannu', data)
+        setChats(data.notification)
+      }else if (data.type === 'notification'){
+        setNotifications((prevNotifications)=>[data.notification, ...prevNotifications])
+      }else if(data.type === 'update_notifications'){ 
+        console.log('vvvvaaaannnuuuu')
+        setNotifications(data.notification)
+      };
     
     return () => {
       socket.close();
-    };
+    }}
   }, [workerinfo.id]);
 
 
@@ -137,7 +141,7 @@ function Navbar() {
           </div>
           {showNotifications && (
               <div className='fixed top-[4.3rem] w-[23rem] z-20 bg-white shadow-sm flex flex-col rounded-lg border ' style={{left:'70%'}}>
-                {notifications?.map((notification, index)=>(
+                {notifications?.length > 0 && notifications?.map((notification, index)=>(
                   <div key={index} className='flex gap-4 hover:bg-blue-50 p-3' onClick={()=>{navigate('/worker/profile/')}}>
                     <img src={notification?.sender?.profile_pic} alt="" className='w-9 h-9 object-cover rounded-full'/>
                     <div>

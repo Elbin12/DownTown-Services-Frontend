@@ -11,6 +11,8 @@ function ServiceEdit() {
     const selectedService = useSelector(state => state.worker.selectedService)
 
     console.log(selectedService, 'selected');
+
+    const [isLoading, setIsLoading] = useState(false);
     
 
     const [service_name, setService_name] = useState(selectedService?.service_name ? selectedService.service_name : '');
@@ -90,6 +92,7 @@ function ServiceEdit() {
         }
         console.log(data, 'data', );
         const id = selectedService.id
+        setIsLoading(true);
         try{
             const res = await api.put(`worker/services/${id}/`, data,{
             headers: {
@@ -97,12 +100,13 @@ function ServiceEdit() {
                 }
             })
             if (res.status === 200){
-                toast.success('service edited successfully')
+                toast.success('service edited successfully')  
                 navigate('/worker/services/')
             }
         }catch(err){
             console.log(err, 'errr'); 
-            
+        }finally{
+            setIsLoading(false);
         }
     }
 
@@ -190,8 +194,12 @@ function ServiceEdit() {
                 </div>
             </div>
         </div>
-        <div className='w-3/4 shadow-lg py-2 text-center bg-slate-500 rounded-lg text-white font-semibold cursor-pointer' onClick={handleSubmit}>
+        <div className={`w-3/4 shadow-lg py-2 text-center bg-slate-500 rounded-lg text-white font-semibold cursor-pointer flex justify-center items-center gap-3 ${
+          isLoading ? 'cursor-not-allowed opacity-75' : ''}`} disabled={isLoading} onClick={handleSubmit}>
             <h1>Edit Service</h1>
+            {isLoading && (
+                <div className="w-4 h-4 border-2 border-t-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            )}
         </div>
     </div>
   )

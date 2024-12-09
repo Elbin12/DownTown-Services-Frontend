@@ -11,7 +11,7 @@ function Dashboard() {
 
   return (
     <div className='mt-28 mx-28'>
-      <div className="flex items-center justify-end gap-4 bg-white px-2 py-4">
+      {/* <div className="flex items-center justify-end gap-4 bg-white px-2 py-4">
         <h1 className="text-xl font-semibold">
             {isAvailable ? "Available" : "Unavailable"}
         </h1>
@@ -27,7 +27,7 @@ function Dashboard() {
                 }`}
             ></div>
         </button>
-      </div>
+      </div> */}
       <AcceptedServices/>
     </div>
   )

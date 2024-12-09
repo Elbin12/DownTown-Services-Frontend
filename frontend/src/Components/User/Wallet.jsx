@@ -8,7 +8,7 @@ import CheckoutFrom from './CheckoutFrom';
 import { useSelector } from 'react-redux';
 
 
-function Wallet(role) {
+function Wallet({role}) {
   const key = process.env.REACT_APP_STRIPE_PUBLISH_KEY
   const stripePromise = loadStripe(key);
 
@@ -19,7 +19,7 @@ function Wallet(role) {
 
   useEffect(()=>{
     const fetchWallet = async()=>{
-      const url = role === 'user'? 'wallet/' : 'worker/wallet/'
+      const url = role === 'user' ? 'wallet/' : 'worker/wallet/'
       try{
         const res = await api.get(url)
         if (res.status === 200){
@@ -38,7 +38,7 @@ function Wallet(role) {
     setIsClick(false);
     try{
       const url = role === 'user'? 'capture_payment/' : 'worker/capture_payment/'
-      const res = await api.post('capture_payment/', {'payment_intent_id':paymentIntentId, 'transaction_id':transaction_id})
+      const res = await api.post(url, {'payment_intent_id':paymentIntentId, 'transaction_id':transaction_id})
       console.log('success vvvvvv', res.data);
       if (res.status === 200){
         setWallet(res.data);
@@ -67,7 +67,7 @@ function Wallet(role) {
             <div className="w-full flex flex-col gap-2">
               <input type="number" min={10} placeholder="Enter amount" className="mt-2 w-full px-3 py-3 text-xs border rounded focus:outline-none" onChange={(e) => setAmount(e.target.value)}/>
               <Elements stripe={stripePromise}>
-                <CheckoutFrom amount={amount} onPaymentSuccess={handlePaymentSuccess} />
+                <CheckoutFrom role={role} amount={amount} onPaymentSuccess={handlePaymentSuccess} />
               </Elements>
             </div>
           </div>

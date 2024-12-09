@@ -10,13 +10,13 @@ import { api } from '../../../axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { MdAccountCircle } from "react-icons/md";
 import OTP from '../OTP/OTP';
-import { setUserinfo } from '../../../redux/user';
+import { setUserinfo, } from '../../../redux/user';
 import Location from '../Location';
 import { useLoadScript } from "@react-google-maps/api";
 import { IoIosNotifications } from 'react-icons/io';
 
 
-function Navbar({setIsChatOpen, setWorker}) {
+function Navbar({setChats, setIsChatOpen, setWorker}) {
 
   const userinfo = useSelector(state => state.user.userinfo);
   const anonymous_user_location = useSelector(state=>state.anonymous_user.locationDetails)
@@ -25,12 +25,11 @@ function Navbar({setIsChatOpen, setWorker}) {
   const [location, setLocation] = useState(userinfo? userinfo.location:anonymous_user_location? anonymous_user_location.location:'');
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  const [notifications, setNotifications] = useState([]);
   const [showNotifications, setShowNotifications] = useState(false);
 
   console.log(userinfo, 'jjjj', anonymous_user_location);
   
+  const [notifications, setNotifications] = useState([]);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_LOCATION_API,
@@ -43,32 +42,32 @@ function Navbar({setIsChatOpen, setWorker}) {
     }
   })
 
-  const socket = new WebSocket(`ws://localhost:8000/ws/notification/${userinfo.id}/`);
-
-  useEffect(()=>{
-    socket.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      console.log(data, 'dadada')
-      console.log("Notification received:", data.notification, data);
-      setNotifications((prevNotifications) => [...prevNotifications, data.notification]);
-    };
-  }, [])
   
+  useEffect(()=>{
+    const socket = new WebSocket(`ws://localhost:8000/ws/notification/${userinfo.id}/`);
 
-  socket.onopen = function () {
+    console.log('ooooo')
+    socket.onopen = function () {
       console.log("WebSocket connection opened");
   };
-
-  socket.onclose = function () {
-      console.log("WebSocket connection closed");
-  };
-
-  const sendMessage = ()=>{
-      socket.send(JSON.stringify({
-        message: "Hello, Worker!",
-    }));
-  }
-
+  
+    socket.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      console.log("Notification received:", data);
+      if (data.type === 'recentchats'){
+        console.log('chats updated vannu', data)
+        setChats(data.notification);
+      }else if(data.type === 'notification'){
+        setNotifications((prevNotifications)=>[data.notification, ...prevNotifications])
+      }else if(data.type === 'update_notifications'){
+        console.log('vvvvaaaannnuuuu')
+        setNotifications(data.notification)
+      }
+  
+    return () => {
+      socket.close();
+    }}
+  }, [])
 
   console.log(notifications, 'notifications from state')
   return (

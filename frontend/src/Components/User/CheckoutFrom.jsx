@@ -3,7 +3,7 @@ import React from 'react'
 import { api } from '../../axios';
 import { useSelector } from 'react-redux';
 
-function CheckoutFrom({ amount, onPaymentSuccess }) {
+function CheckoutFrom({role, amount, onPaymentSuccess }) {
 
     const user = useSelector(state=>state.user.userinfo)
 
@@ -21,26 +21,27 @@ function CheckoutFrom({ amount, onPaymentSuccess }) {
         const cardElement = elements.getElement(CardElement);
 
         try {
-        const res = await api.post("add-money/", { amount });
-        const { client_secret } = res.data;
-        const {transaction_id} = res.data;
+          const url = role === 'user'? "add-money/" : "worker/add-money/"
+          const res = await api.post(url, { amount });
+          const { client_secret } = res.data;
+          const {transaction_id} = res.data;
 
-        const paymentResult = await stripe.confirmCardPayment(client_secret, {
-            payment_method: {
-            card: cardElement,
-            billing_details: {
-                name: user?.first_name,
-            },
-            },
-        });
+          const paymentResult = await stripe.confirmCardPayment(client_secret, {
+              payment_method: {
+              card: cardElement,
+              billing_details: {
+                  name: user?.first_name,
+              },
+              },
+          });
 
-        if (paymentResult.error) {
-            console.error("Payment failed:", paymentResult.error.message);
-        } else if (paymentResult.paymentIntent.status === "succeeded") {
-            const paymentIntentId = paymentResult.paymentIntent.id;
-            console.log("Payment successful!");
-            onPaymentSuccess(paymentIntentId, transaction_id);
-        }
+          if (paymentResult.error) {
+              console.error("Payment failed:", paymentResult.error.message);
+          } else if (paymentResult.paymentIntent.status === "succeeded") {
+              const paymentIntentId = paymentResult.paymentIntent.id;
+              console.log("Payment successful!");
+              onPaymentSuccess(paymentIntentId, transaction_id);
+          }
         } catch (error) {
         console.error("Error during payment:", error);
         }

@@ -9,6 +9,7 @@ import AcceptedServicePage from '../Pages/User/AcceptedServicePage'
 import PaymentSuccessPage from '../Pages/User/PaymentSuccessPage'
 import Orderspage from '../Pages/User/Orderspage'
 import WalletPage from '../Pages/User/WalletPage'
+import WebSocketTest from './Trial'
 
 function UserRoutes() {
     return (
@@ -22,6 +23,7 @@ function UserRoutes() {
                 <Route path='/order/:id/' element={<UserProtectedRoute><AcceptedServicePage /></UserProtectedRoute>}></Route>
                 <Route path='/payment/success/:id/' element={<UserProtectedRoute><PaymentSuccessPage /></UserProtectedRoute>}></Route>
                 <Route path='/wallet/' element={<UserProtectedRoute><WalletPage /></UserProtectedRoute>}></Route>
+                <Route path='/dummy/' element={<UserProtectedRoute><WebSocketTest/></UserProtectedRoute>}></Route>
             </Routes>
         </div>
     )

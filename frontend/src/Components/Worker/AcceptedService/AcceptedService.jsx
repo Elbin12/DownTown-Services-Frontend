@@ -31,7 +31,7 @@ function AcceptedService({role}) {
 
     const [error, setError] = useState(null);
     const [paymentAddError, setPaymentAddErr] = useState();
-    const [loading, setLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
     const receiptInput = useRef();
 
@@ -128,19 +128,24 @@ function AcceptedService({role}) {
                 formData.append(`img_${index}`, section.img);
             }
         });
-        
+        setIsLoading(true);
         try{
             const res = await api.post('worker/add-payment/', formData)
+            if(res.status === 200){
+                setAcceptedService(res.data);
+            }
             console.log('response --->', res.data, res )
         }catch(err){
             console.log(err, 'err');
-        }
+        }finally{
+            setIsLoading(false);
+          }
     }
 
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
+        setIsLoading(true);
 
         try {
             const response = await api.post('create_payment/', {'order_id':id})
@@ -155,7 +160,7 @@ function AcceptedService({role}) {
         } catch (err) {
             setError("Something went wrong!");
         } finally {
-            setLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -329,7 +334,12 @@ function AcceptedService({role}) {
                                     </div>
                                 ))}
                                 <p className='text-xs text-red-500'>{paymentAddError}</p>
-                                <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' onClick={paymentProceed}>Proceed</button>
+                                <div className={`bg-amber-500 py-1 rounded-lg text-white font-bold mt-4 flex items-center justify-center gap-3 cursor-pointer ${isLoading ? 'cursor-not-allowed opacity-75' : ''}`} onClick={paymentProceed} disabled={isLoading}>
+                                    <h1>Proceed</h1>
+                                    {isLoading && (
+                                        <div className="w-4 h-4 border-2 border-t-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </div>

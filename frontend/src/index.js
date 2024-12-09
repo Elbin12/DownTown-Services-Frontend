@@ -10,7 +10,6 @@ import { GoogleMapsProvider } from './context';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
     <GoogleOAuthProvider clientId='484952135134-ut5tcak70fkt5l4460rlosla8vr1rg4k.apps.googleusercontent.com'>
       <GoogleMapsProvider>
         <Provider store={store}>
@@ -18,7 +17,6 @@ root.render(
         </Provider>
       </GoogleMapsProvider>
     </GoogleOAuthProvider>
-  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

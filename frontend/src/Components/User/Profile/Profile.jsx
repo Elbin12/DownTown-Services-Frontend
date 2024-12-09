@@ -20,6 +20,8 @@ function Profile({role}) {
 
   const fileuploadRef = useRef();
   const [img, setImg] = useState(null);
+
+  const [isLoading, setIsLoading] = useState(false);
   
   const [activePopup, setActivePopup] = useState('');
   
@@ -119,7 +121,6 @@ function Profile({role}) {
 
   const handlesubmit = async()=>{
     console.log(first_name, last_name, 'woooo');
-    
 
     if (role==='user'){
       if (!img && !userinfo?.profile_pic){
@@ -141,7 +142,7 @@ function Profile({role}) {
           mob
         }
         console.log(data, 'ddd');
-        
+        setIsLoading(true);
         try{
           const res = await api.post('profile/', data,{
             headers: {
@@ -159,7 +160,9 @@ function Profile({role}) {
           }
           console.log(err.response.data, 'lll');
           setMobErr(err.response.data.mob)     
-        } 
+        }finally{
+          setIsLoading(false);
+        }
       }else if(role=='worker'){
         if (!img && !workerinfo?.profile_pic){
           setPicErr('Profile image is Required')
@@ -179,7 +182,7 @@ function Profile({role}) {
           mob
         }
         console.log(data, 'ddd');
-        
+        setIsLoading(true);
         try{
           const res = await api.post('worker/profile/', data,{
             headers: {
@@ -198,6 +201,8 @@ function Profile({role}) {
           console.log(err.response.data, 'lll');
           setMobErr(err.response.data.mob)
           console.log(err.response.data.mob, 'lll');
+        }finally{
+          setIsLoading(false);
         }
       }
     }
@@ -353,7 +358,13 @@ function Profile({role}) {
       {userinfo&&<button className='bg-[#3d6b94da] px-2 py-1 rounded-sm text-white font-bold text-sm' onClick={logout}>LOGOUT</button>}
     </div>
     {activePopup==='save' &&(<div className='text-xs md:text-sm fixed flex justify-center items-center bottom-0 w-full bg-white h-20 z-10'>
-      <button className='border h-11 w-1/2 rounded-lg text-white bg-[#3d6b94da]' onClick={handlesubmit}>Save Changes</button>
+      <button className={`border h-11 w-1/2 rounded-lg text-white  bg-[#3d6b94da] flex items-center justify-center ${
+          isLoading ? 'cursor-not-allowed opacity-75' : ''}`} onClick={handlesubmit} disabled={isLoading}>
+        <span className='mr-2'>Save Changes</span>
+        {isLoading && (
+          <div className="w-4 h-4 border-2 border-t-2 border-white border-t-transparent rounded-full animate-spin"></div>
+        )}
+      </button>
     </div>)}
     </div>
   )

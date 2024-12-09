@@ -10,6 +10,8 @@ function AddServices() {
 
     const navigate = useNavigate();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const [service_name, setService_name] = useState();
     const [serviceErr, setServiceErr] = useState();
 
@@ -114,7 +116,7 @@ function AddServices() {
             price
         }
         console.log(data, 'data', );
-
+        setIsLoading(true);
         try{
             const res = await api.post('worker/services/', data,{
             headers: {
@@ -123,6 +125,7 @@ function AddServices() {
             })
             if (res.status === 201){
                 console.log(res.status, 'kkk');
+                setIsLoading(false);
                 toast.success('service added successfully')
                 setService_name('')
                 setIsCategory('')
@@ -134,6 +137,7 @@ function AddServices() {
                 navigate('/worker/services/')
             }
         }catch(err){
+            setIsLoading(false);
             console.log(err, 'errr', err.response.data?.message[0]); 
             toast.error(err.response.data?.message[0]);
         }
@@ -271,8 +275,12 @@ function AddServices() {
             }} />
             <img src={img} alt="" accept="image/*" className={`${pic&&'h-24'}`}/>
         </div>}
-        <div className='w-3/4 shadow-lg py-2 text-center bg-slate-500 rounded-lg text-white font-semibold' onClick={handleSubmit}>
-            <h1>Create Service</h1>
+        <div className={`w-3/4 shadow-lg py-2 text-center bg-slate-500 rounded-lg text-white font-semibold cursor-pointer flex justify-center items-center gap-3 ${
+          isLoading ? 'cursor-not-allowed opacity-75' : ''}`} disabled={isLoading} onClick={handleSubmit}>
+            <h1>Edit Service</h1>
+            {isLoading && (
+                <div className="w-4 h-4 border-2 border-t-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            )}
         </div>
     </div>
   )
