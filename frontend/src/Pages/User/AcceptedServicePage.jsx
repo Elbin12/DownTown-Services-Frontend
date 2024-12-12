@@ -10,11 +10,9 @@ function AcceptedServicePage() {
   const stripePromise = loadStripe(key);
   return (
     <>
-        <Navbar />
         <Elements stripe={stripePromise}>
           <AcceptedService role={'user'} stripePromise={stripePromise}/>
         </Elements>
-        <Footer />
     </>
   )
 }

@@ -14,41 +14,10 @@ import { useSelector } from 'react-redux';
 
 
 function Homepage() {
-
-  const [isChatOpen, setIsChatOpen] = useState();
-  const [recipient_id, setRecipient_id] = useState();
-  const [worker, setWorker] = useState();
-
-  const [chats, setChats] = useState();
-  const [selectedChatId, setSelectedChatId] = useState(null);
-  const userinfo = useSelector(state=>state.user.userinfo)
-  useEffect(()=>{
-    const fetchChats = async()=>{
-        try{
-            const res = await api.get('chats/')
-            if (res.status===200){
-                console.log(res.data, 'chatsss dataaas')
-                setChats(res.data)
-            }
-        }catch(err){
-            console.log(err, 'errr')
-        }
-    }
-    fetchChats();
-}, [])
-
   return (
     <Fragment>
-      <Navbar setChats={setChats} setIsChatOpen={setIsChatOpen} setWorker={setWorker}/>
       <Banner />
       <TopServices />
-      {userinfo && 
-        <Chat role='user' chats={chats} setIsChatOpen={setIsChatOpen} setWorker={setWorker} selectedChatId={selectedChatId} setSelectedChatId={setSelectedChatId}/>
-      }
-      {isChatOpen&&
-        <ChatDetails setChats={setChats} role='user' setIsChatOpen={setIsChatOpen} recipient_id={recipient_id} user={worker} setSelectedChatId={setSelectedChatId}/>
-      }
-      <Footer />
     </Fragment>
   )
 }

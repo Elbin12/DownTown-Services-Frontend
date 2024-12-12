@@ -14,25 +14,28 @@ import AcceptedServicePage from '../Pages/Worker/AcceptedServicePage'
 import OrdersPage from '../Pages/Worker/OrdersPage'
 import ResubmitPage from '../Pages/Worker/ResubmitPage'
 import WalletPage from '../Pages/Worker/WalletPage'
+import Layout from '../Pages/Worker/Layout'
 
 function WorkerRoutes() {
   return (
     <div>
-      <Routes>
-        <Route path='' element={<LoginPage />}/>
-        <Route path='/resubmit/' element={<ResubmitPage />}/>
-        <Route path='/forgot-password/' element={<ForgotPasswordPage />} />
-        <Route path='/signup/' element={<SignupPage />}/>
-        <Route path='/dashboard/' element={<WorkerProtectedRoute><HomePage /></WorkerProtectedRoute>} />
-        <Route path='/profile/' element={<WorkerProtectedRoute><ProfilePage /></WorkerProtectedRoute>} />
-        <Route path='/add-service/' element={<WorkerProtectedRoute><AddServicesPage /></WorkerProtectedRoute>} />
-        <Route path='/services/' element={<WorkerProtectedRoute><ServicesPage /></WorkerProtectedRoute>} />
-        <Route path='/service-edit/' element={<WorkerProtectedRoute><ServiceEditPage /></WorkerProtectedRoute>} />
-        <Route path='/requests/' element={<WorkerProtectedRoute><RequestPage /></WorkerProtectedRoute>} />
-        <Route path='/services/accepted/:id/' element={<WorkerProtectedRoute><AcceptedServicePage /></WorkerProtectedRoute>} />
-        <Route path='/services/accepted/' element={<WorkerProtectedRoute><OrdersPage /></WorkerProtectedRoute>} />
-        <Route path='/wallet/' element={<WorkerProtectedRoute><WalletPage /></WorkerProtectedRoute>} />
-      </Routes>
+      <Layout >
+        <Routes>
+          <Route path='login' element={<LoginPage />}/>
+          <Route path='/resubmit/' element={<ResubmitPage />}/>
+          <Route path='/forgot-password/' element={<ForgotPasswordPage />} />
+          <Route path='/signup/' element={<SignupPage />}/>
+          <Route path='/dashboard/' element={<WorkerProtectedRoute><HomePage /></WorkerProtectedRoute>} />
+          <Route path='/profile/' element={<WorkerProtectedRoute><ProfilePage /></WorkerProtectedRoute>} />
+          <Route path='/add-service/' element={<WorkerProtectedRoute><AddServicesPage /></WorkerProtectedRoute>} />
+          <Route path='/services/' element={<WorkerProtectedRoute><ServicesPage /></WorkerProtectedRoute>} />
+          <Route path='/service-edit/' element={<WorkerProtectedRoute><ServiceEditPage /></WorkerProtectedRoute>} />
+          <Route path='/requests/' element={<WorkerProtectedRoute><RequestPage /></WorkerProtectedRoute>} />
+          <Route path='/services/accepted/:id/' element={<WorkerProtectedRoute><AcceptedServicePage /></WorkerProtectedRoute>} />
+          <Route path='/services/accepted/' element={<WorkerProtectedRoute><OrdersPage /></WorkerProtectedRoute>} />
+          <Route path='/wallet/' element={<WorkerProtectedRoute><WalletPage /></WorkerProtectedRoute>} />
+        </Routes>
+      </Layout>
     </div>
   )
 }

@@ -13,6 +13,7 @@ import { IoAddCircleSharp } from "react-icons/io5";
 import { MdOutlineArrowDropDown } from 'react-icons/md';
 import Location from '../User/Location';
 import { useLoadScript } from "@react-google-maps/api";
+import { BiSolidMessageDetail } from "react-icons/bi";
 
 
 
@@ -24,10 +25,12 @@ function Navbar({setChats}) {
   const [location, setLocation] = useState(workerinfo? workerinfo.location:'');
 
   const [showNotifications, setShowNotifications] = useState(false);
+  const [showChatNotifications, setShowChatNotifications] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [notifications, setNotifications] = useState([]);
+  const [chatMessages, setChatMessages] = useState([]);
 
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_LOCATION_API,
@@ -52,15 +55,22 @@ function Navbar({setChats}) {
     socket.onmessage = (event) => {
       const data = JSON.parse(event.data);
       console.log("Notification received:", data.notification, data);
-      if (data.type === 'recentchats'){
-        console.log('chats updated vannu', data)
-        setChats(data.notification)
-      }else if (data.type === 'notification'){
-        setNotifications((prevNotifications)=>[data.notification, ...prevNotifications])
-      }else if(data.type === 'update_notifications'){ 
-        console.log('vvvvaaaannnuuuu')
-        setNotifications(data.notification)
-      };
+      try{
+        if (data.type === 'recentchats'){
+          console.log('chats updated vannu', data)
+          setChats(data.notification);
+        }else if (data.type === 'chat_message'){
+          setChatMessages((prevNotifications)=>[data.notification, ...prevNotifications])
+        }else if(data.type === 'update_notifications'){ 
+          console.log('vvvvaaaannnuuuu')
+          setChatMessages([]);
+          setNotifications(data.notification)
+        }else if(data.type === 'notification'){
+          setNotifications((prevNotifications)=>[data.notification, ...prevNotifications])
+        }
+      }catch(err){
+        console.log(err, 'err')
+      }
     
     return () => {
       socket.close();
@@ -132,6 +142,14 @@ function Navbar({setChats}) {
             )}
           </div>
           <div className="relative flex">
+            <BiSolidMessageDetail className="text-xl cursor-pointer" onMouseEnter={() => setShowChatNotifications(true)} onMouseLeave={() => setShowChatNotifications(false)}/>
+            {chatMessages?.length > 0 && (
+              <span className="absolute top-0 right-0 bg-slate-600 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center translate-x-1/2 -translate-y-1/2">
+                {chatMessages.length}
+              </span>
+            )}
+          </div>
+          <div className="relative flex">
             <IoIosNotifications className="text-xl cursor-pointer" onMouseEnter={() => setShowNotifications(true)} onMouseLeave={() => setShowNotifications(false)}/>
             {notifications?.length > 0 && (
               <span className="absolute top-0 right-0 bg-slate-600 text-white text-xs font-semibold rounded-full w-4 h-4 flex items-center justify-center translate-x-1/2 -translate-y-1/2">
@@ -139,19 +157,30 @@ function Navbar({setChats}) {
               </span>
             )}
           </div>
-          {showNotifications && (
+          {showChatNotifications && (
               <div className='fixed top-[4.3rem] w-[23rem] z-20 bg-white shadow-sm flex flex-col rounded-lg border ' style={{left:'70%'}}>
-                {notifications?.length > 0 && notifications?.map((notification, index)=>(
+                {chatMessages?.length > 0 && chatMessages?.map((message, index)=>(
                   <div key={index} className='flex gap-4 hover:bg-blue-50 p-3' onClick={()=>{navigate('/worker/profile/')}}>
-                    <img src={notification?.sender?.profile_pic} alt="" className='w-9 h-9 object-cover rounded-full'/>
+                    <img src={message?.sender?.profile_pic} alt="" className='w-9 h-9 object-cover rounded-full'/>
                     <div>
-                      <h4 className='font-semibold text-sm'>{notification.sender?.first_name}</h4>
-                      <p className='text-xs'>{notification.message}</p>
+                      <h4 className='font-semibold text-sm'>{message.sender?.first_name}</h4>
+                      <p className='text-xs'>{message.message}</p>
                     </div>
                   </div>
                 ))}
               </div>
             )}
+          {showNotifications && (
+            <div className='fixed top-[4.3rem] w-[23rem] z-20 bg-white shadow-sm flex flex-col rounded-lg border ' style={{left:'70%'}}>
+              {notifications?.map((notification, index)=>(
+                <div key={index} className='flex gap-4 hover:bg-blue-50 p-3'>
+                  <div>
+                    <p className='text-xs'>{notification}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </>

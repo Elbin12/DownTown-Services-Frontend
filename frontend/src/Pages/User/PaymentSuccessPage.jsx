@@ -6,9 +6,7 @@ import Footer from '../../Components/User/Footer'
 function PaymentSuccessPage() {
   return (
     <>
-      <Navbar /> 
       <AcceptedService role={'user'}/>
-      <Footer />
     </>
   )
 }

@@ -7,10 +7,8 @@ import Footer from '../../Components/User/Footer'
 function Profilepage() {
   return (
     <>
-      <Navbar />
       <SecondNavbar role="user"/>  
       <Profile role="user" />  
-      <Footer />
     </>
   )
 }

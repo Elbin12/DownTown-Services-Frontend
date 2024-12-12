@@ -4,21 +4,16 @@ import Navbar from '../../Components/User/Navbar/Navbar'
 import Footer from '../../Components/User/Footer'
 import Chat from '../../Components/Chat/Chat';
 import ChatDetails from '../../Components/Chat/ChatDetails';
+import { useChat } from '../../context';
 
 function ServiceDetailsPage() {
+  const [recipient_id, setRecipient_id] = useState(''); 
 
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [recipient_id, setRecipient_id] = useState('');
-  const [worker, setWorker] = useState();
+  const { setIsChatOpen, setWorker } = useChat();
 
   return (
     <>
-        <Navbar />
         <ServiceDetail setIsChatOpen={setIsChatOpen} setRecipient_id={setRecipient_id} setWorker={setWorker}/>
-        {isChatOpen&&
-          <ChatDetails role='user' recipient_id={recipient_id} setIsChatOpen={setIsChatOpen} user={worker}/>
-        }
-        <Footer />
     </>
   )
 }

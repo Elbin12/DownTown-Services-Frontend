@@ -6,16 +6,39 @@ import { IoCall } from "react-icons/io5";
 
 
 
-function ChatDetails({ setChats, role, recipient_id, setIsChatOpen, user, setSelectedChatId={setSelectedChatId} }) {
+function ChatDetails({  role,  setIsChatOpen, user, setSelectedChatId={setSelectedChatId} }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const userinfo = useSelector((state) => state.user.userinfo);
   const workerinfo = useSelector((state) => state.worker.workerinfo);
-  const dispatch = useDispatch();
+  const [page, setPage] = useState(1);
+  const [loadingOlderMessages, setLoadingOlderMessages] = useState(false); // To prevent duplicate fetches
+  const [hasMoreMessages, setHasMoreMessages] = useState(true);
 
   console.log(userinfo, 'usserrrinfo')
 
   const sender_id = role === "user" ? userinfo?.id || "" : workerinfo?.id || "";
+
+  const fetchMessages = async (pageNumber = 1) => {
+    const url = role === "user" ? `/chat/history/${userinfo?.id}/${user.id}/${pageNumber}/` : `worker/chat/history/${user.id}/${workerinfo?.id}/${pageNumber}/`;
+    try {
+      setLoadingOlderMessages(true);
+      const response = await api.get(url);
+      console.log(response, 'response')
+      const fetchedMessages = response.data.messages;
+  
+      if (fetchedMessages.length === 0) {
+        setHasMoreMessages(false); 
+      } else {
+        setMessages((prevMessages) => [...fetchedMessages, ...prevMessages]);  
+      }
+    } catch (error) {
+      console.error("Error fetching older messages:", error);
+    } finally {
+      setLoadingOlderMessages(false);
+    }
+  };
+  
 
   const chatEndRef = useRef(null);
   useEffect(() => {
@@ -23,18 +46,22 @@ function ChatDetails({ setChats, role, recipient_id, setIsChatOpen, user, setSel
   }, [messages]);
 
   useEffect(() => {
-    const fetchMessages = async () => {
-      const url =
-        role === "user"? `/chat/history/${userinfo?.id}/${user.id}/`: `worker/chat/history/${user.id}/${workerinfo?.id}/`;
-      try {
-        const response = await api.get(url);
-        setMessages(response.data); 
-      } catch (error) {
-        console.error("Error fetching chat history:", error);
-      }
-    };
-    fetchMessages();
-  }, [userinfo?.id, workerinfo?.id, role, user?.id]);
+    fetchMessages(); 
+  }, []);
+  
+  useEffect(() => {
+    if (page>1){
+      fetchMessages(page); 
+    }
+  }, [page]);
+  
+
+  const handleScroll = (e) => {
+    if (e.target.scrollTop === 0 && hasMoreMessages && !loadingOlderMessages) {
+      setLoadingOlderMessages(true);
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   const chatGroupId =
     role === "user"
@@ -96,7 +123,7 @@ function ChatDetails({ setChats, role, recipient_id, setIsChatOpen, user, setSel
   
 
   return (
-    <div className="fixed right-1/4 -mr-12 bottom-4 flex flex-col bg-white h-1/2 w-1/2 rounded-lg">
+    <div className="z-20 fixed right-1/4 -mr-12 bottom-4 flex flex-col bg-white h-1/2 w-1/2 rounded-lg">
       <div className="py-2 px-4 flex items-center justify-between shadow border-b">
         <div className="flex items-center gap-2">
           <img src={user?.profile_pic} alt="" className="w-9 h-9 object-cover rounded-full" />
@@ -109,7 +136,14 @@ function ChatDetails({ setChats, role, recipient_id, setIsChatOpen, user, setSel
         <IoCloseOutline className="text-2xl font-bold cursor-pointer" onClick={() => {setIsChatOpen(false); setSelectedChatId(null);}} />
       </div>
 
-      <div className="flex-1 px-4 py-2 overflow-y-auto">
+      <div className="flex-1 px-4 py-2 overflow-y-auto chat-container" onScroll={handleScroll}>
+      {loadingOlderMessages && (
+        <div className="text-center my-2">
+          <div className="flex justify-center items-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        </div>
+      )}
         {messages.map((msg, index) => {
           const dateObject = new Date(msg.timestamp);
           const time = new Intl.DateTimeFormat([], { hour: '2-digit', minute: '2-digit', hour12: false }).format(dateObject);
@@ -130,7 +164,9 @@ function ChatDetails({ setChats, role, recipient_id, setIsChatOpen, user, setSel
             </>
           )
         })}
-        <div ref={chatEndRef} />
+        {page===1 &&
+          <div ref={chatEndRef} />
+        }
       </div>
 
       <div className="bg-white w-full px-7 py-4 border-t flex items-center rounded-b-lg">

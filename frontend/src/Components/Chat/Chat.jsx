@@ -16,7 +16,7 @@ function Chat({chats, role, setIsChatOpen, setWorker, selectedChatId, setSelecte
     
 console.log(chats, 'cahaaa', selectedChatId)
   return (
-    <div className="fixed bottom-4 right-0 w-1/5 mr-3 bg-white shadow-lg rounded-lg">
+    <div className="z-20 fixed bottom-4 right-0 w-1/5 mr-3 bg-white shadow-lg rounded-lg">
         <div className={`flex items-center justify-between px-9 py-2 border-stone-300 ${isClicked && 'border-b'}`}>
             <img src={user.profile_pic} alt="" className='w-8 h-8 object-cover rounded-full'/>
             <h1 className='text-sm font-semibold'>Messaging</h1>

@@ -6,9 +6,7 @@ import Footer from '../../Components/User/Footer'
 function AddMobilePage() {
   return (
     <>
-        < Navbar />
         < AddMobile />
-        <Footer />
     </>
   )
 }
