@@ -12,6 +12,7 @@ import CategoriesPage from '../Pages/Admin/CategoriesPage'
 import WorkerDetailPage from '../Pages/Admin/WorkerDetailPage'
 import ServiceDetailsPage from '../Pages/Admin/ServiceDetailsPage'
 import RequestDetailPage from '../Pages/Admin/RequestDetailPage'
+import SubscriptionsPage from '../Pages/Admin/SubscriptionsPage'
 
 function AdminRoutes() {
   return (
@@ -28,6 +29,7 @@ function AdminRoutes() {
         <Route path='/services/' element={<AdminProtectedRoute><ServicesListingPage /></AdminProtectedRoute>} />
         <Route path='/service/:id/' element={<AdminProtectedRoute><ServiceDetailsPage /></AdminProtectedRoute>} />
         <Route path='/categories/' element={<AdminProtectedRoute><CategoriesPage /></AdminProtectedRoute>} />
+        <Route path='/subscriptions/' element={<AdminProtectedRoute><SubscriptionsPage /></AdminProtectedRoute>} />
       </Routes>
     </div>
   )
