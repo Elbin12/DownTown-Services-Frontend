@@ -13,6 +13,8 @@ import WorkerDetailPage from '../Pages/Admin/WorkerDetailPage'
 import ServiceDetailsPage from '../Pages/Admin/ServiceDetailsPage'
 import RequestDetailPage from '../Pages/Admin/RequestDetailPage'
 import SubscriptionsPage from '../Pages/Admin/SubscriptionsPage'
+import OrdersPage from '../Pages/Admin/OrdersPage'
+import OrderdetailsPage from '../Pages/Admin/OrderdetailsPage'
 
 function AdminRoutes() {
   return (
@@ -30,6 +32,8 @@ function AdminRoutes() {
         <Route path='/service/:id/' element={<AdminProtectedRoute><ServiceDetailsPage /></AdminProtectedRoute>} />
         <Route path='/categories/' element={<AdminProtectedRoute><CategoriesPage /></AdminProtectedRoute>} />
         <Route path='/subscriptions/' element={<AdminProtectedRoute><SubscriptionsPage /></AdminProtectedRoute>} />
+        <Route path='/orders/' element={<AdminProtectedRoute><OrdersPage /></AdminProtectedRoute>} />
+        <Route path='/order/:id/' element={<AdminProtectedRoute><OrderdetailsPage /></AdminProtectedRoute>} />
       </Routes>
     </div>
   )

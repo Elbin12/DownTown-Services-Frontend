@@ -5,7 +5,7 @@ import ChatDetails from '../../Components/Chat/ChatDetails';
 import Footer from '../../Components/User/Footer';
 import { useSelector } from 'react-redux';
 import Navbar from '../../Components/Worker/Navbar';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 function Layout({children}) {
     const [isChatOpen, setIsChatOpen] = useState();
@@ -14,13 +14,16 @@ function Layout({children}) {
     const [selectedChatId, setSelectedChatId] = useState(null);
 
     const workerinfo = useSelector(state=>state.worker.workerinfo)
+    const navigate = useNavigate();
 
     const location = useLocation();
 
-    const excludePaths = ["/worker/login", "/worker/signup"];
+    const excludePaths = ["/worker/login/", "/worker/signup/"];
 
     const shouldShowLayout = !excludePaths.includes(location.pathname);
 
+    console.log(workerinfo, 'workerinfo')
+    
     useEffect(()=>{
         const fetchChats = async()=>{
             try{

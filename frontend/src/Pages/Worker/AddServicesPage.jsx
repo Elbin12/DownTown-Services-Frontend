@@ -5,7 +5,6 @@ import AddServices from '../../Components/Worker/AddServices'
 function AddServicesPage() {
   return (
     <>
-        <Navbar />
         <AddServices />
     </>
   )

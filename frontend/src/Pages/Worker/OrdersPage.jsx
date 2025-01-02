@@ -6,7 +6,6 @@ import Orders from '../../Components/User/Orders'
 function OrdersPage() {
   return (
     <>
-        <Navbar />
         <SecondNavbar role='worker'/>
         <Orders role='worker'/>
     </>

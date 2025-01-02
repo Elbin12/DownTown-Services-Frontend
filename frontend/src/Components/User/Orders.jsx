@@ -31,7 +31,7 @@ function Orders({role}) {
     console.log(orders, 'orders');
     
   return (
-    <div className='pt-[10rem] h-screen'>
+    <div className={`pt-[10rem] py-4 ${orders?.length === 0 && 'h-screen'}`}>
       <div className='px-20 flex flex-col gap-2 items-center'>
         <div className='w-3/5 flex gap-3 py-2 bg-[#e1f5d39d] px-3'>
             <button className={`rounded px-3 ${filter==='completed'&&'bg-[#b9e49a9b] text-zinc-100 shadow-sm'}`} onClick={()=>{setfilter('completed')}}>Completed</button>

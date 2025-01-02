@@ -5,7 +5,6 @@ import Requests from '../../Components/Worker/Requests';
 function RequestPage() {
   return (
     <>
-        <Navbar />
         <Requests />
     </>
   )

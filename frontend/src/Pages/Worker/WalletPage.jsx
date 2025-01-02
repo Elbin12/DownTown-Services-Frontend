@@ -7,10 +7,8 @@ import Footer from '../../Components/User/Footer'
 function WalletPage() {
   return (
     <>
-      <Navbar />
       <SecondNavbar role="worker"/>  
       <Wallet role="worker" />  
-      <Footer />
     </>
   )
 }

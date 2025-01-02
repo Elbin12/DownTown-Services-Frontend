@@ -5,7 +5,6 @@ import ServiceEdit from '../../Components/Worker/ServiceEdit'
 function ServiceEditPage() {
   return (
     <>
-        <Navbar />
         <ServiceEdit/>
     </>
   )

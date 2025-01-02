@@ -15,13 +15,21 @@ import OrdersPage from '../Pages/Worker/OrdersPage'
 import ResubmitPage from '../Pages/Worker/ResubmitPage'
 import WalletPage from '../Pages/Worker/WalletPage'
 import Layout from '../Pages/Worker/Layout'
+import ChooseSubscriptionsPage from '../Pages/Worker/ChooseSubscriptionsPage'
+import CreditPaymentPage from '../Pages/Worker/CreditPaymentPage'
+import UpgradePaymentPage from '../Pages/Worker/UpgradePaymentPage'
+import UpgradeSubscriptionsPlans from '../Pages/Worker/UpgradeSubscriptionsPlans'
 
 function WorkerRoutes() {
   return (
     <div>
       <Layout >
         <Routes>
-          <Route path='login' element={<LoginPage />}/>
+          <Route path='/subscription/plans/' element={<WorkerProtectedRoute><ChooseSubscriptionsPage /></WorkerProtectedRoute>} />
+          <Route path='/subscription/upgrade/plans/' element={<WorkerProtectedRoute><UpgradeSubscriptionsPlans /></WorkerProtectedRoute>} />
+          <Route path='/upgrade/plan/' element={<WorkerProtectedRoute><UpgradePaymentPage /></WorkerProtectedRoute>} />
+          <Route path='/credit/' element={<WorkerProtectedRoute><CreditPaymentPage /></WorkerProtectedRoute>} />
+          <Route path='/login/' element={<LoginPage />}/>
           <Route path='/resubmit/' element={<ResubmitPage />}/>
           <Route path='/forgot-password/' element={<ForgotPasswordPage />} />
           <Route path='/signup/' element={<SignupPage />}/>

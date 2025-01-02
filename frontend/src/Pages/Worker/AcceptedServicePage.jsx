@@ -5,7 +5,6 @@ import AcceptedService from '../../Components/Worker/AcceptedService/AcceptedSer
 function AcceptedServicePage() {
   return (
     <>
-        <Navbar />
         <AcceptedService role={'worker'}/>
     </>
   )

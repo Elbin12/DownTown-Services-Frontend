@@ -37,9 +37,17 @@ function Sidebar() {
             <TiSpanner className={`${window.location.pathname.includes('services')&& 'text-2xl font-semibold'}`}/>
             <Link to="/admin/services/" className={`${window.location.pathname.includes('services')&& 'text-[#658ab7] font-semibold'}`}>Services</Link>
         </div>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('orders')&&'bg-[#BACBDF]'}`}>
+            <TiSpanner className={`${window.location.pathname.includes('orders')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/orders/" className={`${window.location.pathname.includes('orders')&& 'text-[#658ab7] font-semibold'}`}>Orders</Link>
+        </div>
         <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('categories')&&'bg-[#BACBDF]'}`}>
             <BiCategory className={`${window.location.pathname.includes('categories')&& 'text-2xl font-semibold'}`}/>
             <Link to="/admin/categories/" className={`${window.location.pathname.includes('categories')&& 'text-[#658ab7] font-semibold'}`}>Categories</Link>
+        </div>
+        <div className={`flex items-center gap-1 w-8/12 py-4 pl-4 justify-start ${window.location.pathname.includes('subscriptions')&&'bg-[#BACBDF]'}`}>
+            <BiCategory className={`${window.location.pathname.includes('subscriptions')&& 'text-2xl font-semibold'}`}/>
+            <Link to="/admin/subscriptions/" className={`${window.location.pathname.includes('categories')&& 'text-[#658ab7] font-semibold'}`}>Subscriptions</Link>
         </div>
       </div>
     </div>

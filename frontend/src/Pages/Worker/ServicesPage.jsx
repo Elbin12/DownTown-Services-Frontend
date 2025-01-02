@@ -5,7 +5,6 @@ import Services from '../../Components/Worker/Services'
 function ServicesPage() {
   return (
     <>
-        <Navbar />
         <Services />
     </>
   )

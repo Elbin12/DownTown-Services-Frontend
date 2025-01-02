@@ -4,7 +4,7 @@ import { IoLogoFacebook } from "react-icons/io5";
 
 function Footer() {
   return (
-    <div className='bg-[#c6d2b181]'>
+    <div className='bg-[#c6d2b181] '>
       <div className='flex flex-col gap-3 px-24 py-11'>
         <div className='flex flex-col gap-1'>
             <h1 className='text-sm font-semibold'>SERVICE OFFERING</h1>

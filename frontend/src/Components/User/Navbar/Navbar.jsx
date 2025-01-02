@@ -40,9 +40,9 @@ function Navbar() {
   });
 
   useEffect(()=>{
-    if (!location){
-      setActivePopup('location');
-    }
+    // if (!location){
+    //   setActivePopup('location');
+    // }
   })
 
   

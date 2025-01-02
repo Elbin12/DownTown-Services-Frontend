@@ -25,8 +25,8 @@ function AcceptedServices() {
     console.log(acceptedServices, 'acc');
     
   return (
-    <div className='mt-9 flex items-end'>
-      <div className='bg-white w-1/4'>
+    <div className=' flex items-end'>
+      <div className='bg-white'>
         <div className='flex gap-4 items-center py-2 px-4 border-b border-stone-200'>
             <h1 className='font-semibold'>Accepted Services</h1>
             <p className='text-xs font-semibold underline cursor-pointer'>View All</p>

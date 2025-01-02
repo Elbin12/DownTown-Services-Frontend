@@ -6,9 +6,7 @@ import Footer from '../../Components/User/Footer'
 function ServicesListingPage() {
   return (
     <>
-        <Navbar />
         <Servies />
-        <Footer />
     </>
   )
 }

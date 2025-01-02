@@ -8,12 +8,14 @@ import { api } from '../../../axios';
 import  { setUserinfo } from '../../../redux/user';
 import {setWorkerinfo} from '../../../redux/worker';
 
-import { FaEdit } from "react-icons/fa";
+import { FaArrowRight, FaBroom, FaEdit, FaExclamationCircle } from "react-icons/fa";
 
 import { Toaster, toast } from 'sonner';
 import EditEmail from '../EditEmail';
 import OTP from '../OTP/OTP';
 import { useNavigate } from 'react-router-dom';
+
+import { ArrowUpCircle, CheckCircle2, CircleAlert, Clock, DollarSign, FileText, Gauge, IndianRupee, Info, MoreVertical, Pencil, PlusCircle, RefreshCcw, User, XCircle } from 'lucide-react'
 
 
 function Profile({role}) {
@@ -81,6 +83,9 @@ function Profile({role}) {
 
   const [input, setInput] = useState(email);
 
+  const [categories, setCategories] = useState([]);
+  const [showCategories, setShowCategories] = useState(false);
+  const [selectedServices, setSelectedServices] = useState(workerinfo?.services);
 
   const [mobErr, setMobErr] = useState('');
   const [first_name_err, setFirst_name_Error] = useState('');
@@ -215,11 +220,54 @@ function Profile({role}) {
       })
     }
 
+
+  function formatDate(isoDate) {
+    const date = new Date(isoDate); // Convert ISO string to Date object
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    return date.toLocaleDateString("en-US", options)
+  }
   
+
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen)
+
+  const cancelSubscription = async()=>{
+    try{
+      const res = await api.post('worker/subscription/cancel/')
+      if (res.status === 200){
+        toast.success(res.data.message);
+      }
+    }catch(err){
+      console.log(err, 'err')
+    }
+  }
+
+  const handleEditServices = async()=>{
+    try{
+      setShowCategories(true);
+      const res = await api.get('/worker/categories/')
+      if (res.status === 200){
+        setCategories(res.data);
+      }
+    }catch(err){
+      console.log(err, 'err')
+    }
+  }
+
+
+  const toggleService = (category) => {
+    const service = { id: category.id, name: category.category_name };
+    setSelectedServices(prev => 
+      prev.some(s => s.id === service.id)
+        ? prev.filter(s => s.id !== service.id)
+        : [...prev, service]
+    );
+  };
 
   return (
     <div className='pt-[10rem]'>
-      <div className='bg-white h-96 mx-auto  sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] justify-center flex sm:rounded-lg'>
+      <div className='bg-white h-96 mx-auto  sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] justify-center flex sm:rounded-lg'>
         {activePopup=='mobAdd' && < MobilePopup role={'Add'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
         {activePopup=='mobEdit' && < MobilePopup role={'Edit'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
         {activePopup=='emailEdit' && < EditEmail input={input} setInput={setInput} role={role} setActivePopup={setActivePopup} email={email} setEmail={setEmail}/>}
@@ -262,7 +310,7 @@ function Profile({role}) {
           <h6 className='text-xs pb-2 sm:text-sm sm:pb-3 md:text-lg md:pb-6 text-white font-semibold'>Hi,{role==='user'?userinfo?.first_name? userinfo.first_name:'User':workerinfo?.first_name? workerinfo.first_name:'User' }</h6>
         </div>
         <div className='px-4 sm:px-16'>
-          <h1 className='text-xs md:text-lg font-semibold text-[#434343]'>Account Details</h1>
+          <h1 className='text-xs md:text-2xl font-semibold text-[#434343]'>Account Details</h1>
           <div className='px-1 py-6 gap-9 flex flex-col'>
             <div className='flex  text-sm'>
             <span className='w-1/3 text-xs md:text-sm block md:hidden'>Email</span>
@@ -309,9 +357,9 @@ function Profile({role}) {
         </div>
       </div>
     </div>
-    <div className='bg-white h-96 mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] my-2 sm:rounded-lg'>
+    <div className='bg-white h-96 mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] my-2 sm:rounded-lg'>
       <div className='px-4 sm:px-16 gap-9 flex flex-col py-9'>
-        <h1 className='text-xs md:text-lg font-semibold text-[#434343]'>Personal Details</h1>
+        <h1 className='text-xs md:text-2xl font-semibold text-[#434343]'>Personal Details</h1>
         <div className='flex flex-col gap-6 text-sm px-1'>
           <div className='flex justify-between items-center text-xs md:text-sm'>
             <h6>First Name</h6>
@@ -354,7 +402,164 @@ function Profile({role}) {
         </div>
       </div>
     </div>
-    <div className=' mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[20rem] mb-9 my-2 sm:rounded-lg'>
+
+    {role==='worker' && 
+      <div className="bg-white mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] my-2 sm:rounded-lg shadow-md p-6 sm:p-8">
+        <div className='flex w-full justify-between items-center mb-6'>
+          <h2 className="text-2xl font-semibold text-gray-800">Your Services</h2>
+          <Pencil className='w-5 h-5 cursor-pointer' onClick={handleEditServices}/>
+        </div>
+        
+        <div className="space-x-4 flex">
+          {selectedServices.map(service => (
+            <div key={service.id} className="flex w-1/6 items-center justify-center  bg-gray-200 py-3 rounded-md">
+              <h1 className="text-lg font-medium text-gray-700">{service.name}</h1>
+            </div>
+          ))}
+        </div>
+
+        {role==='worker' && showCategories && (
+          <div className='mt-6'>
+            <h3 className="text-lg font-medium text-gray-700 mb-2">Available Services:</h3>
+            <div className="flex flex-wrap gap-4">
+              {categories.map(category => {
+                const isSelected = selectedServices?.some(s => s.id === category.id);
+                return (
+                  <div
+                    key={category.id}
+                    className={`flex items-center justify-center py-2 px-4 rounded-md cursor-pointer transition-colors duration-200 ${
+                      isSelected ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    }`}
+                    onClick={() => toggleService(category)}
+                  >
+                    <h1 className="text-lg font-medium">{category.category_name}</h1>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+        
+        {workerinfo.services.length === 0 && (
+          <div className="text-center text-gray-500 mt-8">
+            No services available. Please contact support to add services.
+          </div>
+        )}
+      </div>
+    }
+
+    {workerinfo && role ==='worker' && workerinfo?.subscription&&
+      <div className="bg-white    mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] my-2 sm:rounded-lg shadow-md p-6 sm:p-8 relative">
+        <div className="space-y-6">
+          <div className="flex justify-between items-start">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0 flex-grow">
+              <div>
+                <div className='flex gap-9 items-center'>
+                  <h2 className="text-2xl font-bold text-gray-800">Subscription Details</h2>
+                  <h1 className={`font-semibold text-sm ${workerinfo.subscription?.subscription_status==='canceled'&&'text-red-500'}`}>{workerinfo.subscription?.subscription_status}
+                    {/* <span className='text-black text-opacity-80 pl-2 text-xs'>
+                      {workerinfo.subscription?.subscription_status==='canceled'&&'The subscription will ends in'} {formatDate(workerinfo.subscription?.subscription_end_date)}
+                    </span> */}
+                  </h1>
+                </div>
+                <p className="text-sm text-gray-600 mt-1">Your current plan and usage information</p>
+              </div>
+            </div>
+            <div className="relative">
+              <button onClick={toggleMenu} className="p-2 rounded-full hover:bg-gray-100 transition-colors" aria-label="More options">
+                <MoreVertical className="h-5 w-5 text-gray-500" />
+              </button>
+              {isMenuOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-10">
+                  <div className="py-1">
+                    <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                      <FileText className="h-4 w-4 mr-2" />
+                      Download Invoice
+                    </button>
+                    <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={()=>{navigate('/worker/subscription/upgrade/plans/')}}>
+                      <ArrowUpCircle className="h-4 w-4 mr-2" />
+                      <span>Upgrade Plan</span>
+                    </button>
+                    <button className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={cancelSubscription}>
+                      <XCircle className="h-4 w-4 mr-2" />
+                      <span>Cancel Subscription</span>
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <div className='bg-gray-100 rounded-full flex items-center px-3 py-1 gap-2'>
+                  <span className=" text-gray-800 text-lg font-semibold">{workerinfo.subscription?.tier_name}</span>
+                  {true && <CheckCircle2 className="h-5 w-5 text-green-500" />}
+                </div>
+                
+              </div>
+              <div className="flex items-center space-x-2 text-gray-700">
+                <IndianRupee className="h-5 w-5" />
+                <span className="text-xl font-semibold">{workerinfo.subscription?.price}</span>
+                <span className="text-sm">/month</span>
+              </div>
+              <div className="flex items-center space-x-2 text-gray-600">
+                <Clock className="h-5 w-5" />
+                <span className="text-sm">Started on {formatDate(workerinfo.subscription?.subscription_start_date)}</span>
+              </div>
+            </div>
+            
+            <div className=" flex flex-col items-end">
+              <div className='space-y-3'>
+                <div className="flex items-center space-x-3 text-gray-600">
+                  <PlusCircle className="h-5 w-5 text-blue-500" />
+                  <span className="text-sm">Add up to {workerinfo.subscription?.service_add_limit} services</span>
+                </div>
+                <div className="flex items-center space-x-3 text-gray-600">
+                  <RefreshCcw className="h-5 w-5 text-blue-500" />
+                  <span className="text-sm">Update services {workerinfo.subscription?.service_update_limit} times</span>
+                </div>
+                <div className="flex items-center space-x-3 text-gray-600">
+                  <User className="h-5 w-5 text-blue-500" />
+                  <span className="text-sm">{workerinfo.subscription?.user_requests_limit} user requests</span>
+                </div>
+                <div className="flex items-center space-x-3 text-gray-600">
+                  <Gauge className="h-5 w-5 text-blue-500" />
+                  <span className="text-sm">{workerinfo.subscription?.analytics}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="border-t border-gray-200 pt-4 mt-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-2 sm:space-y-0">
+              <div className="text-sm text-gray-500">
+                Platform fee: {workerinfo.subscription?.platform_fee_perc}%
+              </div>
+              <div className="text-sm text-gray-500">
+                Subscription end date: {formatDate(workerinfo.subscription?.subscription_end_date)}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+
+    {role === 'worker' && !workerinfo?.subscription &&
+      <div className="bg-white mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] my-2 sm:rounded-lg shadow-md p-6 sm:p-8">
+        <div className="flex flex-col items-center text-center space-y-6">
+          <CircleAlert className="text-stone-700 w-16 h-16" />
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">You don't have an active subscription plan</h1>
+          <p className="text-gray-600 max-w-md">Please subscribe to continue enjoying our services and unlock all the features we offer.</p>
+          <button className="mt-4 bg-primary hover:bg-[#264a61f1] text-white font-semibold py-2 px-4 rounded-md transition duration-300 ease-in-out flex items-center space-x-2" onClick={()=>{navigate('/worker/subscription/plans/')}}>
+            <span>Subscribe Now</span>
+            <FaArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+    }
+    <div className=' mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] mb-9 my-2 sm:rounded-lg'>
       {userinfo&&<button className='bg-[#3d6b94da] px-2 py-1 rounded-sm text-white font-bold text-sm' onClick={logout}>LOGOUT</button>}
     </div>
     {activePopup==='save' &&(<div className='text-xs md:text-sm fixed flex justify-center items-center bottom-0 w-full bg-white h-20 z-10'>
