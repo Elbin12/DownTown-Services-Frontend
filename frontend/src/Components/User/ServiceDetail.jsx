@@ -264,7 +264,7 @@ function ServiceDetail({setIsChatOpen, setRecipient_id, setWorker}) {
                     <h1 className='text-lg mb-3'>Reviews</h1>
                   </div>
                   <div>
-                    <div className='grid gap-3 grid-cols-2'>
+                    <div className='grid gap-3 grid-cols-3'>
                       {service?.workerProfile?.reviews?.map((review, index)=>(
                         <div className='flex flex-col gap-1 border border-stone-400 rounded-lg px-6 py-2 hover:shadow-lg shadow-sm cursor-pointer'>
                           <div className='flex gap-1'>

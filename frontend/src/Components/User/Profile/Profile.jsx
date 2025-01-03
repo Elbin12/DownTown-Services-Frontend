@@ -267,12 +267,12 @@ function Profile({role}) {
 
   return (
     <div className='pt-[10rem]'>
-      <div className='bg-white h-96 mx-auto  sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] justify-center flex sm:rounded-lg'>
+      <div className='bg-white h-64 sm:h-80 lg:h-96 mx-[1rem] sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] justify-center rounded-md flex sm:rounded-lg'>
         {activePopup=='mobAdd' && < MobilePopup role={'Add'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
         {activePopup=='mobEdit' && < MobilePopup role={'Edit'} setActivePopup={setActivePopup} mob={mob} setMob={setMob}/>}
         {activePopup=='emailEdit' && < EditEmail input={input} setInput={setInput} role={role} setActivePopup={setActivePopup} email={email} setEmail={setEmail}/>}
         {activePopup=='otp' && < OTP role={role} setEmail={setEmail} input={input} setActivePopup={setActivePopup} from={'profile'}/>}
-      <div className='bg-[#233e56d2] h-14 sm:h-16  md:h-20 sm:rounded-t-lg w-full'>
+      <div className='bg-[#233e56d2] h-14 sm:h-16  md:h-20 rounded-t-md sm:rounded-t-lg w-full'>
         <div className='flex items-center gap-4 py-6 px-4 sm:px-16'>
           <div className='flex flex-col'>
             <div className='flex flex-col items-center justify-center w-[3rem] h-[3rem] sm:w-[4rem] sm:h-[4rem] bg-white rounded-full md:w-[6rem] md:h-[6rem] drop-shadow-lg overflow-hidden' onClick={imageUpload}>
@@ -357,7 +357,7 @@ function Profile({role}) {
         </div>
       </div>
     </div>
-    <div className='bg-white h-96 mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] my-2 sm:rounded-lg'>
+    <div className='bg-white h-96 mx-[1rem] sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] my-2 rounded-md sm:rounded-lg'>
       <div className='px-4 sm:px-16 gap-9 flex flex-col py-9'>
         <h1 className='text-xs md:text-2xl font-semibold text-[#434343]'>Personal Details</h1>
         <div className='flex flex-col gap-6 text-sm px-1'>
@@ -559,7 +559,7 @@ function Profile({role}) {
         </div>
       </div>
     }
-    <div className=' mx-auto sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] mb-9 my-2 sm:rounded-lg'>
+    <div className=' mx-[1rem] sm:mx-[5rem] lg:mx-[15rem] xl:mx-[15rem] mb-9 my-2 rounded-md sm:rounded-lg'>
       {userinfo&&<button className='bg-[#3d6b94da] px-2 py-1 rounded-sm text-white font-bold text-sm' onClick={logout}>LOGOUT</button>}
     </div>
     {activePopup==='save' &&(<div className='text-xs md:text-sm fixed flex justify-center items-center bottom-0 w-full bg-white h-20 z-10'>

@@ -17,10 +17,10 @@ function Chat({chats, role, setIsChatOpen, setWorker, selectedChatId, setSelecte
 console.log(chats, 'cahaaa', selectedChatId)
   return (
     <div className="z-20 fixed bottom-4 right-0 w-1/5 mr-3 bg-white shadow-lg rounded-lg">
-        <div className={`flex items-center justify-between px-9 py-2 border-stone-300 ${isClicked && 'border-b'}`}>
-            <img src={user.profile_pic} alt="" className='w-8 h-8 object-cover rounded-full'/>
-            <h1 className='text-sm font-semibold'>Messaging</h1>
-            {isClicked ? <RiArrowDownWideFill className='text-2xl cursor-pointer' onClick={()=>{setIsclicked(false)}}/>: <RiArrowUpWideFill className='text-2xl cursor-pointer' onClick={()=>{setIsclicked(true)}}/>}
+        <div className={`flex items-center justify-between px-2 py-1 lg:px-9 lg:py-2 border-stone-300 ${isClicked && 'border-b'}`}>
+            <img src={user.profile_pic} alt="" className=' w-3 h-3 sm:w-5 sm:h-5 lg:w-8 lg:h-8 object-cover rounded-full'/>
+            <h1 className='text-[8px] sm-text-xs md:text-sm font-semibold'>Messaging</h1>
+            {isClicked ? <RiArrowDownWideFill className='text-2xl cursor-pointer' onClick={()=>{setIsclicked(false)}}/>: <RiArrowUpWideFill className='text-lg md:text-2xl cursor-pointer' onClick={()=>{setIsclicked(true)}}/>}
         </div>
         {isClicked &&
             <>

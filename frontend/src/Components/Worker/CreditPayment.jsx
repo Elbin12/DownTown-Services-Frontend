@@ -3,9 +3,13 @@ import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useEle
 import { api } from "../../axios"; // Your axios instance for API calls
 import { CiCreditCard2 } from "react-icons/ci";
 import { useLocation } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setWorkerinfo } from "../../redux/worker";
 
 
 function CreditPayment({role}) {
+
+  const dispatch = useDispatch()
 
   const location = useLocation();
   const { selectedPlan } = location.state || {};
@@ -37,11 +41,13 @@ function CreditPayment({role}) {
     
           if (response.status === 200) {
             alert("Payment and subscription setup successful!");
+            if(response.data.worker_info){
+              dispatch(setWorkerinfo(response.data.worker_info))
+            }
           } else {
             throw new Error(response.data.error || "Subscription setup failed");
           }
       }else{
-        // 1. Create a payment method first
         const { error: paymentMethodError, paymentMethod } = await stripe.createPaymentMethod({
           type: 'card',
           card: elements.getElement(CardNumberElement),
@@ -54,14 +60,16 @@ function CreditPayment({role}) {
           throw new Error(paymentMethodError.message);
         }
   
-        // 2. Call the backend to create subscription directly
         const { data } = await api.post("/worker/subscription/create/", {
           subscription_plan_id: selectedPlan.id,
-          payment_method_id: paymentMethod.id, // Pass the payment method ID
+          payment_method_id: paymentMethod.id,
         });
   
         if (data.status === "success") {
           alert("Payment and subscription setup successful!");
+          if(data.worker_info){
+            dispatch(setWorkerinfo(data.worker_info))
+          }
         }
       }
 

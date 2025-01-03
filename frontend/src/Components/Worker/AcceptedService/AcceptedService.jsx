@@ -10,6 +10,8 @@ import { toast } from 'sonner';
 import paymentImg from '../../../images/payment.png'
 import { IoIosStar } from "react-icons/io";
 import ServiceAcceptedPopup from '../../User/ServiceAcceptedPopup';
+import WorkerOTPEntry from './WorkerOTPEntry';
+import PaymentMethodPopup from '../../User/PaymentMethodPopup';
 
 
 
@@ -142,28 +144,6 @@ function AcceptedService({role}) {
           }
     }
 
-
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setIsLoading(true);
-
-        try {
-            const response = await api.post('create_payment/', {'order_id':id})
-
-            const { clientSecret } = await response.data
-
-            console.log(clientSecret, 'secretttt', response.data)
-
-            const stripe = await stripePromise;
-            const { error, success } = await stripe.redirectToCheckout({sessionId:response.data.id});
-            
-        } catch (err) {
-            setError("Something went wrong!");
-        } finally {
-            setIsLoading(false);
-        }
-    };
-
     const handleRating = (rate) => {
         setRating(rate);
       };
@@ -198,7 +178,10 @@ function AcceptedService({role}) {
         {role === 'user' && accepted_service?.status === 'pending' && <ServiceAcceptedPopup service={accepted_service} from={'order'}/>}
         <div className='bg-white w-full mx-24 py-9 my-9 mt-28 gap-9 flex flex-col rounded-lg h-full'>
             <UserDetails role={role} user={role==='user'?accepted_service?.worker:accepted_service?.user} order={accepted_service}/>
-            {role==='worker' && accepted_service?.status !== 'completed' &&
+            {role==='worker' && accepted_service?.status === 'pending' &&
+                <WorkerOTPEntry order={accepted_service} setAcceptedService={setAcceptedService}/>
+            }
+            {role==='worker' && accepted_service?.status === 'working' &&
                 <div className='flex flex-col items-center gap-3'>
                     <h1 className='text-lg font-semibold text-neutral-700'>Click the button once you've finished your work.</h1>
                     <button className='bg-amber-600 text-white px-4 py-1 rounded-sm font-semibold' onClick={workCompleted}>Mark as Completed</button>
@@ -249,7 +232,10 @@ function AcceptedService({role}) {
                                         <h1 className='font-bold text-neutral-800'>Rs. {accepted_service?.payment_details?.total_amount }</h1>
                                     </div>
                                 </div>
-                                {role==='user' && accepted_service?.payment_details?.status === 'unPaid' && <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' onClick={handleSubmit}>Make payment</button>}
+                                {/* {role==='user' && accepted_service?.payment_details?.status === 'unPaid' && <button className='bg-amber-500 py-1 rounded-lg text-white font-bold mt-4' onClick={handleSubmit}>Make payment</button>} */}
+                                {role === 'user' && accepted_service?.payment_details?.status === 'unPaid' && (
+                                    <PaymentMethodPopup setIsLoading={setIsLoading} id={id} stripePromise={stripePromise} setError={setError} />
+                                )}
                             </div>
                         </div>
                         {role === 'user' && accepted_service?.status === 'completed' && accepted_service?.payment_details?.status === 'paid'&& accepted_service?.user_review.length === 0 &&

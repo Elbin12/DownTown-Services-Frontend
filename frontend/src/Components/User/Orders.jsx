@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import { api } from '../../axios'
 import { useNavigate } from 'react-router-dom'
+import { AlertCircle } from 'lucide-react';
+import ReportModal from './ReportModal';
 
 function Orders({role}) {
     const [orders, setOrders] = useState();
     const [filter, setfilter] = useState('completed');
+    const [reportingOrderId, setReportingOrderId] = useState(null)
     const navigate = useNavigate();
 
     useEffect(()=>{
@@ -29,6 +32,10 @@ function Orders({role}) {
         fetchorders();
     },[filter])
     console.log(orders, 'orders');
+
+    const handleReport = (orderId) => {
+        setReportingOrderId(orderId)
+      }
     
   return (
     <div className={`pt-[10rem] py-4 ${orders?.length === 0 && 'h-screen'}`}>
@@ -39,11 +46,11 @@ function Orders({role}) {
             <button className={`rounded px-3 ${filter==='cancelled'&&'bg-[#b9e49a9b] text-zinc-100 shadow-sm'}`} onClick={()=>{setfilter('cancelled')}}>Cancelled</button>
         </div>
         {orders?.map((order, key)=>(
-            <div className='bg-white w-3/5 h-full py-3 px-4 flex gap-4 cursor-pointer shadow-sm rounded-lg hover:shadow-lg' onClick={()=>{role==='user'?navigate(`/order/${order.id}/`):navigate(`/worker/services/accepted/${order.id}/`)}}>
-                <div className='w-1/6 overflow-hidden'>
+            <div className='bg-white w-3/5 h-full py-3 px-4 gap-4 cursor-pointer shadow-sm rounded-lg hover:shadow-lg flex justify-between' onClick={()=>{role==='user'?navigate(`/order/${order.id}/`):navigate(`/worker/services/accepted/${order.id}/`)}}>
+                <div className='w-1/4 overflow-hidden'>
                     <img src={order?.service_image} alt="" className='w-full h-3/4 bg-cover'/>
                 </div>
-                <div className='w-3/5 flex flex-col gap-2 border-r-2 pr-11 border-neutral-200'>
+                <div className='w-3/4 flex flex-col gap-2  border-neutral-200'>
                     <div>
                         <h1>{order?.service_name}</h1>
                         <p className='text-xs font-semibold text-stone-500'>Serviced By - {order?.worker?.first_name}</p>
@@ -67,10 +74,21 @@ function Orders({role}) {
                         <h1>Rs. {order?.payment_details?.total_amount}</h1>
                     </div>
                 </div>
+                {filter === 'completed' && role === 'user' && (
+                    <div className='flex justify-end items-start mt-4 md:mt-0'>
+                        <AlertCircle className='w-4 h-4 mr-1 text-red-500' onClick={(e) => {
+                            e.stopPropagation()
+                            handleReport(order.id)
+                        }}/>
+                    </div>
+                )}
             </div>
         ))}
       </div>
-    </div>
+      {reportingOrderId && (
+        <ReportModal orderId={reportingOrderId} onClose={() => setReportingOrderId(null)}/>
+      )}
+      </div>
   )
 }
 

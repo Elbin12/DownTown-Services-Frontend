@@ -3,6 +3,7 @@ import { IoChatbubbleEllipsesSharp } from "react-icons/io5";
 import {api} from '../../axios'
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { CheckCircle, Lock } from 'lucide-react';
 
 
 function ServiceAcceptedPopup({service, from}) {
@@ -99,10 +100,34 @@ function ServiceAcceptedPopup({service, from}) {
                         </div>
                         {/* <p className='bg-lime-50 px-3 py-1 font-semibold text-green-700'>Accepted</p> */}
                     </div>
-                    <div className='flex flex-col items-center mt-3'>
-                        <p className='text-stone-700 text-sm'>Click this button when worker arrive</p> 
-                        <button className='bg-amber-300 px-4 py-1 border text-white font-semibold rounded text-xs' onClick={()=>{setIsClicked(true);}}>Worker arrived</button>
+                    
+                    <div className="flex gap-2 mt-3 flex-col items-center">
+                        <p className="text-gray-600 text-center">
+                            Share this code with your service provider upon arrival
+                        </p>
+                        <div className="bg-gray-100 py-2 w-3/4 text-center">
+                            <span className="text-4xl font-bold tracking-wider text-yellow-400">{order?.otp}</span>
+                        </div>
+                        {/* <button
+                        className={`w-full py-3 px-4 rounded-lg text-white font-semibold text-lg transition-all duration-300 flex items-center justify-center ${
+                            isClicked
+                            ? 'bg-green-500 hover:bg-green-600'
+                            : 'bg-blue-500 hover:bg-blue-600'
+                        }`}
+                        onClick={()=>{setIsClicked(true);}}
+                        disabled={isClicked}
+                        >
+                        {isClicked ? (
+                            <>
+                            <CheckCircle className="h-6 w-6 mr-2" />
+                            Worker Arrived
+                            </>
+                        ) : (
+                            'Confirm Worker Arrival'
+                        )}
+                        </button> */}
                     </div>
+                    
                 </div>
             </div>
             <div className="text-center p-4 mb-2 bg-green-50">

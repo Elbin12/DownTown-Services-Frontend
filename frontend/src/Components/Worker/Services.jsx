@@ -6,8 +6,6 @@ import DeleteService from './DeleteService';
 function Services() {
 
     const [services, setServices] = useState();
-    const [popup, setPopup] = useState();
-
 
     useEffect(()=>{
         const fetchServices = async () => {
@@ -26,15 +24,9 @@ function Services() {
 
   return (
     <div className='min-h-screen pb-9'>
-        {popup&&
-            <>
-                <div className='bg-black opacity-50 w-full fixed h-screen z-10'></div>
-                <DeleteService services={services} setServices={setServices} setPopup={setPopup}/>
-            </>
-        }
-        <div className='flex flex-col items-center px-32 pt-32  gap-6' >
+        <div className='flex flex-col items-center px-32 pt-32  gap-2' >
         {services?.map((service) => (
-                <Service setPopup={setPopup} key={service.id} service={service}/>
+                <Service key={service.id} service={service} setServices={setServices}/>
             ))}
         </div>
     </div>
